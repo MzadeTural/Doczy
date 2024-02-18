@@ -8,7 +8,7 @@ namespace Doczy.DataAccess.Configurations
         {
 
             ConfigurationManager manager = new ConfigurationManager();
-            manager.SetBasePath(Directory.GetCurrentDirectory() + "../../RentaCar.Api");
+            manager.SetBasePath(Directory.GetCurrentDirectory() + "../../Doczy.Api");
             manager.AddJsonFile("appsettings.json");
             return manager.GetConnectionString("Default");
         }
