@@ -1,6 +1,6 @@
 ﻿namespace Doczy.Core.Entities.Identities
 {
-    public class AppUser : BaseAppUser
+    public class PatientAppUser : BaseAppUser
     {
     }
 }
