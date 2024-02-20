@@ -10,7 +10,7 @@ namespace Doczy.DataAccess.Contexts
         public DoczyContext CreateDbContext(string[] args)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Doczy.Api"))
+                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Doczy.API"))
                 .AddJsonFile("appsettings.json")
                 .Build();
 
