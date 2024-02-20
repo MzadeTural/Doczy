@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Doczy.DataAccess.Contexts
 {
-    public class DoczyContext :IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+    public class DoczyContext :IdentityDbContext<BaseAppUser, IdentityRole<Guid>, Guid>
     {
         public DoczyContext(DbContextOptions<DoczyContext> options) : base(options) { }
     

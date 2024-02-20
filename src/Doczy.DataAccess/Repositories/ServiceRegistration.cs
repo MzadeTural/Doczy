@@ -19,7 +19,7 @@ namespace Doczy.DataAccess.Repositories
             services.AddDbContext<DoczyContext>(opt =>
             {
                 opt.UseSqlServer(ServiceConfiguration.ConnectionString());
-            }).AddIdentity<AppUser, IdentityRole<Guid>>(x =>
+            }).AddIdentity<BaseAppUser, IdentityRole<Guid>>(x =>
             {
                 x.Password.RequiredLength = 8;
                
