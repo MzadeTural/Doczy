@@ -2,5 +2,6 @@
 {
     public class PatientAppUser : BaseAppUser
     {
+        public List<Appointment>? Appointments { get; set; }
     }
 }

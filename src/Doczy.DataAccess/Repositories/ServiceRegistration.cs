@@ -1,7 +1,4 @@
 ﻿
-
-
-
 using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Configurations;
 using Doczy.DataAccess.Contexts;
@@ -13,7 +10,6 @@ namespace Doczy.DataAccess.Repositories
 {
     public static class ServiceRegistration
     {
-
         public static void AddDataAccesServices(this IServiceCollection services)
         {
             services.AddDbContext<DoczyContext>(opt =>
@@ -22,14 +18,13 @@ namespace Doczy.DataAccess.Repositories
             }).AddIdentity<BaseAppUser, IdentityRole<Guid>>(x =>
             {
                 x.Password.RequiredLength = 8;
-               
                 x.SignIn.RequireConfirmedEmail = true;
                 x.User.RequireUniqueEmail = true;
-               
+
             }).
             AddEntityFrameworkStores<DoczyContext>().AddDefaultTokenProviders();
 
-           
+
 
         }
 
