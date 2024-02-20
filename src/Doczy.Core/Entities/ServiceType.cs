@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Doczy.Core.Entities.Common;
 
 namespace Doczy.Core.Entities
 {
-    internal class ServiceType
+    public class ServiceType:BaseSectionEntity
     {
+        public string Name { get; set; }
+        public List<Service> Services { get; set; }
     }
 }

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Doczy.Core.Entities.Common;
 
 namespace Doczy.Core.Entities
 {
-    internal class Service
+    public class Service:BaseSectionEntity
     {
+        public string? Name { get; set; }
+        public byte Duration { get; set; }
+        public string? Description { get; set; }
+        public double Price { get; set; }
+        public Guid ServiceTypeId { get; set; }
+        public ServiceType? ServiceType { get; set; }
+        public List<Appointment>? Appointments { get; set; }
     }
 }
