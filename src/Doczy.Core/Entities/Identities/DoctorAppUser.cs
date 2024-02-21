@@ -2,9 +2,13 @@
 {
     public class DoctorAppUser : BaseAppUser
     {
-        public List<Blog> Blogs { get; set; }
+        public List<Blog>? Blogs { get; set; }
         public List<Appointment>? Appointments { get; set; }
-       
-        
+        public string? IdCardImageUrl { get; set; }
+        public string? DiplomaImageUrl { get; set; }
+        public WorkPlace? WorkPlace { get; set; }
+        public Guid WorkPlaceId { get; set; }
+
+
     }
 }
