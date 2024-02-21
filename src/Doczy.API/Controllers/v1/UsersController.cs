@@ -11,6 +11,7 @@ namespace Doczy.API.Controllers.v1
     public class UsersController : ControllerBase
     {
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+      
 
         public UsersController(RoleManager<IdentityRole<Guid>> roleManager)
         {

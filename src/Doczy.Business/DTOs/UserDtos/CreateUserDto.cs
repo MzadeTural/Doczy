@@ -1,4 +1,4 @@
-﻿namespace Doczy.Business.DTOs
+﻿namespace Doczy.Business.DTOs.UserDtos
 {
     public class CreateUserDto
     {
