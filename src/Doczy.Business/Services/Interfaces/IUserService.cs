@@ -1,5 +1,5 @@
-﻿using Doczy.Business.DTOs;
-using Doczy.Business.DTOs.Common;
+﻿using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.UserDtos;
 using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Business.Services.Interfaces
@@ -7,6 +7,7 @@ namespace Doczy.Business.Services.Interfaces
     internal interface IUserService
     {
         Task<ResponseDto> CreateAsync(CreateUserDto model);
-        Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenEndDate, int refreshTokenLifeTime);
+        Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model);
+        Task UpdateRefreshToken(string refreshToken, BaseAppUser user, DateTime accessTokenEndDate, int refreshTokenLifeTime);
     }
 }
