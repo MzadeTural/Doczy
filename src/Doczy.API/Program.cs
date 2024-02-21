@@ -1,3 +1,4 @@
+using Doczy.Business.MappingProfiles;
 using Doczy.DataAccess.Repositories;
 
 
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+builder.Services.AddAutoMapper(typeof(DoctorMapper));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDataAccesServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
