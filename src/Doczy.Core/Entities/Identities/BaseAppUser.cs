@@ -13,7 +13,8 @@ namespace Doczy.Core.Entities.Identities
         public override string PhoneNumber { get; set; } = null!;
         public Guid GenderId { get; set; }
         public Gender? Gender { get; set; }
-        public string? Fullname { get; set; }
+        public string? FirstName  { get; set; }
+        public string? LastName { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenEndDate { get; set; }
     }

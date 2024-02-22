@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Doczy.Business\Doczy.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
