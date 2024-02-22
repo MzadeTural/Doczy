@@ -39,6 +39,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model)
         {
+
             string FileName = string.Empty;
             var doct = _mapper.Map<DoctorAppUser>(model);
            var a= _context.DoctorAppUsers.ToList();
