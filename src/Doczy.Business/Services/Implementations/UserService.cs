@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.MailDtos;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Enums;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -23,8 +24,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LinkGenerator _linkGenerator;
         private readonly IMapper _mapper;
+        private readonly IMailService _mailService;
 
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
@@ -33,6 +35,7 @@ namespace Doczy.Business.Services.Implementations
             _mapper = mapper;
             _context = context;
             _fileService = fileService;
+            _mailService = mailService;
         }
         public Task<ResponseDto> CreateAsync(CreateUserDto model)
         {
@@ -55,16 +58,42 @@ namespace Doczy.Business.Services.Implementations
             {
                 await _userManager.AddToRoleAsync(doct, Roles.Member.ToString());
 
-                //string? url = await GetEmailConfirmationLinkAsync(user);
-                //string body = await GetEmailConfirmationTemplate(url);
-
-                //await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = user.Email, Subject = "Doczy email confirmation for activate account", Body = body });
+                string? url = await GetEmailConfirmationLinkAsync(doct);
+                string body = await GetEmailConfirmationTemplate(url);
+                await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });
 
                 var response = new ResponseDto(StatusCode: HttpStatusCode.Created, Message: "Doctor successfully created. To login to your account, please activate your account by clicking on the link sent to your email address.");
                 return response;
             }
 
             throw new UserCreateFailedException(result.Errors);
+        }
+        private async Task<string?> GetEmailConfirmationLinkAsync(BaseAppUser user)
+        {
+            string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            HttpContext? httpContext = _httpContextAccessor.HttpContext;
+            string? url = string.Empty;
+            if (httpContext is not null)
+            {
+                HttpRequest request = httpContext.Request;
+                url = _linkGenerator.GetUriByAction(
+                   httpContext,
+                   action: "ConfirmEmail",
+                   controller: "Users",
+                   values: new { token, email = user.Email },
+                   scheme: request.Scheme,
+                   host: request.Host
+               );
+            }
+            return url;
+        }
+        private async Task<string> GetEmailConfirmationTemplate(string url)
+        {
+            string path = Path.Combine(_environment.WebRootPath, "templates", "EmailConfirmation.html");
+            using StreamReader streamReader = new StreamReader(path);
+            string result = await streamReader.ReadToEndAsync();
+            var body = result.Replace("[Link]", url);
+            return body;
         }
 
         public async Task UpdateRefreshToken(string refreshToken, BaseAppUser user, DateTime accessTokenEndDate, int refreshTokenLifeTime)
