@@ -4,6 +4,7 @@ using Doczy.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doczy.DataAccess.Migrations
 {
     [DbContext(typeof(DoczyContext))]
-    partial class DoczyContextModelSnapshot : ModelSnapshot
+    [Migration("20240222100153_CreateRelationDoctorCategory")]
+    partial class CreateRelationDoctorCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,14 +189,11 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Fullname")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("GenderId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
