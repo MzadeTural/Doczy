@@ -18,12 +18,13 @@ namespace Doczy.Business.Services.Implementations
     {
         private readonly UserManager<BaseAppUser> _userManager;
         private readonly DoczyContext _context;
+        private readonly IFileService _fileService;
         private readonly IWebHostEnvironment _environment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LinkGenerator _linkGenerator;
         private readonly IMapper _mapper;
 
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
@@ -31,6 +32,7 @@ namespace Doczy.Business.Services.Implementations
             _environment = environment;
             _mapper = mapper;
             _context = context;
+            _fileService = fileService;
         }
         public Task<ResponseDto> CreateAsync(CreateUserDto model)
         {
@@ -40,12 +42,14 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model)
         {
 
-            string FileName = string.Empty;
+            string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/doctors/diploma/");
+            string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/doctors/idcard/");
+
             var doct = _mapper.Map<DoctorAppUser>(model);
-           var a= _context.DoctorAppUsers.ToList();
-           
-            
-           
+            doct.DiplomaImageUrl = diplomaFile;
+            doct.IdCardImageUrl = idCardFile;
+
+
             IdentityResult result = await _userManager.CreateAsync(doct, model.Password);
             if (result.Succeeded)
             {
@@ -56,7 +60,7 @@ namespace Doczy.Business.Services.Implementations
 
                 //await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = user.Email, Subject = "Doczy email confirmation for activate account", Body = body });
 
-                var response = new ResponseDto(StatusCode: HttpStatusCode.Created, Message: "User successfully created. To login to your account, please activate your account by clicking on the link sent to your email address.");
+                var response = new ResponseDto(StatusCode: HttpStatusCode.Created, Message: "Doctor successfully created. To login to your account, please activate your account by clicking on the link sent to your email address.");
                 return response;
             }
 
