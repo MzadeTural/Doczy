@@ -1,0 +1,49 @@
+﻿using AutoMapper;
+using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.ServiceTypeDtos;
+using Doczy.Business.Exceptions.ServiceTypeExceptions;
+using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities;
+using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Net;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+
+namespace Doczy.Business.Services.Implementations
+{
+    public class ServiceTypeService : IServiceTypeService
+    {
+        private readonly IServiceTypeRepository _serviceTypeRepository;
+        private readonly IFileService _fileService;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IMapper _mapper;
+
+        public ServiceTypeService(IServiceTypeRepository serviceTypeRepository, IFileService fileService, IWebHostEnvironment environment, IMapper mapper)
+        {
+            _serviceTypeRepository = serviceTypeRepository;
+            _fileService = fileService;
+            _environment = environment;
+            _mapper = mapper;
+        }
+
+        public async Task<ResponseDto> CreateServiceTypeAsync(CreateServiceTypeDto model)
+        {
+            bool isExist = await _serviceTypeRepository.IsExistAsync(s => s.Name == model.Name);
+            if (isExist)
+                throw new ServiceTypeAlreadyExistExceptions("Service type already exist");
+
+            string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/servicetypeicons/");
+
+            var newServiceType = _mapper.Map<ServiceType>(model);
+            newServiceType.IconUrl = file;
+            var result = await _serviceTypeRepository.CreateAsync(newServiceType);
+            await _serviceTypeRepository.SaveAsync();
+
+            return new ResponseDto(
+                         StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+                         Message: result ? "Service type successfully created" : "Something went wrong"
+                         );
+        }
+    }
+}

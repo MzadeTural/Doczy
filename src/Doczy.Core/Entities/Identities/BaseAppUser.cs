@@ -7,6 +7,7 @@ namespace Doczy.Core.Entities.Identities
     public class BaseAppUser: IdentityUser<Guid>
     {
         public DateTime CreatedAt { get; set; }
+        public string ProfileImageUrl { get; set; }
         public override string Email { get; set; } 
         [Display(Name = "Fincode")]
         public override string? UserName { get; set; } 
