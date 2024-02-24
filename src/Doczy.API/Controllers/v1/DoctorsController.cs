@@ -5,6 +5,7 @@ using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Common;
 using System.Net;
+using Doczy.Business.DTOs.ServiceDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,7 +45,9 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorService.UpdatePhoneNumberAsync(userId, model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPatch("{userId},{workPlaceId}/workplace")]
+        [HttpPost("createUserWithCars")]
+       
+            [HttpPatch("{userId},{workPlaceId}/workplace")]
         public async Task<IActionResult> UpdateWorkPlace(Guid userId,Guid workPlaceId, [FromForm] UserPhoneUpdateDto model)
         {
             var response = await _doctorService.UpdateWorkPlaceAsync(userId, workPlaceId);
