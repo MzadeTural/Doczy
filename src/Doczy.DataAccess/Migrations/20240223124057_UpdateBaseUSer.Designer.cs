@@ -4,6 +4,7 @@ using Doczy.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doczy.DataAccess.Migrations
 {
     [DbContext(typeof(DoczyContext))]
-    partial class DoczyContextModelSnapshot : ModelSnapshot
+    [Migration("20240223124057_UpdateBaseUSer")]
+    partial class UpdateBaseUSer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,7 +192,7 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("GenderId")
+                    b.Property<Guid>("GenderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LastName")
@@ -507,13 +509,13 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<string>("DiplomaImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("DoctorCategoryId")
+                    b.Property<Guid>("DoctorCategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("IdCardImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("WorkPlaceId")
+                    b.Property<Guid>("WorkPlaceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("DoctorCategoryId");
@@ -568,7 +570,9 @@ namespace Doczy.DataAccess.Migrations
                 {
                     b.HasOne("Doczy.Core.Entities.Gender", "Gender")
                         .WithMany("Users")
-                        .HasForeignKey("GenderId");
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Gender");
                 });
@@ -639,11 +643,15 @@ namespace Doczy.DataAccess.Migrations
                 {
                     b.HasOne("Doczy.Core.Entities.DoctorCategory", "DoctorCategory")
                         .WithMany("Doctors")
-                        .HasForeignKey("DoctorCategoryId");
+                        .HasForeignKey("DoctorCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Doczy.Core.Entities.WorkPlace", "WorkPlace")
                         .WithMany("Doctors")
-                        .HasForeignKey("WorkPlaceId");
+                        .HasForeignKey("WorkPlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DoctorCategory");
 

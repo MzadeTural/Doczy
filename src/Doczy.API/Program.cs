@@ -1,4 +1,6 @@
+using Doczy.Business.Helpers.Settings;
 using Doczy.Business.MappingProfiles;
+using Doczy.Business.Services;
 using Doczy.DataAccess.Repositories;
 
 
@@ -12,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(DoctorMapper));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDataAccesServices();
+builder.Services.AddBusinessServices();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

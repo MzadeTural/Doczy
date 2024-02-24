@@ -45,8 +45,8 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model)
         {
 
-            string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/doctors/diploma/");
-            string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/doctors/idcard/");
+            string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
+            string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/users/doctors/idcard/");
 
             var doct = _mapper.Map<DoctorAppUser>(model);
             doct.DiplomaImageUrl = diplomaFile;
@@ -89,7 +89,7 @@ namespace Doczy.Business.Services.Implementations
         }
         private async Task<string> GetEmailConfirmationTemplate(string url)
         {
-            string path = Path.Combine(_environment.WebRootPath, "templates", "EmailConfirmation.html");
+            string path = Path.Combine(_environment.WebRootPath, "uploads","templates", "EmailConfirmation.html");
             using StreamReader streamReader = new StreamReader(path);
             string result = await streamReader.ReadToEndAsync();
             var body = result.Replace("[Link]", url);

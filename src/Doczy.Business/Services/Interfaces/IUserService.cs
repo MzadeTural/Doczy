@@ -4,7 +4,7 @@ using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Business.Services.Interfaces
 {
-    internal interface IUserService
+    public interface IUserService
     {
         Task<ResponseDto> CreateAsync(CreateUserDto model);
         Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model);

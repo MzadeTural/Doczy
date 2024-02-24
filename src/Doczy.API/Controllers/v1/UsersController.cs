@@ -19,7 +19,7 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("createrole")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+       
         public async Task CreateRole()
         {
             foreach (var role in Enum.GetValues(typeof(Roles)))

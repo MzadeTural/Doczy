@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Doczy.Business.Services.Interfaces;
+using Doczy.Business.DTOs.UserDtos;
+using Doczy.Business.DTOs.DoctorDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +12,29 @@ namespace Doczy.API.Controllers.v1
     [ApiController]
     public class DoctorsController : ControllerBase
     {
+        
+        private readonly IUserService _userService;
+        private readonly IDoctorService _doctorService;
+        public DoctorsController(IUserService userService, IDoctorService doctorService)
+        {
+
+            _userService = userService;
+            _doctorService = doctorService;
+        }
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromForm] CreateDoctorDto createDoctorDto)
+        {
+            var response = await _userService.CreateDoctorAsync(createDoctorDto);
+
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+        [HttpGet("{userId}/doctor-appointments")]
+        public async Task<List<GetDoctorAppointmentsDto>> GetUserCars(Guid userId)
+        {
+            var appointments = await _doctorService.GetDoctorAppointments(userId);
+            return appointments;
+        }
+
         // GET: api/<DoctorsController>
         [HttpGet]
         public IEnumerable<string> Get()
