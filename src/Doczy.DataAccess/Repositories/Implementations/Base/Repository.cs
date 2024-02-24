@@ -29,7 +29,8 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
         {
             throw new NotImplementedException();
         }
-
+        public async Task<T> GetByIdAsync(Guid id)
+           => await Table.FindAsync(id);
         public IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes)
         {
             var query = GetQuery(includes).Where(expression);

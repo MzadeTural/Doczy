@@ -7,6 +7,7 @@ using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Contexts;
+using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,8 +26,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly LinkGenerator _linkGenerator;
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
+        private readonly IWorkPlaceRepository _workPlaceRepository;
 
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IWorkPlaceRepository workPlaceRepository = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
@@ -36,6 +38,7 @@ namespace Doczy.Business.Services.Implementations
             _context = context;
             _fileService = fileService;
             _mailService = mailService;
+            _workPlaceRepository = workPlaceRepository;
         }
         public Task<ResponseDto> CreateAsync(CreateUserDto model)
         {
@@ -57,7 +60,8 @@ namespace Doczy.Business.Services.Implementations
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(doct, Roles.Member.ToString());
-
+                Guid id = new Guid();
+                
                 string? url = await GetEmailConfirmationLinkAsync(doct);
                 string body = await GetEmailConfirmationTemplate(url);
                 await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });

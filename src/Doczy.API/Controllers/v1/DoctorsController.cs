@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.Common;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,7 +14,7 @@ namespace Doczy.API.Controllers.v1
     [ApiController]
     public class DoctorsController : ControllerBase
     {
-        
+
         private readonly IUserService _userService;
         private readonly IDoctorService _doctorService;
         public DoctorsController(IUserService userService, IDoctorService doctorService)
@@ -29,42 +31,26 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
         [HttpGet("{userId}/doctor-appointments")]
-        public async Task<List<GetDoctorAppointmentsDto>> GetUserCars(Guid userId)
+        public async Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId)
         {
             var appointments = await _doctorService.GetDoctorAppointments(userId);
             return appointments;
         }
 
-        // GET: api/<DoctorsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        
+        [HttpPatch("{userId}/phone")]
+        public async Task<IActionResult> UpdatePhoneNumber(Guid userId, [FromForm] UserPhoneUpdateDto model)
         {
-            return new string[] { "value1", "value2" };
+            var response = await _doctorService.UpdatePhoneNumberAsync(userId, model);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+        [HttpPatch("{userId},{workPlaceId}/workplace")]
+        public async Task<IActionResult> UpdateWorkPlace(Guid userId,Guid workPlaceId, [FromForm] UserPhoneUpdateDto model)
+        {
+            var response = await _doctorService.UpdateWorkPlaceAsync(userId, workPlaceId);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
-        // GET api/<DoctorsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
-        // POST api/<DoctorsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<DoctorsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<DoctorsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
