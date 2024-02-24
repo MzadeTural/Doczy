@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\uploads\servicetypeicons\" />
     <Folder Include="wwwroot\uploads\users\doctors\diploma\" />
     <Folder Include="wwwroot\uploads\users\doctors\idcard\" />
   </ItemGroup>

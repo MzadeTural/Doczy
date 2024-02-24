@@ -50,10 +50,11 @@ namespace Doczy.Business.Services.Implementations
 
             string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
             string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/users/doctors/idcard/");
-
             var doct = _mapper.Map<DoctorAppUser>(model);
+            doct.CreatedAt= DateTime.Now;   
             doct.DiplomaImageUrl = diplomaFile;
             doct.IdCardImageUrl = idCardFile;
+            doct.ProfileImageUrl = "profile-default.png";
 
 
             IdentityResult result = await _userManager.CreateAsync(doct, model.Password);

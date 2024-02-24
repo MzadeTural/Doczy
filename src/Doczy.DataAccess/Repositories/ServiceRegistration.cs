@@ -28,7 +28,11 @@ namespace Doczy.DataAccess.Repositories
             }).
             AddEntityFrameworkStores<DoczyContext>().AddDefaultTokenProviders();
             services.AddScoped<IWorkPlaceRepository, WorkPlaceRepository>();
-           services.AddScoped<IDoctorRepository, DoctorRepository>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
+            services.AddScoped<IDoctorCategoryRepository, DoctorCategoryRepository>();
+            services.AddScoped<ISliderRepository, SliderRepository>();
+            services.AddScoped<IServiceTypeRepository,ServiceTypeRepository>();
+            services.AddScoped<IServiceRepository,ServiceRepository>();
            
 
 
