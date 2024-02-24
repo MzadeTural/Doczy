@@ -4,6 +4,7 @@
     {
         public List<Blog>? Blogs { get; set; }
         public List<Appointment>? Appointments { get; set; }
+        public List<Service>? Services { get; set; }
         public string? IdCardImageUrl { get; set; }
         public string? DiplomaImageUrl { get; set; }
         public WorkPlace? WorkPlace { get; set; }

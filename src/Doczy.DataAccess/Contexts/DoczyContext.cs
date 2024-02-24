@@ -23,7 +23,23 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<WorkPlace> WorkPlaces { get; set; }
-       
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Appointment>()
+             .HasOne(r => r.Doctor)
+             .WithMany()
+             .HasForeignKey(r => r.DoctorId)
+             .OnDelete(DeleteBehavior.ClientSetNull);
+             
+
+            modelBuilder.Entity<Appointment>()
+            .HasOne(r => r.Patient)
+            .WithMany()
+            .HasForeignKey(r => r.PatientId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+        }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
