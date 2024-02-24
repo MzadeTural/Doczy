@@ -1,0 +1,61 @@
+﻿using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.Exceptions.UserExceprions;
+using Doczy.Business.Exceptions.WorkPlaceExceptions;
+using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Repositories.Implementations;
+using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using System.Net;
+
+namespace Doczy.Business.Services.Implementations
+{
+    public class DoctorService : IDoctorService
+    {
+        private readonly UserManager<BaseAppUser> _userManager;
+
+        private readonly IWorkPlaceRepository _workPlaceRepository;
+        private readonly IDoctorRepository _doctorRepository;
+        public DoctorService(UserManager<BaseAppUser> userManager, IWorkPlaceRepository workPlaceRepository, IDoctorRepository doctorRepository)
+        {
+            _userManager = userManager;
+            _workPlaceRepository = workPlaceRepository;
+            _doctorRepository = doctorRepository;
+
+        }
+        public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResponseDto> UpdatePhoneNumberAsync(Guid id, UserPhoneUpdateDto model)
+        {
+            ArgumentNullException.ThrowIfNull(id);
+            var doct = await _userManager.FindByIdAsync(id.ToString());
+            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            doct.PhoneNumber = model.PhoneNumber;
+            await _doctorRepository.SaveAsync();
+            return new ResponseDto(
+                                    StatusCode: HttpStatusCode.OK,
+                                    Message: "Phone number successfully modified"
+                                    );
+        }
+
+        public async Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId)
+        {
+            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(worpPlaceId);
+            var doct = await _doctorRepository.GetByIdAsync(id);
+            var workPlace = await _workPlaceRepository.GetByIdAsync(worpPlaceId);
+            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            if (workPlace is null) throw new WokrPlaceNotFoundException("Work Place Not Found");
+            doct.WorkPlaceId = worpPlaceId;
+            await _doctorRepository.SaveAsync();
+            return new ResponseDto(
+                                     StatusCode: HttpStatusCode.OK,
+                                     Message: "Work place successfully modified"
+                                     );
+        }
+    }
+}

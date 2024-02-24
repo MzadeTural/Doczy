@@ -13,6 +13,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
         bool Update(T entity);
         void Delete(T entity);
         bool SoftDelete(T entity);
+        Task<T> GetByIdAsync(Guid id);
         Task<bool> IsExistAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
         Task<int> SaveAsync();
     }
