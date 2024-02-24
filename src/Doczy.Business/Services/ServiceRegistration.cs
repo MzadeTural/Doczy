@@ -18,6 +18,8 @@ namespace Doczy.Business.Services
             services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IServiceTypeService, ServiceTypeService>();
+           
         }
         }
 }
