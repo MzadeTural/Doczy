@@ -5,7 +5,7 @@ using Doczy.DataAccess.Repositories.Interfaces;
 
 namespace Doczy.DataAccess.Repositories.Implementations
 {
-    public class ServiceRepository : Repository<Service>, IServicerepository
+    public class ServiceRepository : Repository<Service>, IServiceRepository
     {
         public ServiceRepository(DoczyContext context) : base(context)
         {

@@ -31,6 +31,8 @@ namespace Doczy.DataAccess.Repositories
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IDoctorCategoryRepository, DoctorCategoryRepository>();
             services.AddScoped<ISliderRepository, SliderRepository>();
+            services.AddScoped<IServiceTypeRepository,ServiceTypeRepository>();
+            services.AddScoped<IServiceRepository,ServiceRepository>();
            
 
 

@@ -3,7 +3,7 @@ using Doczy.DataAccess.Repositories.Interfaces.Base;
 
 namespace Doczy.DataAccess.Repositories.Interfaces
 {
-    public interface IServicerepository:IRepository<Service>
+    public interface IServiceRepository:IRepository<Service>
     {
     }
 }
