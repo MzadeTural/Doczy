@@ -1,7 +1,8 @@
 ﻿namespace Doczy.Business.DTOs.ServiceDtos
 {
     public record CreateServiceDto(
-    string? Name,
+        Guid DoctorId,
+    string Name,
     byte Duration,
     string Description,
     double Price,

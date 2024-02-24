@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Doczy.DataAccess.Migrations
 {
-    public partial class InitialDoczyDb : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -55,6 +55,7 @@ namespace Doczy.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -116,49 +117,25 @@ namespace Doczy.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Duration = table.Column<byte>(type: "tinyint", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    ServiceTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UptadetAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Services_ServiceTypes_ServiceTypeId",
-                        column: x => x.ServiceTypeId,
-                        principalTable: "ServiceTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Fullname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdCardImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DiplomaImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WorkPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DoctorCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
@@ -175,56 +152,20 @@ namespace Doczy.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_AspNetUsers_DoctorCategories_DoctorCategoryId",
+                        column: x => x.DoctorCategoryId,
+                        principalTable: "DoctorCategories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_AspNetUsers_Genders_GenderId",
                         column: x => x.GenderId,
                         principalTable: "Genders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AspNetUsers_WorkPlaces_WorkPlaceId",
                         column: x => x.WorkPlaceId,
                         principalTable: "WorkPlaces",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PainDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UptadetAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Appointments_AspNetUsers_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Appointments_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -339,10 +280,103 @@ namespace Doczy.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Duration = table.Column<byte>(type: "tinyint", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    ServiceTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorAppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UptadetAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_AspNetUsers_DoctorAppUserId",
+                        column: x => x.DoctorAppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Services_ServiceTypes_ServiceTypeId",
+                        column: x => x.ServiceTypeId,
+                        principalTable: "ServiceTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PainDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DoctorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PatientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DoctorAppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PatientAppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UptadetAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_DoctorAppUserId",
+                        column: x => x.DoctorAppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_PatientAppUserId",
+                        column: x => x.PatientAppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_AspNetUsers_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Appointments_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DoctorAppUserId",
+                table: "Appointments",
+                column: "DoctorAppUserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_DoctorId",
                 table: "Appointments",
                 column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_PatientAppUserId",
+                table: "Appointments",
+                column: "PatientAppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_PatientId",
@@ -387,6 +421,11 @@ namespace Doczy.DataAccess.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_DoctorCategoryId",
+                table: "AspNetUsers",
+                column: "DoctorCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_GenderId",
                 table: "AspNetUsers",
                 column: "GenderId");
@@ -407,6 +446,11 @@ namespace Doczy.DataAccess.Migrations
                 name: "IX_Blogs_DoctorId",
                 table: "Blogs",
                 column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_DoctorAppUserId",
+                table: "Services",
+                column: "DoctorAppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_ServiceTypeId",
@@ -438,9 +482,6 @@ namespace Doczy.DataAccess.Migrations
                 name: "Blogs");
 
             migrationBuilder.DropTable(
-                name: "DoctorCategories");
-
-            migrationBuilder.DropTable(
                 name: "Sliders");
 
             migrationBuilder.DropTable(
@@ -454,6 +495,9 @@ namespace Doczy.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "ServiceTypes");
+
+            migrationBuilder.DropTable(
+                name: "DoctorCategories");
 
             migrationBuilder.DropTable(
                 name: "Genders");

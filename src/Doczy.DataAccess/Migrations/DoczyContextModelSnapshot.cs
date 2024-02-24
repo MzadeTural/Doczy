@@ -37,7 +37,10 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DoctorId")
+                    b.Property<Guid?>("DoctorAppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -46,7 +49,10 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<string>("PainDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PatientId")
+                    b.Property<Guid?>("PatientAppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ServiceId")
@@ -61,12 +67,13 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<DateTime>("UptadetAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
+                    b.HasIndex("DoctorAppUserId");
+
                     b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientAppUserId");
 
                     b.HasIndex("PatientId");
 
@@ -271,6 +278,9 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<byte>("Duration")
                         .HasColumnType("tinyint");
 
@@ -294,6 +304,8 @@ namespace Doczy.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DoctorId");
+
                     b.HasIndex("ServiceTypeId");
 
                     b.ToTable("Services");
@@ -309,6 +321,10 @@ namespace Doczy.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -536,13 +552,23 @@ namespace Doczy.DataAccess.Migrations
 
             modelBuilder.Entity("Doczy.Core.Entities.Appointment", b =>
                 {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
+                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("DoctorId");
+                        .HasForeignKey("DoctorAppUserId");
+
+                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .IsRequired();
+
+                    b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientAppUserId");
 
                     b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", "Patient")
-                        .WithMany("Appointments")
-                        .HasForeignKey("PatientId");
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .IsRequired();
 
                     b.HasOne("Doczy.Core.Entities.Service", "Service")
                         .WithMany("Appointments")
@@ -579,11 +605,19 @@ namespace Doczy.DataAccess.Migrations
 
             modelBuilder.Entity("Doczy.Core.Entities.Service", b =>
                 {
+                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
+                        .WithMany("Services")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Doczy.Core.Entities.ServiceType", "ServiceType")
                         .WithMany("Services")
                         .HasForeignKey("ServiceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("ServiceType");
                 });
@@ -684,6 +718,8 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Blogs");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.Identities.PatientAppUser", b =>
