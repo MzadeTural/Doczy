@@ -2,6 +2,10 @@
 using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Configurations;
 using Doczy.DataAccess.Contexts;
+using Doczy.DataAccess.Repositories.Implementations;
+using Doczy.DataAccess.Repositories.Implementations.Base;
+using Doczy.DataAccess.Repositories.Interfaces;
+using Doczy.DataAccess.Repositories.Interfaces.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +27,9 @@ namespace Doczy.DataAccess.Repositories
 
             }).
             AddEntityFrameworkStores<DoczyContext>().AddDefaultTokenProviders();
-
+            services.AddScoped<IWorkPlaceRepository, WorkPlaceRepository>();
+           services.AddScoped<IDoctorRepository, DoctorRepository>();
+           
 
 
         }
