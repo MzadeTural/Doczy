@@ -55,14 +55,12 @@ namespace Doczy.Business.Services.Implementations
             doct.DiplomaImageUrl = diplomaFile;
             doct.IdCardImageUrl = idCardFile;
             doct.ProfileImageUrl = "profile-default.png";
-
+            
 
             IdentityResult result = await _userManager.CreateAsync(doct, model.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(doct, Roles.Member.ToString());
-                Guid id = new Guid();
-                
+                await _userManager.AddToRoleAsync(doct, Roles.Doctor.ToString());            
                 string? url = await GetEmailConfirmationLinkAsync(doct);
                 string body = await GetEmailConfirmationTemplate(url);
                 await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });
@@ -80,6 +78,7 @@ namespace Doczy.Business.Services.Implementations
             string? url = string.Empty;
             if (httpContext is not null)
             {
+            //var sessionValue = httpContext.Session.GetString("SessionKey");
                 HttpRequest request = httpContext.Request;
                 url = _linkGenerator.GetUriByAction(
                    httpContext,
