@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doczy.DataAccess.Migrations
 {
     [DbContext(typeof(DoczyContext))]
-    [Migration("20240224204120_Initial")]
-    partial class Initial
+    [Migration("20240225091356_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,9 +39,6 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DoctorAppUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -50,9 +47,6 @@ namespace Doczy.DataAccess.Migrations
 
                     b.Property<string>("PainDescription")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PatientAppUserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
@@ -71,11 +65,7 @@ namespace Doczy.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorAppUserId");
-
                     b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientAppUserId");
 
                     b.HasIndex("PatientId");
 
@@ -280,7 +270,7 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("DoctorAppUserId")
+                    b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<byte>("Duration")
@@ -306,7 +296,7 @@ namespace Doczy.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorAppUserId");
+                    b.HasIndex("DoctorId");
 
                     b.HasIndex("ServiceTypeId");
 
@@ -554,21 +544,13 @@ namespace Doczy.DataAccess.Migrations
 
             modelBuilder.Entity("Doczy.Core.Entities.Appointment", b =>
                 {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("DoctorAppUserId");
-
                     b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .IsRequired();
 
-                    b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("PatientAppUserId");
-
                     b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", "Patient")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("PatientId")
                         .IsRequired();
 
@@ -607,15 +589,19 @@ namespace Doczy.DataAccess.Migrations
 
             modelBuilder.Entity("Doczy.Core.Entities.Service", b =>
                 {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", null)
+                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
                         .WithMany("Services")
-                        .HasForeignKey("DoctorAppUserId");
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Doczy.Core.Entities.ServiceType", "ServiceType")
                         .WithMany("Services")
                         .HasForeignKey("ServiceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("ServiceType");
                 });

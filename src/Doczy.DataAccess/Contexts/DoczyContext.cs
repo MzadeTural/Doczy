@@ -29,14 +29,13 @@ namespace Doczy.DataAccess.Contexts
 
             modelBuilder.Entity<Appointment>()
              .HasOne(r => r.Doctor)
-             .WithMany()
+             .WithMany(c=>c.Appointments)
              .HasForeignKey(r => r.DoctorId)
              .OnDelete(DeleteBehavior.ClientSetNull);
-             
 
             modelBuilder.Entity<Appointment>()
             .HasOne(r => r.Patient)
-            .WithMany()
+            .WithMany(c=>c.Appointments)
             .HasForeignKey(r => r.PatientId)
             .OnDelete(DeleteBehavior.ClientSetNull);
         }

@@ -37,9 +37,6 @@ namespace Doczy.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DoctorAppUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -48,9 +45,6 @@ namespace Doczy.DataAccess.Migrations
 
                     b.Property<string>("PainDescription")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PatientAppUserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
@@ -69,11 +63,7 @@ namespace Doczy.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorAppUserId");
-
                     b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientAppUserId");
 
                     b.HasIndex("PatientId");
 
@@ -552,21 +542,13 @@ namespace Doczy.DataAccess.Migrations
 
             modelBuilder.Entity("Doczy.Core.Entities.Appointment", b =>
                 {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("DoctorAppUserId");
-
                     b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .IsRequired();
 
-                    b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("PatientAppUserId");
-
                     b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", "Patient")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("PatientId")
                         .IsRequired();
 
