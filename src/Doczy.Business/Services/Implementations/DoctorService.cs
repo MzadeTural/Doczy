@@ -24,6 +24,12 @@ namespace Doczy.Business.Services.Implementations
             _doctorRepository = doctorRepository;
 
         }
+
+        public Task<ResponseDto> AddLanguageAsync(Guid id, Guid languageId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId)
         {
             throw new NotImplementedException();
