@@ -8,9 +8,7 @@ using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
-using System.Security.Claims;
 
 namespace Doczy.Business.Services.Implementations
 {
@@ -21,7 +19,7 @@ namespace Doczy.Business.Services.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<BaseAppUser> _userManager;
 
-        public ServiceService(ServiceRepository serviceRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<BaseAppUser> userManager)
+        public ServiceService(IServiceRepository serviceRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<BaseAppUser> userManager)
         {
             _serviceRepository = serviceRepository;
             _mapper = mapper;
@@ -31,7 +29,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreateServiceAsync(CreateServiceDto model)
         {
-                    
+
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             if (model.Price <= 0)
                 throw new ArgumentOutOfRangeException("Price",

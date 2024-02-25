@@ -1,8 +1,10 @@
 ﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Exceptions.WorkPlaceExceptions;
 using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
@@ -17,17 +19,37 @@ namespace Doczy.Business.Services.Implementations
 
         private readonly IWorkPlaceRepository _workPlaceRepository;
         private readonly IDoctorRepository _doctorRepository;
-        public DoctorService(UserManager<BaseAppUser> userManager, IWorkPlaceRepository workPlaceRepository, IDoctorRepository doctorRepository)
+        private readonly ILanguageRepository _languageRepository;
+        private readonly IDoctorLanguageRepository _doctorLanguageRepository;
+        public DoctorService(UserManager<BaseAppUser> userManager, IWorkPlaceRepository workPlaceRepository, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository)
         {
             _userManager = userManager;
             _workPlaceRepository = workPlaceRepository;
             _doctorRepository = doctorRepository;
-
+            _languageRepository = languageRepository;
+            _doctorLanguageRepository = doctorLanguageRepository;
         }
 
-        public Task<ResponseDto> AddLanguageAsync(Guid id, Guid languageId)
+        public async Task<ResponseDto> AddLanguageAsync(Guid id, Guid languageId)
         {
-            throw new NotImplementedException();
+
+            ArgumentNullException.ThrowIfNull(id);
+            ArgumentNullException.ThrowIfNull(languageId);
+            var doct = await _doctorRepository.GetByIdAsync(id);
+            var language = await _languageRepository.GetByIdAsync(languageId);
+            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            if (language is null) throw new LanguageNotFoundException("Language Not Found");
+            var userLanguage = new DoctorLanguage()
+            {
+                DoctorId = id,
+                LanguageId = languageId
+            };
+            await _doctorLanguageRepository.CreateAsync(userLanguage);
+            await _doctorLanguageRepository.SaveAsync();
+            return new ResponseDto(
+                                     StatusCode: HttpStatusCode.OK,
+                                     Message: "Work place successfully modified"
+                                     );
         }
 
         public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId)
