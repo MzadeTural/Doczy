@@ -1,5 +1,6 @@
 ﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.Language;
 
 namespace Doczy.Business.Services.Interfaces
 {
@@ -9,5 +10,6 @@ namespace Doczy.Business.Services.Interfaces
         Task<ResponseDto> UpdatePhoneNumberAsync(Guid id, UserPhoneUpdateDto model);
         Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId);
         Task<ResponseDto> AddLanguageAsync(Guid id, Guid languageId);
+         Task<List<GetLanguageDto>> GetLanguageAsync(Guid userId);
     }
 }

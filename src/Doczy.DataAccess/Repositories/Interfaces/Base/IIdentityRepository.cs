@@ -1,5 +1,6 @@
 ﻿using Doczy.Core.Entities.Identities;
 using Microsoft.AspNetCore.Identity;
+using System.Linq.Expressions;
 
 namespace Doczy.DataAccess.Repositories.Interfaces.Base
 {
@@ -7,6 +8,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
     {
         Task<int> SaveAsync();
         Task<T> GetByIdAsync(Guid id);
+        IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes);
 
     }
 }

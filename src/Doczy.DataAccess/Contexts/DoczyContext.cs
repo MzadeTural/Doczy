@@ -29,6 +29,7 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<UnivercityDegree> UnivercityDegrees{ get; set; }
         public DbSet<FieldOfStudy> FieldOfStudies{ get; set; }
         public DbSet<Education> Educations{ get; set; }
+        public DbSet<Experiance> Experiances{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

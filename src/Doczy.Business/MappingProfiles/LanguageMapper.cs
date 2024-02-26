@@ -11,6 +11,10 @@ namespace Doczy.Business.MappingProfiles
         public LanguageMapper()
         {
             CreateMap<CreateLanguageDto, Language>().ReverseMap();
+            CreateMap<Language, GetLanguageDto>()
+                .ReverseMap();
+
+           
         }
     
     }
