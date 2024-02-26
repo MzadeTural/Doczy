@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.ServiceTypeDtos;
+using Doczy.Business.DTOs.WorkPlace;
 
 namespace Doczy.Business.Services.Interfaces
 {
-    internal interface IWorkPlace
+    public interface IWorkPlaceService
     {
+        Task<ResponseDto> CreateWorkPlaceAsync(CreateWorkPlaceDto model);
     }
 }

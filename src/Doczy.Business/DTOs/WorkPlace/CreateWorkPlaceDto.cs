@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Doczy.Business.DTOs.WorkPlace
 {
-    internal class CreateWorkPlaceDto
-    {
-    }
+    public record CreateWorkPlaceDto(
+      string? Name,
+      IFormFile Icon
+   );
 }
