@@ -13,9 +13,9 @@ namespace Doczy.Core.Entities
 
         [DataType(DataType.Time)]
         public DateTime Time { get; set; }
-        public DoctorAppUser? Doctor { get; set; }
+        public DoctorAppUser? Doctor { get; set; }     
         public Guid DoctorId { get; set; }     
-        public PatientAppUser? Patient { get; set; }
+        public PatientAppUser? Patient { get; set; }      
         public Guid PatientId { get; set; }
         public Service? Service { get; set; }
         public Guid ServiceId { get; set; }

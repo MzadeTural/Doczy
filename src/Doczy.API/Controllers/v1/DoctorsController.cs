@@ -6,6 +6,8 @@ using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Common;
 using System.Net;
 using Doczy.Business.DTOs.ServiceDtos;
+using Microsoft.AspNetCore.Authorization;
+using Doczy.Business.DTOs.Language;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -45,13 +47,26 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorService.UpdatePhoneNumberAsync(userId, model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPost("createUserWithCars")]
+        
        
             [HttpPatch("{userId},{workPlaceId}/workplace")]
-        public async Task<IActionResult> UpdateWorkPlace(Guid userId,Guid workPlaceId, [FromForm] UserPhoneUpdateDto model)
+        public async Task<IActionResult> UpdateWorkPlace(Guid userId,Guid workPlaceId)
         {
             var response = await _doctorService.UpdateWorkPlaceAsync(userId, workPlaceId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+        [HttpPatch("{userId},{languageId}/language")]
+        public async Task<IActionResult> AddLanguage(Guid userId, Guid languageId)
+        {
+            var response = await _doctorService.AddLanguageAsync(userId, languageId);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+        [HttpGet("{userId}/user-languages")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Member")]
+        public async Task<List<GetLanguageDto>> GetDoctorLanguages(Guid userId)
+        {
+            var languages = await _doctorService.GetLanguageAsync(userId);
+            return languages;
         }
 
 

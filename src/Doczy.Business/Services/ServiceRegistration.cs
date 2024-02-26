@@ -1,12 +1,6 @@
 ﻿using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doczy.Business.Services
 {
@@ -19,7 +13,10 @@ namespace Doczy.Business.Services
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IServiceTypeService, ServiceTypeService>();
-           
+            services.AddScoped<ILanguageService, LanguageService>();
+
+            services.AddScoped<IServiceService, ServiceService>();
+
         }
-        }
+    }
 }
