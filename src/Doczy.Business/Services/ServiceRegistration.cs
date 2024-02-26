@@ -14,7 +14,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IServiceTypeService, ServiceTypeService>();
             services.AddScoped<ILanguageService, LanguageService>();
-
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IServiceService, ServiceService>();
 
         }

@@ -13,10 +13,10 @@ namespace Doczy.Business.Services.Implementations
     public class AuthService : IAuthService
     {
 
-        private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<BaseAppUser> _userManager;
 
         private readonly IMailService _mailService;
-        public AuthService(UserManager<AppUser> userManager, IMailService mailService)
+        public AuthService(UserManager<BaseAppUser> userManager, IMailService mailService)
         {
             _userManager = userManager;
             _mailService = mailService;
