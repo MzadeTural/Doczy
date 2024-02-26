@@ -13,9 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 builder.Services.AddAutoMapper(typeof(DoctorMapper));
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IWorkPlaceRepository, WorkPlaceRepository>();
 builder.Services.AddBusinessServices();
 builder.Services.AddDataAccesServices();
 builder.Services.AddRouting();

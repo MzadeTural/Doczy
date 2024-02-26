@@ -3,6 +3,7 @@ using Doczy.DataAccess.Contexts;
 using Doczy.DataAccess.Repositories.Interfaces.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Doczy.DataAccess.Repositories.Implementations.Base
 {
@@ -16,11 +17,31 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
         }
         public DbSet<T> Table => _context.Set<T>();
 
+        public IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes)
+        {
+            var query = GetQuery(includes).Where(expression);
+            query = !tracking ? query.AsNoTracking() : query;
+            return query;
+        }
+
         public async Task<T> GetByIdAsync(Guid id)     
             => await Table.FindAsync(id);
           
 
         public async Task<int> SaveAsync()
             => await _context.SaveChangesAsync();
+
+        private IQueryable<T> GetQuery(params Expression<Func<T, object>>[] includes)
+        {
+            var query = Table.AsQueryable();
+            if (includes is not null && includes?.Length > 0)
+            {
+                foreach (var item in includes)
+                {
+                    query = query.Include(item);
+                }
+            }
+            return query;
+        }
     }
 }

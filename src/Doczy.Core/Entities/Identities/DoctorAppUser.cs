@@ -3,6 +3,8 @@
     public class DoctorAppUser : BaseAppUser
     {
         public List<Blog>? Blogs { get; set; }
+        public IList<DoctorLanguage>? Languages { get; set; }
+        public IList<Education> Educations { get; set; }
         public List<Appointment>? Appointments { get; set; }
         public List<Service>? Services { get; set; }
         public string? IdCardImageUrl { get; set; }

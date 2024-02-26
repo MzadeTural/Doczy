@@ -23,20 +23,27 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<WorkPlace> WorkPlaces { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Award> Awards { get; set; }
+        public DbSet<Univercity> Univercities { get; set; }
+        public DbSet<UnivercityDegree> UnivercityDegrees{ get; set; }
+        public DbSet<FieldOfStudy> FieldOfStudies{ get; set; }
+        public DbSet<Education> Educations{ get; set; }
+        public DbSet<Experiance> Experiances{ get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Appointment>()
              .HasOne(r => r.Doctor)
-             .WithMany()
+             .WithMany(c=>c.Appointments)
              .HasForeignKey(r => r.DoctorId)
              .OnDelete(DeleteBehavior.ClientSetNull);
-             
 
             modelBuilder.Entity<Appointment>()
             .HasOne(r => r.Patient)
-            .WithMany()
+            .WithMany(c=>c.Appointments)
             .HasForeignKey(r => r.PatientId)
             .OnDelete(DeleteBehavior.ClientSetNull);
         }

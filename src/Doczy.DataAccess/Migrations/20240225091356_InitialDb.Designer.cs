@@ -4,6 +4,7 @@ using Doczy.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doczy.DataAccess.Migrations
 {
     [DbContext(typeof(DoczyContext))]
-    partial class DoczyContextModelSnapshot : ModelSnapshot
+    [Migration("20240225091356_InitialDb")]
+    partial class InitialDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,35 +72,6 @@ namespace Doczy.DataAccess.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Appointments");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Award", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AwardImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UptadetAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Awards");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.Blog", b =>
@@ -166,147 +139,6 @@ namespace Doczy.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DoctorCategories");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.DoctorLanguage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LanguageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("LanguageId");
-
-                    b.ToTable("DoctorLanguage");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Education", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FieldOfStudyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UnivercityDegreeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UnivercityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UptadetAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("FieldOfStudyId");
-
-                    b.HasIndex("UnivercityDegreeId");
-
-                    b.HasIndex("UnivercityId");
-
-                    b.ToTable("Educations");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Experiance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UptadetAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("WorkPlaceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("currentlyWorking")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkPlaceId");
-
-                    b.ToTable("Experiances");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.FieldOfStudy", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FieldOfStudies");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.Gender", b =>
@@ -423,23 +255,6 @@ namespace Doczy.DataAccess.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("BaseAppUser");
                 });
 
-            modelBuilder.Entity("Doczy.Core.Entities.Language", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Languages");
-                });
-
             modelBuilder.Entity("Doczy.Core.Entities.Service", b =>
                 {
                     b.Property<Guid>("Id")
@@ -537,43 +352,6 @@ namespace Doczy.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sliders");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Univercity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("IconUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Univercities");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.UnivercityDegree", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UnivercityDegrees");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.WorkPlace", b =>
@@ -800,71 +578,6 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Doctor");
                 });
 
-            modelBuilder.Entity("Doczy.Core.Entities.DoctorLanguage", b =>
-                {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
-                        .WithMany("Languages")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Doczy.Core.Entities.Language", "Language")
-                        .WithMany("Doctors")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Language");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Education", b =>
-                {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
-                        .WithMany("Educations")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Doczy.Core.Entities.FieldOfStudy", "FieldOfStudy")
-                        .WithMany("Educations")
-                        .HasForeignKey("FieldOfStudyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Doczy.Core.Entities.UnivercityDegree", "UnivercityDegree")
-                        .WithMany("Educations")
-                        .HasForeignKey("UnivercityDegreeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Doczy.Core.Entities.Univercity", "Univercity")
-                        .WithMany("Educations")
-                        .HasForeignKey("UnivercityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("FieldOfStudy");
-
-                    b.Navigation("Univercity");
-
-                    b.Navigation("UnivercityDegree");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Experiance", b =>
-                {
-                    b.HasOne("Doczy.Core.Entities.WorkPlace", "WorkPlace")
-                        .WithMany("Experiances")
-                        .HasForeignKey("WorkPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WorkPlace");
-                });
-
             modelBuilder.Entity("Doczy.Core.Entities.Identities.BaseAppUser", b =>
                 {
                     b.HasOne("Doczy.Core.Entities.Gender", "Gender")
@@ -964,19 +677,9 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Doctors");
                 });
 
-            modelBuilder.Entity("Doczy.Core.Entities.FieldOfStudy", b =>
-                {
-                    b.Navigation("Educations");
-                });
-
             modelBuilder.Entity("Doczy.Core.Entities.Gender", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.Language", b =>
-                {
-                    b.Navigation("Doctors");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.Service", b =>
@@ -989,21 +692,9 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("Doczy.Core.Entities.Univercity", b =>
-                {
-                    b.Navigation("Educations");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.UnivercityDegree", b =>
-                {
-                    b.Navigation("Educations");
-                });
-
             modelBuilder.Entity("Doczy.Core.Entities.WorkPlace", b =>
                 {
                     b.Navigation("Doctors");
-
-                    b.Navigation("Experiances");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.Identities.DoctorAppUser", b =>
@@ -1011,10 +702,6 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Blogs");
-
-                    b.Navigation("Educations");
-
-                    b.Navigation("Languages");
 
                     b.Navigation("Services");
                 });

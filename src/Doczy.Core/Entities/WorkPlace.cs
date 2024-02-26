@@ -7,6 +7,7 @@ namespace Doczy.Core.Entities
     {
         public string? Name { get; set; }
         public string? IconUrl { get; set; }
+        public IList<Experiance> Experiances { get; set; }
         public IEnumerable<DoctorAppUser>? Doctors{ get; set; }
     }
 }
