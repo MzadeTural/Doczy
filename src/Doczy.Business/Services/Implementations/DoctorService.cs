@@ -40,18 +40,15 @@ namespace Doczy.Business.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<ResponseDto> AddLanguageAsync(Guid id, Guid languageId)
+        public async Task<ResponseDto> AddLanguageAsync( Guid languageId)
         {
-
-            ArgumentNullException.ThrowIfNull(id);
-            ArgumentNullException.ThrowIfNull(languageId);
-            var doct = await _doctorRepository.GetByIdAsync(id);
-            var language = await _languageRepository.GetByIdAsync(languageId);
-            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;           
+            ArgumentNullException.ThrowIfNull(languageId);         
+            var language = await _languageRepository.GetByIdAsync(languageId);         
             if (language is null) throw new LanguageNotFoundException("Language Not Found");
             var userLanguage = new DoctorLanguage()
             {
-                DoctorId = id,
+                DoctorId = doctorId,
                 LanguageId = languageId
             };
             await _doctorLanguageRepository.CreateAsync(userLanguage);
@@ -95,13 +92,13 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId)
         {
-            ArgumentNullException.ThrowIfNull(id);
-            ArgumentNullException.ThrowIfNull(worpPlaceId);
-            var doct = await _doctorRepository.GetByIdAsync(id);
-            var workPlace = await _workPlaceRepository.GetByIdAsync(worpPlaceId);
-            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
-            if (workPlace is null) throw new WokrPlaceNotFoundException("Work Place Not Found");
-            doct.WorkPlaceId = worpPlaceId;
+            //ArgumentNullException.ThrowIfNull(id);
+            //ArgumentNullException.ThrowIfNull(worpPlaceId);
+            //var doct = await _doctorRepository.GetByIdAsync(id);
+            //var workPlace = await _workPlaceRepository.GetByIdAsync(worpPlaceId);
+            //if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            //if (workPlace is null) throw new WokrPlaceNotFoundException("Work Place Not Found");
+            //doct.WorkPlaceId = worpPlaceId;
             await _doctorRepository.SaveAsync();
             return new ResponseDto(
                                      StatusCode: HttpStatusCode.OK,
