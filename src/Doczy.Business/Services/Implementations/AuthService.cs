@@ -1,4 +1,5 @@
-﻿using Doczy.Business.DTOs.Common;
+﻿using Doczy.Business.DTOs.AuthDtos;
+using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Exceptions.AuthExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -49,6 +50,19 @@ namespace Doczy.Business.Services.Implementations
             );
         }
 
+        Task<ResponseDto> IAuthService.ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto)
+        {
+            throw new NotImplementedException();
+        }
 
+        Task<LoginResponseDto> IAuthService.LoginAsync(LoginDto model, int accessTokenLifeTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<TokenResponseDto> IAuthService.RefreshTokenLoginAsync(string refreshToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
