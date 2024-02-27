@@ -8,6 +8,7 @@ using System.Net;
 using Doczy.Business.DTOs.ServiceDtos;
 using Microsoft.AspNetCore.Authorization;
 using Doczy.Business.DTOs.Language;
+using Doczy.Business.DTOs.Experiance;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,11 +21,13 @@ namespace Doczy.API.Controllers.v1
 
         private readonly IUserService _userService;
         private readonly IDoctorService _doctorService;
-        public DoctorsController(IUserService userService, IDoctorService doctorService)
+        private readonly IExperianceService _experianceService;
+        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService)
         {
 
             _userService = userService;
             _doctorService = doctorService;
+            _experianceService = experianceService;
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] CreateDoctorDto createDoctorDto)
@@ -49,17 +52,24 @@ namespace Doczy.API.Controllers.v1
         }
         
        
-            [HttpPatch("{userId},{workPlaceId}/workplace")]
+         [HttpPatch("{userId},{workPlaceId}/workplace")]
         public async Task<IActionResult> UpdateWorkPlace(Guid userId,Guid workPlaceId)
         {
             var response = await _doctorService.UpdateWorkPlaceAsync(userId, workPlaceId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPatch("{userId},{languageId}/language")]
-        public async Task<IActionResult> AddLanguage(Guid userId, Guid languageId)
+        [HttpPatch("{languageId}/language")]
+        public async Task<IActionResult> AddLanguage( Guid languageId)
         {
-            var response = await _doctorService.AddLanguageAsync(userId, languageId);
+            var response = await _doctorService.AddLanguageAsync( languageId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+
+        [HttpPost("experiance")]
+        public async Task<IActionResult> AddExperiance([FromForm] CreateExperianceDto createExperianceDto)
+        {
+            var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
+            return StatusCode((int)response.StatusCode, response.Message);
         }
         [HttpGet("{userId}/user-languages")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Member")]

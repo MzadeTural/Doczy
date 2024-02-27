@@ -9,8 +9,8 @@
         public List<Service>? Services { get; set; }
         public string? IdCardImageUrl { get; set; }
         public string? DiplomaImageUrl { get; set; }
-        public WorkPlace? WorkPlace { get; set; }
-        public Guid? WorkPlaceId { get; set; }
+        public IEnumerable<Experiance>? Experiances { get; set; }
+       
         public DoctorCategory? DoctorCategory { get; set; }
         public Guid? DoctorCategoryId { get; set; }
 
