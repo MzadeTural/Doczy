@@ -50,10 +50,7 @@ namespace Doczy.Business.Services.Implementations
             );
         }
 
-        Task<ResponseDto> IAuthService.ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         Task<LoginResponseDto> IAuthService.LoginAsync(LoginDto model, int accessTokenLifeTime)
         {
