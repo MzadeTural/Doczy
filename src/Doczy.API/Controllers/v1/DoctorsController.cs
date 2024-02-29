@@ -58,6 +58,7 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorService.UpdateWorkPlaceAsync(userId, workPlaceId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
+        [Authorize]
         [HttpPatch("{languageId}/language")]
         public async Task<IActionResult> AddLanguage( Guid languageId)
         {

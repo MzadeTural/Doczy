@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Doczy.Business.DTOs.AuthDtos
 {
-    public record LoginResponseDto
-    
-        ( 
-        TokenResponseDto? TokenResponse 
-        );
+    public class LoginResponseDto
+
+    {
+        public TokenResponseDto? TokenResponse { get; set; }
+    }
     
 }

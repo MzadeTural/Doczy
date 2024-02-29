@@ -31,6 +31,7 @@ namespace Doczy.Business.Services.Implementations
             var claims = new List<Claim>()
         {
             new(ClaimTypes.Name, user.UserName),
+             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
         };
 
@@ -58,7 +59,8 @@ namespace Doczy.Business.Services.Implementations
             tokenResponseDto.AccessToken = jwtSecurityTokenHandler.WriteToken(jwtSecurityToken);
 
             tokenResponseDto.RefreshToken = CreateRefreshToken();
-
+            var tokenHandler = new JwtSecurityTokenHandler();
+            tokenHandler.WriteToken(jwtSecurityToken);
             return tokenResponseDto;
         }
 

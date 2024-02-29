@@ -43,7 +43,11 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> AddLanguageAsync( Guid languageId)
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;           
-            ArgumentNullException.ThrowIfNull(languageId);         
+            ArgumentNullException.ThrowIfNull(languageId);
+          var languages= await _doctorLanguageRepository.FindAll(dl => dl.DoctorId == doctorId).ToListAsync();
+           var check= languages.Any(dl=>dl.LanguageId== languageId);
+            if (check)
+                throw new LanguageAlreadyAddedExceptions("The language  is already available for this user");
             var language = await _languageRepository.GetByIdAsync(languageId);         
             if (language is null) throw new LanguageNotFoundException("Language Not Found");
             var userLanguage = new DoctorLanguage()
