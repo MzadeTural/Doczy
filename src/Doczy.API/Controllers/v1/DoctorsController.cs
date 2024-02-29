@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Doczy.Business.Services.Interfaces;
-using Doczy.Business.DTOs.UserDtos;
+﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
-using Doczy.Business.DTOs.Common;
-using System.Net;
-using Doczy.Business.DTOs.ServiceDtos;
-using Microsoft.AspNetCore.Authorization;
-using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.Experiance;
+using Doczy.Business.DTOs.Language;
+using Doczy.Business.DTOs.UserDtos;
+using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,33 +34,28 @@ namespace Doczy.API.Controllers.v1
 
             return StatusCode((int)response.StatusCode, response.Message);
         }
-        [HttpGet("{userId}/doctor-appointments")]
-        public async Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId)
+        [HttpGet("/doctor-appointments")]
+        public async Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments()
         {
-            var appointments = await _doctorService.GetDoctorAppointments(userId);
+            var appointments = await _doctorService.GetDoctorAppointments();
             return appointments;
         }
 
-        
-        [HttpPatch("{userId}/phone")]
-        public async Task<IActionResult> UpdatePhoneNumber(Guid userId, [FromForm] UserPhoneUpdateDto model)
+
+        [HttpPatch("/phone")]
+        public async Task<IActionResult> UpdatePhoneNumber([FromForm] UserPhoneUpdateDto model)
         {
-            var response = await _doctorService.UpdatePhoneNumberAsync(userId, model);
+            var response = await _doctorService.UpdatePhoneNumberAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        
-       
-         [HttpPatch("{userId},{workPlaceId}/workplace")]
-        public async Task<IActionResult> UpdateWorkPlace(Guid userId,Guid workPlaceId)
-        {
-            var response = await _doctorService.UpdateWorkPlaceAsync(userId, workPlaceId);
-            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
-        }
+
+
+
         [Authorize]
         [HttpPatch("{languageId}/language")]
-        public async Task<IActionResult> AddLanguage( Guid languageId)
+        public async Task<IActionResult> AddLanguage(Guid languageId)
         {
-            var response = await _doctorService.AddLanguageAsync( languageId);
+            var response = await _doctorService.AddLanguageAsync(languageId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
@@ -72,11 +65,12 @@ namespace Doczy.API.Controllers.v1
             var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
             return StatusCode((int)response.StatusCode, response.Message);
         }
-        [HttpGet("{userId}/user-languages")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Member")]
-        public async Task<List<GetLanguageDto>> GetDoctorLanguages(Guid userId)
+        
+        [HttpGet("/user-languages")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+        public async Task<List<GetLanguageDto>> GetDoctorLanguages()
         {
-            var languages = await _doctorService.GetLanguageAsync(userId);
+            var languages = await _doctorService.GetLanguageAsync();
             return languages;
         }
 
