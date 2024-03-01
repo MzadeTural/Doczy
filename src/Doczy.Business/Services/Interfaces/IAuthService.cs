@@ -6,8 +6,8 @@ namespace Doczy.Business.Services.Interfaces
 {
     public interface IAuthService
     {
-        public Task<LoginResponseDto> LoginAsync(LoginDto model, int accessTokenLifeTime);
-        public Task<TokenResponseDto> RefreshTokenLoginAsync(string refreshToken);
-        public Task<ResponseDto> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto);
+         Task<LoginResponseDto> LoginAsync(LoginDto model, int accessTokenLifeTime);
+         Task<TokenResponseDto> RefreshTokenLoginAsync(string refreshToken);
+         Task<ResponseDto> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto);
     }
 }

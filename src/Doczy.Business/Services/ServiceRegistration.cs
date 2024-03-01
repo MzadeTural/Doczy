@@ -9,6 +9,7 @@ namespace Doczy.Business.Services
         public static void AddBusinessServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITokenHandler, TokenHandler>();
             services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IFileService, FileService>();
@@ -17,6 +18,8 @@ namespace Doczy.Business.Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IWorkPlaceService, WorkPlaceService>();
+            services.AddScoped<IExperianceService,ExperianceService >();
+
 
         }
     }

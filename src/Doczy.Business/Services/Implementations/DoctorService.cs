@@ -43,7 +43,11 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> AddLanguageAsync( Guid languageId)
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;           
-            ArgumentNullException.ThrowIfNull(languageId);         
+            ArgumentNullException.ThrowIfNull(languageId);
+          var languages= await _doctorLanguageRepository.FindAll(dl => dl.DoctorId == doctorId).ToListAsync();
+           var check= languages.Any(dl=>dl.LanguageId== languageId);
+            if (check)
+                throw new LanguageAlreadyAddedExceptions("The language  is already available for this user");
             var language = await _languageRepository.GetByIdAsync(languageId);         
             if (language is null) throw new LanguageNotFoundException("Language Not Found");
             var userLanguage = new DoctorLanguage()
@@ -58,29 +62,28 @@ namespace Doczy.Business.Services.Implementations
                                      Message: "Language  successfully added"
                                      );
         }
-        public async Task<List<GetLanguageDto>> GetLanguageAsync(Guid userId)
+        public async Task<List<GetLanguageDto>> GetLanguageAsync()
         {
-            ArgumentNullException.ThrowIfNull(userId);
-            //var user = _httpContextAccessor?.HttpContext?.User?.Identity;
-            //if (user?.IsAuthenticated == false)
-            //    throw new AuthorizationException("Get Languages");
-            //var userLanguagesDTO = _mapper.Map<List<LanguageDTO>>(user.Languages.Select(dl => dl.Language));
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            ArgumentNullException.ThrowIfNull(doctorId);         
 
-            var languages = await _doctorLanguageRepository.FindAll(c => c.DoctorId == userId ,tracking: false)
+            var languages = await _doctorLanguageRepository.FindAll(c => c.DoctorId == doctorId, tracking: false)
                                                             .Select(dl => dl.Language)
                                                             .ProjectTo<GetLanguageDto>(_mapper.ConfigurationProvider)
                                                              .ToListAsync();  
             return languages;
         }
-            public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId)
+            public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments( )
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ResponseDto> UpdatePhoneNumberAsync(Guid id, UserPhoneUpdateDto model)
+        public async Task<ResponseDto> UpdatePhoneNumberAsync(UserPhoneUpdateDto model)
         {
-            ArgumentNullException.ThrowIfNull(id);
-            var doct = await _userManager.FindByIdAsync(id.ToString());
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            ArgumentNullException.ThrowIfNull(doctorId);
+
+            var doct = await _userManager.FindByIdAsync(doctorId.ToString());
             if (doct is null) throw new UserNotFoundException("Doctor Not Found");
             doct.PhoneNumber = model.PhoneNumber;
             await _doctorRepository.SaveAsync();

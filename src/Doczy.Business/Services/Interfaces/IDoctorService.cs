@@ -6,10 +6,10 @@ namespace Doczy.Business.Services.Interfaces
 {
     public interface IDoctorService
     {
-        Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments(Guid userId);
-        Task<ResponseDto> UpdatePhoneNumberAsync(Guid id, UserPhoneUpdateDto model);
+        Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments();
+        Task<ResponseDto> UpdatePhoneNumberAsync( UserPhoneUpdateDto model);
         Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId);
         Task<ResponseDto> AddLanguageAsync(Guid languageId);
-         Task<List<GetLanguageDto>> GetLanguageAsync(Guid userId);
+         Task<List<GetLanguageDto>> GetLanguageAsync();
     }
 }
