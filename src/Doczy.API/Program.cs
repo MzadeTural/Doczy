@@ -1,9 +1,10 @@
+using Doczy.API.Extensions;
 using Doczy.Business.Helpers.Settings;
 using Doczy.Business.MappingProfiles;
 using Doczy.Business.Services;
 using Doczy.DataAccess.Repositories;
-using Doczy.DataAccess.Repositories.Implementations;
-using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 
 
@@ -20,11 +21,38 @@ builder.Services.AddBusinessServices();
 builder.Services.AddDataAccesServices();
 builder.Services.AddRouting();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Doczy API", Version = "v1" });
+
+    // Add JWT Authentication to Swagger
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter JWT Bearer token",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer", // must be lower case
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            { securityScheme, Array.Empty<string>() }
+        });
+});
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -32,9 +60,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 
+
+app.UseStaticFiles();
+
+app.AddExceptionHandler();
+
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
