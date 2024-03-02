@@ -10,9 +10,10 @@
         public string? IdCardImageUrl { get; set; }
         public string? DiplomaImageUrl { get; set; }
         public IEnumerable<Experiance>? Experiances { get; set; }
-       
+        public string? AboutDoctor { get; set; }
         public DoctorCategory? DoctorCategory { get; set; }
         public Guid? DoctorCategoryId { get; set; }
+        public bool IsVerified { get; set; }
 
 
     }

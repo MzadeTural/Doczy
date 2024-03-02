@@ -9,6 +9,9 @@ namespace Doczy.Business.MappingProfiles
         public ExperianceMapper()
         {
             CreateMap<CreateExperianceDto, Experiance>().ReverseMap();
+            CreateMap<Experiance, GetExperianceDto>()
+           .ForMember(dest => dest.WorkPlace, opt => opt.MapFrom(src => src.WorkPlace.Name));
+         
         }
     }
 }
