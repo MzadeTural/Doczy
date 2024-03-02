@@ -10,6 +10,7 @@ namespace Doczy.Business.Services.Interfaces
         Task<ResponseDto> UpdatePhoneNumberAsync( UserPhoneUpdateDto model);
         Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId);
         Task<ResponseDto> AddLanguageAsync(Guid languageId);
+        Task<ResponseDto> UpdateCategoryAsync(Guid categoryId);
          Task<List<GetLanguageDto>> GetLanguageAsync();
     }
 }

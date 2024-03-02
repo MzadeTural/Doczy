@@ -4,6 +4,7 @@ using Doczy.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doczy.DataAccess.Migrations
 {
     [DbContext(typeof(DoczyContext))]
-    partial class DoczyContextModelSnapshot : ModelSnapshot
+    [Migration("20240302092055_updateExperianceTable")]
+    partial class updateExperianceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -742,9 +744,6 @@ namespace Doczy.DataAccess.Migrations
                 {
                     b.HasBaseType("Doczy.Core.Entities.Identities.BaseAppUser");
 
-                    b.Property<string>("AboutDoctor")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("DiplomaImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -753,9 +752,6 @@ namespace Doczy.DataAccess.Migrations
 
                     b.Property<string>("IdCardImageUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
 
                     b.HasIndex("DoctorCategoryId");
 
