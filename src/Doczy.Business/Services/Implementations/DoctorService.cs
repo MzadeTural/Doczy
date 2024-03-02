@@ -4,6 +4,7 @@ using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.Exceptions.AuthExceptions;
+using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Exceptions.WorkPlaceExceptions;
@@ -29,7 +30,8 @@ namespace Doczy.Business.Services.Implementations
         private readonly IDoctorLanguageRepository _doctorLanguageRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
-        public DoctorService(UserManager<BaseAppUser> userManager, IWorkPlaceRepository workPlaceRepository, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+        private readonly IDoctorCategoryRepository _categoryRepository;
+        public DoctorService(UserManager<BaseAppUser> userManager, IWorkPlaceRepository workPlaceRepository, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository)
         {
             _userManager = userManager;
             _workPlaceRepository = workPlaceRepository;
@@ -38,6 +40,7 @@ namespace Doczy.Business.Services.Implementations
             _doctorLanguageRepository = doctorLanguageRepository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<ResponseDto> AddLanguageAsync( Guid languageId)
@@ -107,6 +110,23 @@ namespace Doczy.Business.Services.Implementations
                                      StatusCode: HttpStatusCode.OK,
                                      Message: "Work place successfully modified"
                                      );
+        }
+
+        public async Task<ResponseDto> UpdateCategoryAsync(Guid categoryId)
+        {
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            ArgumentNullException.ThrowIfNull(categoryId);
+            var doct = await _doctorRepository.GetByIdAsync(doctorId);
+            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            var catg = _categoryRepository.GetByIdAsync(categoryId);
+            if (catg is null) throw new CategoryNotFoundException("Category Not Found");
+            doct.DoctorCategoryId = categoryId;
+            await _doctorRepository.SaveAsync();
+            return new ResponseDto(
+                                    StatusCode: HttpStatusCode.OK,
+                                    Message: "Category successfully modified"
+                                    );
+         
         }
     }
 }
