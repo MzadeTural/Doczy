@@ -1,4 +1,6 @@
-﻿using Doczy.Business.Services.Implementations;
+﻿using Doczy.Business.HelperServices.Implementations;
+using Doczy.Business.HelperServices.Interfaces;
+using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IWorkPlaceService, WorkPlaceService>();
             services.AddScoped<IExperianceService,ExperianceService >();
+            services.AddScoped<IOTPService,OTPService >();
 
 
         }

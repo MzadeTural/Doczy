@@ -26,10 +26,20 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
 
         public async Task<T> GetByIdAsync(Guid id)     
             => await Table.FindAsync(id);
-          
+
+        public async Task<T> GetUserByEmailOrPhoneNumberAsync(string emailOrPhoneNumber)
+       => await Table.FirstOrDefaultAsync(u => u.Email == emailOrPhoneNumber || u.PhoneNumber == emailOrPhoneNumber);
+        
 
         public async Task<int> SaveAsync()
             => await _context.SaveChangesAsync();
+
+        public bool Update(T user)
+        {
+            var data = Table.Update(user);
+
+            return data.State == EntityState.Modified;
+        }
 
         private IQueryable<T> GetQuery(params Expression<Func<T, object>>[] includes)
         {

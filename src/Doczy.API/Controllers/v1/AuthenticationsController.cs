@@ -1,6 +1,8 @@
 ﻿using Doczy.Business.DTOs.AuthDtos;
+using Doczy.Business.DTOs.Common;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Doczy.API.Controllers.v1
 {
@@ -21,5 +23,21 @@ namespace Doczy.API.Controllers.v1
             var response = await _authService.LoginAsync(loginUserDto, 15);
             return Ok(response);
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordRequestDto model)
+        {
+            var response= await _authService.ForgotPasswordAsync(model);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordDto model)
+        {
+            var response = await _authService.ResetPasswordAsync(model);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+
+        }
+
+
     }
 }
