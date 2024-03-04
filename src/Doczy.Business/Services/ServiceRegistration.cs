@@ -24,6 +24,8 @@ namespace Doczy.Business.Services
             services.AddScoped<IExperianceService,ExperianceService >();
             services.AddScoped<IOTPService,OTPService >();
             services.AddHostedService<ExpiredOTPCleanupService>();
+            //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
+            //services.AddHostedService<OTPCleanupBackgroundService>();
 
 
         }

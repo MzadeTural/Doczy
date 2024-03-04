@@ -41,6 +41,15 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             return data.State == EntityState.Modified;
         }
 
+
+        public async Task<List<T>> GetUsersWithExpiredOTPAsync()
+        {
+            var currentTime = DateTime.UtcNow;
+            return await Table
+                .Where(u => u.OTP != null && u.OTPExpiryDate < currentTime)
+                .ToListAsync();
+        }
+
         private IQueryable<T> GetQuery(params Expression<Func<T, object>>[] includes)
         {
             var query = Table.AsQueryable();
