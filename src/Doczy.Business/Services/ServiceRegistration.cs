@@ -1,4 +1,5 @@
-﻿using Doczy.Business.HelperServices.Implementations;
+﻿using Doczy.Business.HelperServices.BackgroundServices;
+using Doczy.Business.HelperServices.Implementations;
 using Doczy.Business.HelperServices.Interfaces;
 using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
@@ -22,6 +23,9 @@ namespace Doczy.Business.Services
             services.AddScoped<IWorkPlaceService, WorkPlaceService>();
             services.AddScoped<IExperianceService,ExperianceService >();
             services.AddScoped<IOTPService,OTPService >();
+            services.AddHostedService<ExpiredOTPCleanupService>();
+            //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
+            //services.AddHostedService<OTPCleanupBackgroundService>();
 
 
         }
