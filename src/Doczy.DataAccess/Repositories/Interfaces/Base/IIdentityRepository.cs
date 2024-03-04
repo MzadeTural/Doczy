@@ -10,6 +10,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
         Task<T> GetByIdAsync(Guid id);
         Task<T> GetUserByEmailOrPhoneNumberAsync(string emailOrPhoneNumber);
         bool Update(T user);
+        Task<List<T>> GetUsersWithExpiredOTPAsync();
         IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes);
 
     }
