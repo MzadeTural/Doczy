@@ -1,10 +1,5 @@
 ﻿using Doczy.Business.HelperServices.Interfaces;
 using Doczy.Core.Entities.Identities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doczy.Business.HelperServices.Implementations
 {
@@ -18,8 +13,7 @@ namespace Doczy.Business.HelperServices.Implementations
 
         public void SetOTPForUser(BaseAppUser user)
         {
-            user.OTP = GenerateOTP();
-            user.OTPExpireDate = DateTime.UtcNow.AddMinutes(3);  
+            throw new NotImplementedException();
         }
     }
 }

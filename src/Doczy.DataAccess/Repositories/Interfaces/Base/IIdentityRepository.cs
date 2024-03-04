@@ -8,6 +8,8 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
     {
         Task<int> SaveAsync();
         Task<T> GetByIdAsync(Guid id);
+        Task<T> GetUserByEmailOrPhoneNumberAsync(string emailOrPhoneNumber);
+        bool Update(T user);
         IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes);
 
     }

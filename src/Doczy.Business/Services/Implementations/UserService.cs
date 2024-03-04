@@ -27,6 +27,7 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IWorkPlaceRepository _workPlaceRepository;
+        
 
         public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IWorkPlaceRepository workPlaceRepository = null)
         {
@@ -55,14 +56,14 @@ namespace Doczy.Business.Services.Implementations
             doct.DiplomaImageUrl = diplomaFile;
             doct.IdCardImageUrl = idCardFile;
             doct.ProfileImageUrl = "profile-default.png";
-            
+           
 
             IdentityResult result = await _userManager.CreateAsync(doct, model.Password);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(doct, Roles.Doctor.ToString());            
                 string? url = await GetEmailConfirmationLinkAsync(doct);
-                string body = await GetEmailConfirmationTemplate(url);
+                string body = await _mailService.GetEmailTemplateAsync(url, "EmailConfirmation.html");
                 await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });
 
                 var response = new ResponseDto(StatusCode: HttpStatusCode.Created, Message: "Doctor successfully created. To login to your account, please activate your account by clicking on the link sent to your email address.");
@@ -91,14 +92,7 @@ namespace Doczy.Business.Services.Implementations
             }
             return url;
         }
-        private async Task<string> GetEmailConfirmationTemplate(string url)
-        {
-            string path = Path.Combine(_environment.WebRootPath, "uploads","templates", "EmailConfirmation.html");
-            using StreamReader streamReader = new StreamReader(path);
-            string result = await streamReader.ReadToEndAsync();
-            var body = result.Replace("[Link]", url);
-            return body;
-        }
+       
 
         public async Task UpdateRefreshToken(string refreshToken, BaseAppUser user, DateTime accessTokenEndDate, int refreshTokenLifeTime)
         {
