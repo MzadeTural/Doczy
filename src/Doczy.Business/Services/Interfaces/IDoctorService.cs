@@ -7,6 +7,7 @@ namespace Doczy.Business.Services.Interfaces
     public interface IDoctorService
     {
         Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments();
+        Task<List<GetDoctorsDto>> GetFilterDoctors(GetDoctorFilterDto model);
         Task<ResponseDto> UpdatePhoneNumberAsync( UserPhoneUpdateDto model);
         Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId);
         Task<ResponseDto> AddLanguageAsync(Guid languageId);

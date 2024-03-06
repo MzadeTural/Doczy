@@ -30,6 +30,8 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<FieldOfStudy> FieldOfStudies{ get; set; }
         public DbSet<Education> Educations{ get; set; }
         public DbSet<Experiance> Experiances{ get; set; }
+        public DbSet<DoctorRating> DoctorRatings{ get; set; }
+        public DbSet<FavoriteDoctor> FavoriteDoctors{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +48,31 @@ namespace Doczy.DataAccess.Contexts
             .WithMany(c=>c.Appointments)
             .HasForeignKey(r => r.PatientId)
             .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<DoctorRating>()
+            .HasOne(r => r.Doctor)
+            .WithMany(c => c.Ratings)
+            .HasForeignKey(r => r.DoctorId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<DoctorRating>()
+            .HasOne(r => r.Patient)
+            .WithMany(c => c.Ratings)
+            .HasForeignKey(r => r.PatientId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<FavoriteDoctor>()
+           .HasOne(r => r.Patient)
+           .WithMany(c => c.FavoriteDoctors)
+           .HasForeignKey(r => r.PatientId)
+           .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<FavoriteDoctor>()
+            .HasOne(r => r.Doctor)
+            .WithMany(c => c.FavoriteDoctors)
+            .HasForeignKey(r => r.DoctorId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)

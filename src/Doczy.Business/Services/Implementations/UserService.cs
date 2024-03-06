@@ -27,7 +27,7 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IWorkPlaceRepository _workPlaceRepository;
-        
+
 
         public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IWorkPlaceRepository workPlaceRepository = null)
         {
@@ -52,16 +52,17 @@ namespace Doczy.Business.Services.Implementations
             string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
             string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/users/doctors/idcard/");
             var doct = _mapper.Map<DoctorAppUser>(model);
-            doct.CreatedAt= DateTime.Now;   
+            doct.CreatedAt = DateTime.Now;
             doct.DiplomaImageUrl = diplomaFile;
             doct.IdCardImageUrl = idCardFile;
             doct.ProfileImageUrl = "profile-default.png";
-           
+            doct.IsVerified = false;
+
 
             IdentityResult result = await _userManager.CreateAsync(doct, model.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(doct, Roles.Doctor.ToString());            
+                await _userManager.AddToRoleAsync(doct, Roles.Doctor.ToString());
                 string? url = await GetEmailConfirmationLinkAsync(doct);
                 string body = await _mailService.GetEmailTemplateAsync(url, "EmailConfirmation.html");
                 await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });
@@ -79,7 +80,7 @@ namespace Doczy.Business.Services.Implementations
             string? url = string.Empty;
             if (httpContext is not null)
             {
-            //var sessionValue = httpContext.Session.GetString("SessionKey");
+                //var sessionValue = httpContext.Session.GetString("SessionKey");
                 HttpRequest request = httpContext.Request;
                 url = _linkGenerator.GetUriByAction(
                    httpContext,
@@ -92,7 +93,7 @@ namespace Doczy.Business.Services.Implementations
             }
             return url;
         }
-       
+
 
         public async Task UpdateRefreshToken(string refreshToken, BaseAppUser user, DateTime accessTokenEndDate, int refreshTokenLifeTime)
         {
@@ -106,6 +107,25 @@ namespace Doczy.Business.Services.Implementations
             }
 
             throw new UserNotFoundException("User cannot be null");
+        }
+
+        public async Task<ResponseDto> CreatePatientAsync(CreatePatientDto model)
+        {
+            var doct = _mapper.Map<PatientAppUser>(model);
+            doct.CreatedAt = DateTime.Now;
+            doct.IsVerified = false;
+            IdentityResult result = await _userManager.CreateAsync(doct, model.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(doct, Roles.Doctor.ToString());
+                string? url = await GetEmailConfirmationLinkAsync(doct);
+                string body = await _mailService.GetEmailTemplateAsync(url, "EmailConfirmation.html");
+                await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });
+                var response = new ResponseDto(StatusCode: HttpStatusCode.Created, Message: "Patient successfully created. To login to your account, please activate your account by clicking on the link sent to your email address.");
+                return response;
+            }
+
+            throw new UserCreateFailedException(result.Errors);
         }
     }
 }
