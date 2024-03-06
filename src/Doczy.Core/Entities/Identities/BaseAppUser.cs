@@ -19,6 +19,7 @@ namespace Doczy.Core.Entities.Identities
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenEndDate { get; set; }
         public string? OTP { get; set; }
-        public DateTime? OTPExpiryDate { get; set; }      
+        public DateTime? OTPExpiryDate { get; set; }
+        public bool IsVerified { get; set; }
     }
 }

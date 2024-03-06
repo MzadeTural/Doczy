@@ -4,6 +4,7 @@ using Doczy.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Doczy.DataAccess.Migrations
 {
     [DbContext(typeof(DoczyContext))]
-    partial class DoczyContextModelSnapshot : ModelSnapshot
+    [Migration("20240305114111_userMig")]
+    partial class userMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,40 +194,6 @@ namespace Doczy.DataAccess.Migrations
                     b.ToTable("DoctorLanguage");
                 });
 
-            modelBuilder.Entity("Doczy.Core.Entities.DoctorRating", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Review")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("DoctorRatings");
-                });
-
             modelBuilder.Entity("Doczy.Core.Entities.Education", b =>
                 {
                     b.Property<Guid>("Id")
@@ -328,30 +296,6 @@ namespace Doczy.DataAccess.Migrations
                     b.HasIndex("WorkPlaceId");
 
                     b.ToTable("Experiances");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.FavoriteDoctor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("FavoriteDoctors");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.FieldOfStudy", b =>
@@ -888,23 +832,6 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Language");
                 });
 
-            modelBuilder.Entity("Doczy.Core.Entities.DoctorRating", b =>
-                {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
-                        .WithMany("Ratings")
-                        .HasForeignKey("DoctorId")
-                        .IsRequired();
-
-                    b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", "Patient")
-                        .WithMany("Ratings")
-                        .HasForeignKey("PatientId")
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
-                });
-
             modelBuilder.Entity("Doczy.Core.Entities.Education", b =>
                 {
                     b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
@@ -955,23 +882,6 @@ namespace Doczy.DataAccess.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("WorkPlace");
-                });
-
-            modelBuilder.Entity("Doczy.Core.Entities.FavoriteDoctor", b =>
-                {
-                    b.HasOne("Doczy.Core.Entities.Identities.DoctorAppUser", "Doctor")
-                        .WithMany("FavoriteDoctors")
-                        .HasForeignKey("DoctorId")
-                        .IsRequired();
-
-                    b.HasOne("Doczy.Core.Entities.Identities.PatientAppUser", "Patient")
-                        .WithMany("FavoriteDoctors")
-                        .HasForeignKey("PatientId")
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Doczy.Core.Entities.Identities.BaseAppUser", b =>
@@ -1117,11 +1027,7 @@ namespace Doczy.DataAccess.Migrations
 
                     b.Navigation("Experiances");
 
-                    b.Navigation("FavoriteDoctors");
-
                     b.Navigation("Languages");
-
-                    b.Navigation("Ratings");
 
                     b.Navigation("Services");
                 });
@@ -1129,10 +1035,6 @@ namespace Doczy.DataAccess.Migrations
             modelBuilder.Entity("Doczy.Core.Entities.Identities.PatientAppUser", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("FavoriteDoctors");
-
-                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

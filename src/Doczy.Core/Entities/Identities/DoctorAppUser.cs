@@ -13,7 +13,9 @@
         public string? AboutDoctor { get; set; }
         public DoctorCategory? DoctorCategory { get; set; }
         public Guid? DoctorCategoryId { get; set; }
-        public bool IsVerified { get; set; }
+        public IEnumerable<DoctorRating> Ratings { get; set; }
+        public IEnumerable<FavoriteDoctor> FavoriteDoctors { get; set; }
+
 
 
     }
