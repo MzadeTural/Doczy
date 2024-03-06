@@ -52,7 +52,7 @@ namespace Doczy.Business.Services.Implementations
             if (check)
                 throw new LanguageAlreadyAddedExceptions("The language  is already available for this user");
             var language = await _languageRepository.GetByIdAsync(languageId);         
-            if (language is null) throw new LanguageNotFoundException("Language Not Found");
+            if (language is null) throw new LanguageNotFoundException("Lnguage Not Faound");
             var userLanguage = new DoctorLanguage()
             {
                 DoctorId = doctorId,
