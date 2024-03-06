@@ -5,6 +5,7 @@
         Guid? CategoryId,
         Guid? ServiceTypeId,
         double? MinPrice,
-        double? MaxPrice
+        double? MaxPrice,
+        Guid workPlaceId
         );
 }

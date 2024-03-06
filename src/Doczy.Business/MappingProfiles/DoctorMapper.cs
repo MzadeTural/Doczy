@@ -16,6 +16,9 @@ namespace Doczy.Business.MappingProfiles
                     .ReverseMap();
             CreateMap<DoctorAppUser, GetDoctorsDto>()
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.DoctorCategory.Name))
+                .ForMember(dest => dest.Favourite, opt => opt.MapFrom(src => src.FavoriteDoctors.Count()))
+                .ForMember(dest => dest.Raiting, opt => opt.MapFrom(src => src.Ratings.Average(r => r.Rating)))
+
                    .ReverseMap();
 
         }
