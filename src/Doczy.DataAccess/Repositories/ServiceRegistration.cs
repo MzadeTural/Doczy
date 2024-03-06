@@ -37,8 +37,9 @@ namespace Doczy.DataAccess.Repositories
             services.AddScoped<IDoctorLanguageRepository,DoctorLanguageRepository>();
             services.AddScoped<IExperianceRepository,ExperianceRepository>();
             services.AddScoped<IBaseAppUserRepository,BaseAppUserRepository>();
-         
-           
+            services.AddScoped<IUnivercityRepository,UnivercityRepository>();
+
+
 
 
         }

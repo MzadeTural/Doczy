@@ -11,10 +11,23 @@
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Doczy.DataAccess\Doczy.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Exceptions\UnivercityExceptions\" />
+    <None Remove="DTOs\UnivercityDtos\" />
+    <None Remove="Validations\" />
+    <None Remove="Validations\UnivercityValidation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\UnivercityExceptions\" />
+    <Folder Include="DTOs\UnivercityDtos\" />
+    <Folder Include="Validations\" />
+    <Folder Include="Validations\UnivercityValidation\" />
+  </ItemGroup>
 </Project>

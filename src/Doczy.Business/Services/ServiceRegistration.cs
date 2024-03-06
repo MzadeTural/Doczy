@@ -23,6 +23,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IWorkPlaceService, WorkPlaceService>();
             services.AddScoped<IExperianceService,ExperianceService >();
             services.AddScoped<IOTPService,OTPService >();
+            services.AddScoped<IUnivercityService,UnivercityService>();
             services.AddHostedService<ExpiredOTPCleanupService>();
             //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
             //services.AddHostedService<OTPCleanupBackgroundService>();
