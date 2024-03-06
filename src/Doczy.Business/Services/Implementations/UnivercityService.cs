@@ -27,7 +27,11 @@ namespace Doczy.Business.Services.Implementations
             Univercity newUnivercity = _mapper.Map<Univercity>(model);
             var isExist = _univercityRepository.FindAll(x => x.Name == newUnivercity.Name).FirstOrDefault();
 
-            if(isExist == null)
+            if (isExist != null)
+            {
+                throw new UnivercityAlreadyExistExceptions("Univercity name is exist");
+            }
+            else
             {
                 var result = await _univercityRepository.CreateAsync(newUnivercity);
                 await _univercityRepository.SaveAsync();
@@ -36,7 +40,6 @@ namespace Doczy.Business.Services.Implementations
                          Message: result ? "Univercity successfully created" : "Something went wrong"
                          );
             }
-            else throw new UnivercityAlreadyExistExceptions("Univercity name is exist");
         }
 
         public async Task<ResponseDto> UpdateUnivercityAsync(Guid id, UpdateUnivercityDto model)
