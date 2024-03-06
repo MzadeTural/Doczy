@@ -62,5 +62,7 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             }
             return query;
         }
+
+       
     }
 }
