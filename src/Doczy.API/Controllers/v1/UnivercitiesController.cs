@@ -3,6 +3,7 @@ using System.Net;
 using Doczy.Business.DTOs.UnivercityDtos;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Doczy.API.Controllers.v1
 {
@@ -16,19 +17,22 @@ namespace Doczy.API.Controllers.v1
         {
             _univercityService = univercityService;
         }
-        [Route("/create-univercity")]
+        [HttpPost("create-univercity")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> CreateUnivercity([FromForm] CreateUnivercityDto createDoctorDto)
         {
             var response = await _univercityService.CreateUnivercityAsync(createDoctorDto);
-            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+            return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
-        [Route("/update-univercity")]
+        [HttpPatch("update-univercity/{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> UpdateUnivercity(Guid id,[FromForm] UpdateUnivercityDto updateDoctorDto)
         {
             var response = await _univercityService.UpdateUnivercityAsync(id, updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [Route("/delete-univercity")]
+        [HttpPut("delete-univercity/{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> DeleteUnivercity(Guid id)
         {
             var response = await _univercityService.DeleteUnivercityAsync(id);

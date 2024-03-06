@@ -59,7 +59,7 @@ namespace Doczy.Business.Services.Implementations
             var result = _univercityRepository.Update(db);
             await _univercityRepository.SaveAsync();
             return new ResponseDto(
-                         StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
                          Message: result ? "Univercity successfully updated" : "Something went wrong"
                          );
         }
@@ -72,7 +72,7 @@ namespace Doczy.Business.Services.Implementations
             var result = _univercityRepository.Update(db);
             await _univercityRepository.SaveAsync();
             return new ResponseDto(
-                         StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
                          Message: result ? "Univercity successfully deleted" : "Something went wrong"
                          );
         }

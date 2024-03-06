@@ -2,7 +2,9 @@ using Doczy.API.Extensions;
 using Doczy.Business.Helpers.Settings;
 using Doczy.Business.MappingProfiles;
 using Doczy.Business.Services;
+using Doczy.Business.Validations.UnivercityValidation;
 using Doczy.DataAccess.Repositories;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
@@ -50,6 +52,7 @@ builder.Services.AddSwaggerGen(c =>
             { securityScheme, Array.Empty<string>() }
         });
 });
+builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CreateUnivercityDtoValidation>());
 
 var app = builder.Build();
 
