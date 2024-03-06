@@ -7,8 +7,8 @@ namespace Doczy.Business.Services.Interfaces
 	public interface IUnivercityService
 	{
         Task<ResponseDto> CreateUnivercityAsync(CreateUnivercityDto model);
-        Task<ResponseDto> CreateUnivercityAsync(Guid id, UpdateUnivercityDto model);
-        Task<ResponseDto> CreateUnivercityAsync(Guid id);
+        Task<ResponseDto> UpdateUnivercityAsync(Guid id, UpdateUnivercityDto model);
+        Task<ResponseDto> DeleteUnivercityAsync(Guid id);
     }
 }
 
