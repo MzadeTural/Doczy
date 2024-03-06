@@ -7,6 +7,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
     public interface IIdentityRepository<T> where T : BaseAppUser
     {
         Task<int> SaveAsync();
+
         Task<T> GetByIdAsync(Guid id);
         Task<T> GetUserByEmailOrPhoneNumberAsync(string emailOrPhoneNumber);
         bool Update(T user);
