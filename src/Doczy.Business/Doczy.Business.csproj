@@ -17,4 +17,12 @@
     <ProjectReference Include="..\Doczy.DataAccess\Doczy.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Exceptions\UnivercityExceptions\" />
+    <None Remove="DTOs\UnivercityDtos\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\UnivercityExceptions\" />
+    <Folder Include="DTOs\UnivercityDtos\" />
+  </ItemGroup>
 </Project>
