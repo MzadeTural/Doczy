@@ -23,9 +23,11 @@
     <None Remove="DTOs\UnivercityDtos\" />
     <None Remove="Validations\" />
     <None Remove="Validations\UnivercityValidation\" />
+    <None Remove="DTOs\EducationDtos\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\UnivercityExceptions\" />
     <Folder Include="DTOs\UnivercityDtos\" />
+    <Folder Include="DTOs\EducationDtos\" />
   </ItemGroup>
 </Project>
