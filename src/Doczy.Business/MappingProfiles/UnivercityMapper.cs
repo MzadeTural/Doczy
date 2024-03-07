@@ -12,6 +12,7 @@ namespace Doczy.Business.MappingProfiles
 		{
             CreateMap<CreateUnivercityDto, Univercity>().ReverseMap();
             CreateMap<UpdateUnivercityDto, Univercity>().ReverseMap();
+            CreateMap<Univercity, GetUnivercityDto>().ReverseMap();
         }
 	}
 }
