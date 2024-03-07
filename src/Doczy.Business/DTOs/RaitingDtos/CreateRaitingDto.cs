@@ -1,6 +1,13 @@
-﻿namespace Doczy.Business.DTOs.RaitingDtos
+﻿using Doczy.Core.Entities.Identities;
+
+namespace Doczy.Business.DTOs.RaitingDtos
 {
-    public class CreateRaitingDto
-    {
-    }
+    public record CreateRaitingDto
+    (
+         int Rating,// Rating out of 5
+         string Review ,
+         Guid DoctorId 
+       
+        
+    );
 }
