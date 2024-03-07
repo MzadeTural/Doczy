@@ -27,7 +27,5 @@
   <ItemGroup>
     <Folder Include="Exceptions\UnivercityExceptions\" />
     <Folder Include="DTOs\UnivercityDtos\" />
-    <Folder Include="Validations\" />
-    <Folder Include="Validations\UnivercityValidation\" />
   </ItemGroup>
 </Project>
