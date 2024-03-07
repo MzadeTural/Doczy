@@ -8,8 +8,8 @@ namespace Doczy.Business.Validations.UnivercityValidation
 	{
 		public CreateUnivercityDtoValidation()
 		{
-            RuleFor(x => x.Name).NotEmpty().NotNull().MaximumLength(50);
-			RuleFor(x => x.IconUrl).NotEmpty().NotNull().MaximumLength(150);
+            RuleFor(x => x.Name).MaximumLength(50);
+			RuleFor(x => x.IconUrl).MaximumLength(150);
 		}
 	}
 }
