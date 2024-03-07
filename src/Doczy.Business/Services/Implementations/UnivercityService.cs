@@ -8,10 +8,11 @@ using Doczy.Business.Exceptions.UnivercityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Doczy.Business.Services.Implementations
 {
-	public class UnivercityService:IUnivercityService
+    public class UnivercityService : IUnivercityService
 	{
         private IMapper _mapper;
         private IUnivercityRepository _univercityRepository;
@@ -20,6 +21,13 @@ namespace Doczy.Business.Services.Implementations
         {
             _mapper = mapper;
             _univercityRepository = univercityRepository;
+        }
+
+        public async Task<List<GetUnivercityDto>> GetUnivercitiesAsync()
+        {
+            var dbUnivercities = await _univercityRepository.GetAll().ToListAsync();
+            List<GetUnivercityDto> model = _mapper.Map<List<GetUnivercityDto>>(dbUnivercities);
+            return model;
         }
 
         public async Task<ResponseDto> CreateUnivercityAsync(CreateUnivercityDto model)
@@ -76,8 +84,6 @@ namespace Doczy.Business.Services.Implementations
                          Message: result ? "Univercity successfully deleted" : "Something went wrong"
                          );
         }
-
-        
     }
 }
 

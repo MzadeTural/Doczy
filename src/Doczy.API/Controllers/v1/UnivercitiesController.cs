@@ -17,6 +17,13 @@ namespace Doczy.API.Controllers.v1
         {
             _univercityService = univercityService;
         }
+        [HttpPost("get-univercity")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetUnivercity()
+        {
+            var response = await _univercityService.GetUnivercitiesAsync();
+            return Ok(response);
+        }
         [HttpPost("create-univercity")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> CreateUnivercity([FromForm] CreateUnivercityDto createDoctorDto)
