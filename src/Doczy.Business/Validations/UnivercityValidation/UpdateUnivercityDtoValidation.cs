@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Doczy.Business.Validations.UnivercityValidation
 {
-	public class CreateUnivercityDtoValidation : AbstractValidator<CreateUnivercityDto>
+	public class UpdateUnivercityDtoValidation : AbstractValidator<CreateUnivercityDto>
 	{
-		public CreateUnivercityDtoValidation()
+		public UpdateUnivercityDtoValidation()
 		{
             RuleFor(x => x.Name).MaximumLength(50);
 			RuleFor(x => x.IconUrl).MaximumLength(150);
