@@ -13,6 +13,7 @@ using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -21,24 +22,23 @@ namespace Doczy.Business.Services.Implementations
     public class DoctorService : IDoctorService
     {
         private readonly UserManager<BaseAppUser> _userManager;
-
-        private readonly IWorkPlaceRepository _workPlaceRepository;
         private readonly IDoctorRepository _doctorRepository;
         private readonly ILanguageRepository _languageRepository;
         private readonly IDoctorLanguageRepository _doctorLanguageRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IDoctorCategoryRepository _categoryRepository;
-        public DoctorService(UserManager<BaseAppUser> userManager, IWorkPlaceRepository workPlaceRepository, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository)
+       
+        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository)
         {
             _userManager = userManager;
-            _workPlaceRepository = workPlaceRepository;
             _doctorRepository = doctorRepository;
             _languageRepository = languageRepository;
             _doctorLanguageRepository = doctorLanguageRepository;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
+           
         }
 
         public async Task<ResponseDto> AddLanguageAsync(Guid languageId)
@@ -121,7 +121,7 @@ namespace Doczy.Business.Services.Implementations
             doct.DoctorCategoryId = categoryId;
             await _doctorRepository.SaveAsync();
             return new ResponseDto(
-                                    StatusCode: HttpStatusCode.OK,
+                                    StatusCode: HttpStatusCode.NoContent,
                                     Message: "Category successfully modified"
                                     );
 
@@ -144,9 +144,6 @@ namespace Doczy.Business.Services.Implementations
             return doctors;
         }
 
-        public Task<ResponseDto> RaitingDoctor(CreateRaitingDto model)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }
