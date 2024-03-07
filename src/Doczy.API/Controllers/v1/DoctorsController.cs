@@ -16,6 +16,7 @@ namespace Doczy.API.Controllers.v1
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
     public class DoctorsController : ControllerBase
     {
 
@@ -29,6 +30,7 @@ namespace Doczy.API.Controllers.v1
             _doctorService = doctorService;
             _experianceService = experianceService;
         }
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] CreateDoctorDto createDoctorDto)
         {
@@ -52,29 +54,26 @@ namespace Doczy.API.Controllers.v1
         }
 
 
-        [HttpPatch("phone")]
+        [HttpPatch("update-phone")]
         public async Task<IActionResult> UpdatePhoneNumber([FromForm] UserPhoneUpdateDto model)
         {
             var response = await _doctorService.UpdatePhoneNumberAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [Authorize]
-        [HttpPatch("{languageId}/add-language")]
+        [HttpPost("add-language/{languageId}")]
         public async Task<IActionResult> AddLanguage(Guid languageId)
         {
             var response = await _doctorService.AddLanguageAsync(languageId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [Authorize]
-        [HttpPatch("{categoryId}/add-category")]
+        [HttpPatch("add-category/{categoryId}")]
         public async Task<IActionResult> UpdateCategory(Guid categoryId)
         {
             var response = await _doctorService.UpdateCategoryAsync(categoryId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
-        [HttpPost("experiance")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+        [HttpPost("create-experiance")]
         public async Task<IActionResult> AddExperiance([FromForm] CreateExperianceDto createExperianceDto)
         {
             var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
@@ -82,32 +81,11 @@ namespace Doczy.API.Controllers.v1
         }
         
         [HttpGet("languages")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         public async Task<List<GetLanguageDto>> GetDoctorLanguages()
         {
             var languages = await _doctorService.GetLanguageAsync();
             return languages;
         }
-
-        [HttpPost("test")]
-        public async Task<string> test(  )
-        {
-           
-                string userId = "0a456e14-dc29-442e-60c5-08dc371121a0";
-            string secretKey = "08a5d4e8-86c3-4780-9761-318f3349b3ae";
-
-                string data = userId;
-                byte[] keyBytes = Encoding.UTF8.GetBytes(secretKey);
-                byte[] dataBytes = Encoding.UTF8.GetBytes(data);
-
-                using (var hmac = new HMACSHA256(keyBytes))
-                {
-                    byte[] hashBytes = hmac.ComputeHash(dataBytes);
-                    string token = Convert.ToBase64String(hashBytes);
-                    return token;
-                }                       
-        }
-        
 
         }
 }
