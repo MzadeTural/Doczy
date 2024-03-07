@@ -36,7 +36,7 @@ namespace Doczy.API.Controllers.v1
 
             return StatusCode((int)response.StatusCode, response.Message);
         }
-        [HttpGet("/doctor-appointments")]
+        [HttpGet("appointments")]
         public async Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments()
         {
             var appointments = await _doctorService.GetDoctorAppointments();
@@ -44,7 +44,7 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<GetDoctorsDto>>> FilterDoctors(GetDoctorFilterDto model)
+        public async Task<ActionResult<IEnumerable<GetDoctorsDto>>> FilterDoctors([FromForm] GetDoctorFilterDto model)
         {
             var response = await _doctorService.GetFilterDoctors(model);
             return Ok(response);
@@ -52,7 +52,7 @@ namespace Doczy.API.Controllers.v1
         }
 
 
-        [HttpPatch("/phone")]
+        [HttpPatch("phone")]
         public async Task<IActionResult> UpdatePhoneNumber([FromForm] UserPhoneUpdateDto model)
         {
             var response = await _doctorService.UpdatePhoneNumberAsync(model);
@@ -81,7 +81,7 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
         
-        [HttpGet("/user-languages")]
+        [HttpGet("languages")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         public async Task<List<GetLanguageDto>> GetDoctorLanguages()
         {

@@ -11,7 +11,6 @@ namespace Doczy.Core.Entities
         public DateTime Date { get; set; }
         public Guid DoctorId { get; set; }
         public DoctorAppUser Doctor { get; set; }
-
         public Guid PatientId { get; set; }
         public PatientAppUser Patient { get; set; }
     }

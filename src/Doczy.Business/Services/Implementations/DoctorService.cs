@@ -3,15 +3,13 @@ using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
-using Doczy.Business.Exceptions.AuthExceptions;
+using Doczy.Business.DTOs.RaitingDtos;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
-using Doczy.Business.Exceptions.WorkPlaceExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
-using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -43,15 +41,15 @@ namespace Doczy.Business.Services.Implementations
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<ResponseDto> AddLanguageAsync( Guid languageId)
+        public async Task<ResponseDto> AddLanguageAsync(Guid languageId)
         {
-            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;           
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             ArgumentNullException.ThrowIfNull(languageId);
-          var languages= await _doctorLanguageRepository.FindAll(dl => dl.DoctorId == doctorId).ToListAsync();
-           var check= languages.Any(dl=>dl.LanguageId== languageId);
+            var languages = await _doctorLanguageRepository.FindAll(dl => dl.DoctorId == doctorId).ToListAsync();
+            var check = languages.Any(dl => dl.LanguageId == languageId);
             if (check)
                 throw new LanguageAlreadyAddedExceptions("The language  is already available for this user");
-            var language = await _languageRepository.GetByIdAsync(languageId);         
+            var language = await _languageRepository.GetByIdAsync(languageId);
             if (language is null) throw new LanguageNotFoundException("Lnguage Not Faound");
             var userLanguage = new DoctorLanguage()
             {
@@ -68,15 +66,15 @@ namespace Doczy.Business.Services.Implementations
         public async Task<List<GetLanguageDto>> GetLanguageAsync()
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
-            ArgumentNullException.ThrowIfNull(doctorId);         
+            ArgumentNullException.ThrowIfNull(doctorId);
 
             var languages = await _doctorLanguageRepository.FindAll(c => c.DoctorId == doctorId, tracking: false)
                                                             .Select(dl => dl.Language)
                                                             .ProjectTo<GetLanguageDto>(_mapper.ConfigurationProvider)
-                                                             .ToListAsync();  
+                                                             .ToListAsync();
             return languages;
         }
-            public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments( )
+        public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments()
         {
             throw new NotImplementedException();
         }
@@ -126,24 +124,29 @@ namespace Doczy.Business.Services.Implementations
                                     StatusCode: HttpStatusCode.OK,
                                     Message: "Category successfully modified"
                                     );
-         
+
         }
 
         public async Task<List<GetDoctorsDto>> GetFilterDoctors(GetDoctorFilterDto model)
         {
-            var doctors = await _doctorRepository.FindAll(u => u.DoctorCategoryId == model.CategoryId 
+            var doctors = await _doctorRepository.FindAll(u => u.DoctorCategoryId == model.CategoryId
                                                            && u.Services.Any(s => s.ServiceTypeId == model.ServiceTypeId
                                                            && u.Experiances.Any(e => e.currentlyWorking && e.WorkPlaceId == model.workPlaceId)
-                                                           && s.Price >= model.MinPrice && s.Price <= model.MinPrice), 
-                                                           tracking: false, 
+                                                           && s.Price >= model.MinPrice && s.Price <= model.MinPrice),
+                                                           tracking: false,
                                                            d => d.Services,
-                                                           d=>d.FavoriteDoctors,
-                                                           d=>d.Ratings,
-                                                           d=>d.Experiances,
-                                                           d=>d.DoctorCategory
+                                                           d => d.FavoriteDoctors,
+                                                           d => d.Ratings,
+                                                           d => d.Experiances,
+                                                           d => d.DoctorCategory
                                                            ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
                                                            .ToListAsync();
             return doctors;
+        }
+
+        public Task<ResponseDto> RaitingDoctor(CreateRaitingDto model)
+        {
+            throw new NotImplementedException();
         }
     }
 }
