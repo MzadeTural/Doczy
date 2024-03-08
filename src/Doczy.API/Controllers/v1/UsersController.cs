@@ -24,6 +24,12 @@ namespace Doczy.API.Controllers.v1
             var response = await _authService.ConfirmEmailAsync(confirmEmailDto);
             return StatusCode((int)response.StatusCode, response.Message);
         }
+        [HttpPost("refresh-token-login")]
+        public async Task<IActionResult> RefreshTokenLogin(string refreshToken)
+        {
+            var response = await _authService.RefreshTokenLoginAsync(refreshToken);
+            return Ok(response);
+        }
 
         [HttpPost("createrole")]
 
