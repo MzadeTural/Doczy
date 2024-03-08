@@ -38,6 +38,13 @@ namespace Doczy.API.Controllers.v1
 
             return StatusCode((int)response.StatusCode, response.Message);
         }
+
+        [HttpGet("")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllDoctors()
+        {
+            return Ok(await _doctorService.GetDoctors());
+        }
         [HttpGet("appointments")]
         public async Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments()
         {

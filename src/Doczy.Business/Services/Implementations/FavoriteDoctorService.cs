@@ -36,7 +36,7 @@ namespace Doczy.Business.Services.Implementations
             await _favoriteDoctorRepository.SaveAsync();
             return new ResponseDto(
                        StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
-                       Message: result ? "Favourit successfully created" : "Something went wrong"
+                       Message: result ? "Favourite successfully created" : "Something went wrong"
                        );
         }
     }

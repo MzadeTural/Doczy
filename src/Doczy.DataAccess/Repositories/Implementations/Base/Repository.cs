@@ -37,7 +37,7 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             query = !tracking ? query.AsNoTracking() : query;
             return query;
         }
-
+      
         public IQueryable<T> FindAllPaginate(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, bool tracking = true, params Expression<Func<T, object>>?[] includes)
         {
             var query = GetQuery(includes).Where(expression);

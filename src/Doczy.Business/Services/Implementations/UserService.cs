@@ -111,16 +111,17 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreatePatientAsync(CreatePatientDto model)
         {
-            var doct = _mapper.Map<PatientAppUser>(model);
-            doct.CreatedAt = DateTime.Now;
-            doct.IsVerified = false;
-            IdentityResult result = await _userManager.CreateAsync(doct, model.Password);
+            var user = _mapper.Map<PatientAppUser>(model);
+            user.CreatedAt = DateTime.Now;
+            user.ProfileImageUrl = "profile-default.png";
+            user.IsVerified = true;
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(doct, Roles.Doctor.ToString());
-                string? url = await GetEmailConfirmationLinkAsync(doct);
+                await _userManager.AddToRoleAsync(user, Roles.Patient.ToString());
+                string? url = await GetEmailConfirmationLinkAsync(user);
                 string body = await _mailService.GetEmailTemplateAsync(url, "EmailConfirmation.html");
-                await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = doct.Email, Subject = "Doczy email confirmation for activate account", Body = body });
+                await _mailService.SendEmailAsync(new MailRequestDto { ToEmail = user.Email, Subject = "Doczy email confirmation for activate account", Body = body });
                 var response = new ResponseDto(StatusCode: HttpStatusCode.Created, Message: "Patient successfully created. To login to your account, please activate your account by clicking on the link sent to your email address.");
                 return response;
             }
