@@ -4,6 +4,7 @@ using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.RaitingDtos;
+using Doczy.Business.Enums;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -144,6 +145,15 @@ namespace Doczy.Business.Services.Implementations
             return doctors;
         }
 
-       
+        public async Task<List<GetDoctorsDto>> GetDoctors()
+        {
+            var doctors = await _doctorRepository.GetAll(  tracking: false,
+                                                           d => d.FavoriteDoctors,
+                                                           d => d.Ratings,
+                                                           d => d.DoctorCategory
+                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
+                                                           .ToListAsync();
+            return doctors;
+        }
     }
 }

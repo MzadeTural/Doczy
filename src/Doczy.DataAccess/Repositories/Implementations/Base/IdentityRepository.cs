@@ -3,6 +3,7 @@ using Doczy.DataAccess.Contexts;
 using Doczy.DataAccess.Repositories.Interfaces.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Linq.Expressions;
 
 namespace Doczy.DataAccess.Repositories.Implementations.Base
@@ -63,6 +64,11 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             return query;
         }
 
-       
+        public IQueryable<T> GetAll(bool tracking = true, params Expression<Func<T, object>>?[] includes)
+        {
+            var query = GetQuery(includes);
+            query = !tracking ? query.AsNoTracking() : query;
+            return query;
+        }
     }
 }
