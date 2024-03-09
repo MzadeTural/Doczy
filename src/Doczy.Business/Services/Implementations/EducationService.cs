@@ -3,6 +3,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.EducationDtos;
+using Doczy.Business.Exceptions.EducationExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
@@ -22,13 +23,14 @@ namespace Doczy.Business.Services.Implementations
         }
         public async Task<List<EducationDto>> GetAllEducationsAsync(Guid doctorId)
         {
-            var mod= await _educationRepository.FindAll(x => x.DoctorId == doctorId,
+           var model = await _educationRepository.FindAll(x => x.DoctorId == doctorId && !x.IsDeleted,
                                                                       tracking:false,
                                                                       c=>c.Univercity,
                                                                       c=>c.FieldOfStudy,
                                                                       c=>c.UnivercityDegree).ProjectTo<EducationDto>(_mapper.ConfigurationProvider)
                                                                       .ToListAsync();
-            return mod;
+            if(model is null) throw new EducationNotFoundException("Not Found Education");
+            else return model;
         }
 
         public async  Task<ResponseDto> CreateEducationAsync(CreateEducationDto model)
@@ -39,6 +41,29 @@ namespace Doczy.Business.Services.Implementations
             return new ResponseDto(
                 StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
                 Message: result ? "Education successfully created" : "Something went wrong");
+
+        }
+        public async Task<ResponseDto> UpdateEducation(Guid id, UpdateEducationDto model)
+        {
+            var dbEducation = await _educationRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (dbEducation is null) throw new EducationNotFoundException("Not Found Education");
+            var updatedEducation = _mapper.Map<Education>(model);
+            var result = _educationRepository.Update(updatedEducation);
+            await _educationRepository.SaveAsync();
+            return new ResponseDto(
+                StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                Message: result ? "Education successfully Updated" : "Something went wrong");
+
+        }
+        public async Task<ResponseDto> DeleteEducation(Guid id)
+        {
+            var dbEducation = await _educationRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (dbEducation is null) throw new EducationNotFoundException("Not Found Education");
+            var result = _educationRepository.SoftDelete(dbEducation);
+            await _educationRepository.SaveAsync();
+            return new ResponseDto(
+                StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                Message: result ? "Education successfully Deleted" : "Something went wrong");
 
         }
     }

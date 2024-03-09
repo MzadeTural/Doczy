@@ -25,7 +25,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetUnivercityDto>> GetUnivercitiesAsync()
         {
-            var dbUnivercities = await _univercityRepository.GetAll().ToListAsync();
+            var dbUnivercities = await _univercityRepository.FindAll(x=>!x.IsDeleted).ToListAsync();
             List<GetUnivercityDto> model = _mapper.Map<List<GetUnivercityDto>>(dbUnivercities);
             return model;
         }
@@ -52,7 +52,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> UpdateUnivercityAsync(Guid id, UpdateUnivercityDto model)
         {
-            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id);
+            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if(db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");
             
             Univercity univercity = _mapper.Map<Univercity>(model);
@@ -74,7 +74,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> DeleteUnivercityAsync(Guid id)
         {
-            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id);
+            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if (db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");
             _univercityRepository.SoftDelete(db);
             var result = _univercityRepository.Update(db);
