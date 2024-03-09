@@ -24,10 +24,14 @@
     <None Remove="Validations\" />
     <None Remove="Validations\UnivercityValidation\" />
     <None Remove="DTOs\EducationDtos\" />
+    <None Remove="Exceptions\EducationExceptions\" />
+    <None Remove="Validations\EducationValidations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\UnivercityExceptions\" />
     <Folder Include="DTOs\UnivercityDtos\" />
     <Folder Include="DTOs\EducationDtos\" />
+    <Folder Include="Exceptions\EducationExceptions\" />
+    <Folder Include="Validations\EducationValidations\" />
   </ItemGroup>
 </Project>
