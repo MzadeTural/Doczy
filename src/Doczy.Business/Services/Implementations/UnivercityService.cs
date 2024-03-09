@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using AutoMapper;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.UnivercityDtos;
-using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UnivercityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
@@ -50,7 +48,7 @@ namespace Doczy.Business.Services.Implementations
             }
         }
 
-        public async Task<ResponseDto> UpdateUnivercityAsync(Guid id, UpdateUnivercityDto model)
+        public async Task<ResponseDto> UpdateUnivercity(Guid id, UpdateUnivercityDto model)
         {
             var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if(db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");
@@ -72,7 +70,7 @@ namespace Doczy.Business.Services.Implementations
                          );
         }
 
-        public async Task<ResponseDto> DeleteUnivercityAsync(Guid id)
+        public async Task<ResponseDto> DeleteUnivercity(Guid id)
         {
             var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if (db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");

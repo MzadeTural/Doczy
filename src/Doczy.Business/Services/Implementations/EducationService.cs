@@ -32,6 +32,17 @@ namespace Doczy.Business.Services.Implementations
             if(model is null) throw new EducationNotFoundException("Not Found Education");
             else return model;
         }
+        public async Task<EducationDto> GetEducationAsync(Guid id)
+        {
+            var model = await _educationRepository.FindAll(x => x.Id == id && !x.IsDeleted,
+                                                                       tracking: false,
+                                                                       c => c.Univercity,
+                                                                       c => c.FieldOfStudy,
+                                                                       c => c.UnivercityDegree).ProjectTo<EducationDto>(_mapper.ConfigurationProvider)
+                                                                       .FirstOrDefaultAsync();
+            if (model is null) throw new EducationNotFoundException("Not Found Education");
+            else return model;
+        }
 
         public async  Task<ResponseDto> CreateEducationAsync(CreateEducationDto model)
         {
@@ -47,8 +58,32 @@ namespace Doczy.Business.Services.Implementations
         {
             var dbEducation = await _educationRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if (dbEducation is null) throw new EducationNotFoundException("Not Found Education");
-            var updatedEducation = _mapper.Map<Education>(model);
-            var result = _educationRepository.Update(updatedEducation);
+            //dbEducation = _mapper.Map<Education>(model);
+            if(model.DoctorId != null)
+            {
+                dbEducation.DoctorId = model.DoctorId;
+            }
+            if (model.UnivercityId != null)
+            {
+                dbEducation.UnivercityId = model.UnivercityId;
+            }
+            if (model.UnivercityDegreeId != null)
+            {
+                dbEducation.UnivercityDegreeId = model.UnivercityDegreeId;
+            }
+            if (model.FieldOfStudyId != null)
+            {
+                dbEducation.FieldOfStudyId = model.FieldOfStudyId;
+            }
+            if (model.StartDate != null)
+            {
+                dbEducation.StartDate = model.StartDate;
+            }
+            if (model.EndDate != null)
+            {
+                dbEducation.EndDate = model.EndDate;
+            }
+            var result = _educationRepository.Update(dbEducation);
             await _educationRepository.SaveAsync();
             return new ResponseDto(
                 StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,

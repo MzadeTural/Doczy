@@ -23,11 +23,18 @@ namespace Doczy.API.Controllers.v1
         {
             _educationService = educationService;
         }
-        [HttpGet("get-education/{doctorId}")]
+        [HttpGet("get-doctor-eductions/{doctorId}")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> GetEducation(Guid doctorId)
+        public async Task<IActionResult> GetDoctorEducation(Guid doctorId)
         {
             var response = await _educationService.GetAllEducationsAsync(doctorId);
+            return Ok(response);
+        }
+        [HttpGet("get-education/{id}")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetEducation(Guid id)
+        {
+            var response = await _educationService.GetEducationAsync(id);
             return Ok(response);
         }
         [HttpPost("create-education")]
@@ -36,6 +43,20 @@ namespace Doczy.API.Controllers.v1
         {
             var response = await _educationService.CreateEducationAsync(createDoctorDto);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
+        }
+        [HttpPatch("update-education/{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> UpdateEducation(Guid id,[FromForm] UpdateEducationDto updateDoctorDto)
+        {
+            var response = await _educationService.UpdateEducation(id,updateDoctorDto);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+        [HttpPut("delete-education/{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> DeleteEducation(Guid id)
+        {
+            var response = await _educationService.DeleteEducation(id);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
     }
 }

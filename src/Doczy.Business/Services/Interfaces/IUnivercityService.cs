@@ -8,8 +8,8 @@ namespace Doczy.Business.Services.Interfaces
 	{
         Task<List<GetUnivercityDto>> GetUnivercitiesAsync();
         Task<ResponseDto> CreateUnivercityAsync(CreateUnivercityDto model);
-        Task<ResponseDto> UpdateUnivercityAsync(Guid id, UpdateUnivercityDto model);
-        Task<ResponseDto> DeleteUnivercityAsync(Guid id);
+        Task<ResponseDto> UpdateUnivercity(Guid id, UpdateUnivercityDto model);
+        Task<ResponseDto> DeleteUnivercity(Guid id);
     }
 }
 
