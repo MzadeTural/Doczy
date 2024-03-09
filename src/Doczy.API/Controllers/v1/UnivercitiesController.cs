@@ -35,14 +35,14 @@ namespace Doczy.API.Controllers.v1
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> UpdateUnivercity(Guid id,[FromForm] UpdateUnivercityDto updateDoctorDto)
         {
-            var response = await _univercityService.UpdateUnivercityAsync(id, updateDoctorDto);
+            var response = await _univercityService.UpdateUnivercity(id, updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPut("delete-univercity/{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> DeleteUnivercity(Guid id)
         {
-            var response = await _univercityService.DeleteUnivercityAsync(id);
+            var response = await _univercityService.DeleteUnivercity(id);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
     }

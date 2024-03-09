@@ -26,6 +26,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IUnivercityService,UnivercityService>();
             services.AddScoped<IDoctorRaitingService,DoctorRaitingService>();
             services.AddScoped<IFavoriteDoctorService,FavoriteDoctorService>();
+            services.AddScoped<IEducationService,EducationService>();
             services.AddHostedService<ExpiredOTPCleanupService>();
             //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
             //services.AddHostedService<OTPCleanupBackgroundService>();
