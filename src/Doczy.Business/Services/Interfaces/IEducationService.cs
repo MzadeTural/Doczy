@@ -5,7 +5,7 @@ namespace Doczy.Business.Services.Interfaces
 {
 	public interface IEducationService
 	{
-        Task<EducationDto> GetEducation(Guid DoctorId);
+        Task<EducationDto> GetEducationAsync(Guid DoctorId);
         Task<ResponseDto> CreateEducationAsync(CreateEducationDto model);
     }
 }

@@ -18,7 +18,7 @@ namespace Doczy.Business.Services.Implementations
             _educationRepository = educationRepository;
             _mapper = mapper;
         }
-        public Task<EducationDto> GetEducation(Guid DoctorId)
+        public Task<EducationDto> GetEducationAsync(Guid DoctorId)
         {
             throw new NotImplementedException();
         }
