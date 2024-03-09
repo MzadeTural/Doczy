@@ -1,10 +1,12 @@
 ﻿using System.Net;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.EducationDtos;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Doczy.Business.Services.Implementations
 {
@@ -18,9 +20,15 @@ namespace Doczy.Business.Services.Implementations
             _educationRepository = educationRepository;
             _mapper = mapper;
         }
-        public Task<EducationDto> GetEducationAsync(Guid DoctorId)
+        public async Task<List<EducationDto>> GetAllEducationsAsync(Guid doctorId)
         {
-            throw new NotImplementedException();
+            var mod= await _educationRepository.FindAll(x => x.DoctorId == doctorId,
+                                                                      tracking:false,
+                                                                      c=>c.Univercity,
+                                                                      c=>c.FieldOfStudy,
+                                                                      c=>c.UnivercityDegree).ProjectTo<EducationDto>(_mapper.ConfigurationProvider)
+                                                                      .ToListAsync();
+            return mod;
         }
 
         public async  Task<ResponseDto> CreateEducationAsync(CreateEducationDto model)

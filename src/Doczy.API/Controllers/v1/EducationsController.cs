@@ -23,11 +23,11 @@ namespace Doczy.API.Controllers.v1
         {
             _educationService = educationService;
         }
-        [HttpGet("get-education/{doctorId} ")]
+        [HttpGet("get-education/{doctorId}")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetEducation(Guid doctorId)
         {
-            var response = await _educationService.GetEducationAsync(doctorId);
+            var response = await _educationService.GetAllEducationsAsync(doctorId);
             return Ok(response);
         }
         [HttpPost("create-education")]

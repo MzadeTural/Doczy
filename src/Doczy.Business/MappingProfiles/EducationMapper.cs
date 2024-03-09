@@ -9,6 +9,11 @@ namespace Doczy.Business.MappingProfiles
 		public EducationMapper()
 		{
 			CreateMap<CreateEducationDto, Education>().ReverseMap();
-		}
+			CreateMap<Education, EducationDto>()
+				.ForMember(x => x.Univercity, c => c.MapFrom(k => k.Univercity.Name))
+				.ForMember(x => x.FieldOfStudy, c => c.MapFrom(k => k.FieldOfStudy.Name))
+				.ForMember(x => x.UnivercityDegree, c => c.MapFrom(k => k.UnivercityDegree.Name))
+				.ReverseMap();
+        }
 	}
 }
