@@ -3,6 +3,8 @@ using Doczy.Business.HelperServices.Implementations;
 using Doczy.Business.HelperServices.Interfaces;
 using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
+using Doczy.Business.Validations.UnivercityValidation;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Doczy.Business.Services
@@ -23,11 +25,12 @@ namespace Doczy.Business.Services
             services.AddScoped<IWorkPlaceService, WorkPlaceService>();
             services.AddScoped<IExperianceService,ExperianceService >();
             services.AddScoped<IOTPService,OTPService >();
-            services.AddScoped<IUnivercityService,UnivercityService>();
+            services.AddScoped<IUnivercityService,UnivercityService>(); 
             services.AddScoped<IDoctorRaitingService,DoctorRaitingService>();
             services.AddScoped<IFavoriteDoctorService,FavoriteDoctorService>();
             services.AddScoped<IEducationService,EducationService>();
             services.AddHostedService<ExpiredOTPCleanupService>();
+            services.AddValidatorsFromAssemblyContaining<CreateUnivercityDtoValidation>();
             //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
             //services.AddHostedService<OTPCleanupBackgroundService>();
 
