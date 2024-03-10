@@ -41,10 +41,7 @@ namespace Doczy.DataAccess.Repositories
             services.AddScoped<IFavoriteDoctorRepository,FavoriteDoctorRepository>();
             services.AddScoped<IDoctorRatingRepository,DoctorRatingRepository>();
             services.AddScoped<IEducationRepository,EducationRepository>();
-
-
-
-
+            services.AddScoped<IFieldOfStudyRepository,FieldOfStudyRepository>();
         }
 
     }

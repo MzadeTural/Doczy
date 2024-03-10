@@ -26,6 +26,9 @@
     <None Remove="DTOs\EducationDtos\" />
     <None Remove="Exceptions\EducationExceptions\" />
     <None Remove="Validations\EducationValidations\" />
+    <None Remove="DTOs\FieldOfStudyDtos\" />
+    <None Remove="Validations\FieldOfStudyValidations\" />
+    <None Remove="Exceptions\FieldOfStudyExceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\UnivercityExceptions\" />
@@ -33,5 +36,8 @@
     <Folder Include="DTOs\EducationDtos\" />
     <Folder Include="Exceptions\EducationExceptions\" />
     <Folder Include="Validations\EducationValidations\" />
+    <Folder Include="DTOs\FieldOfStudyDtos\" />
+    <Folder Include="Validations\FieldOfStudyValidations\" />
+    <Folder Include="Exceptions\FieldOfStudyExceptions\" />
   </ItemGroup>
 </Project>
