@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using AutoMapper;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.UnivercityDtos;
-using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UnivercityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
@@ -25,7 +23,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetUnivercityDto>> GetUnivercitiesAsync()
         {
-            var dbUnivercities = await _univercityRepository.GetAll().ToListAsync();
+            var dbUnivercities = await _univercityRepository.FindAll(x=>!x.IsDeleted).ToListAsync();
             List<GetUnivercityDto> model = _mapper.Map<List<GetUnivercityDto>>(dbUnivercities);
             return model;
         }
@@ -50,9 +48,9 @@ namespace Doczy.Business.Services.Implementations
             }
         }
 
-        public async Task<ResponseDto> UpdateUnivercityAsync(Guid id, UpdateUnivercityDto model)
+        public async Task<ResponseDto> UpdateUnivercity(Guid id, UpdateUnivercityDto model)
         {
-            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id);
+            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if(db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");
             
             Univercity univercity = _mapper.Map<Univercity>(model);
@@ -72,9 +70,9 @@ namespace Doczy.Business.Services.Implementations
                          );
         }
 
-        public async Task<ResponseDto> DeleteUnivercityAsync(Guid id)
+        public async Task<ResponseDto> DeleteUnivercity(Guid id)
         {
-            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id);
+            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if (db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");
             _univercityRepository.SoftDelete(db);
             var result = _univercityRepository.Update(db);

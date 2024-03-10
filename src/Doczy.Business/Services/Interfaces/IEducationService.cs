@@ -5,8 +5,11 @@ namespace Doczy.Business.Services.Interfaces
 {
 	public interface IEducationService
 	{
-        Task<EducationDto> GetEducation(Guid DoctorId);
+        Task<List<EducationDto>> GetAllEducationsAsync(Guid DoctorId);
+        Task<EducationDto> GetEducationAsync(Guid id);
         Task<ResponseDto> CreateEducationAsync(CreateEducationDto model);
+        Task<ResponseDto> UpdateEducation(Guid id, UpdateEducationDto model);
+        Task<ResponseDto> DeleteEducation(Guid id);
     }
 }
 
