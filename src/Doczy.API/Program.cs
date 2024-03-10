@@ -16,15 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-
 builder.Services.AddAutoMapper(typeof(DoctorMapper));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBusinessServices();
 builder.Services.AddDataAccesServices();
 builder.Services.AddRouting();
+builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -52,7 +51,6 @@ builder.Services.AddSwaggerGen(c =>
             { securityScheme, Array.Empty<string>() }
         });
 });
-builder.Services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CreateUnivercityDtoValidation>());
 
 var app = builder.Build();
 
