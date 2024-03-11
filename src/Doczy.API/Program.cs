@@ -2,10 +2,7 @@ using Doczy.API.Extensions;
 using Doczy.Business.Helpers.Settings;
 using Doczy.Business.MappingProfiles;
 using Doczy.Business.Services;
-using Doczy.Business.Validations.UnivercityValidation;
 using Doczy.DataAccess.Repositories;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
 
@@ -25,31 +22,32 @@ builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(option =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Doczy API", Version = "v1" });
-
-    // Add JWT Authentication to Swagger
-    var securityScheme = new OpenApiSecurityScheme
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Doczy API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Description = "Enter JWT Bearer token",
         In = ParameterLocation.Header,
+        Description = "Enter a valid token",
+        Name = "Authorization",
         Type = SecuritySchemeType.Http,
-        Scheme = "bearer", // must be lower case
         BearerFormat = "JWT",
-        Reference = new OpenApiReference
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-            Id = JwtBearerDefaults.AuthenticationScheme,
-            Type = ReferenceType.SecurityScheme
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
         }
-    };
-
-    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            { securityScheme, Array.Empty<string>() }
-        });
+    });
 });
 
 var app = builder.Build();
@@ -62,13 +60,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-
-
 app.UseStaticFiles();
-
 app.AddExceptionHandler();
-
-
 app.UseAuthentication();
 app.UseAuthorization();
 

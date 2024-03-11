@@ -1,6 +1,7 @@
 ﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.ServiceDtos;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -19,7 +20,7 @@ namespace Doczy.API.Controllers.v1
 
         [HttpPost]
         [Route("create")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         public async Task<IActionResult> Create([FromForm] CreateServiceDto createServiceDto)
         {
 
