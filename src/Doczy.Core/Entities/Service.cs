@@ -3,7 +3,7 @@ using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Core.Entities
 {
-    public class Service:BaseSectionEntity
+    public class Service:BaseAuditableEntity
     {
         public string? Name { get; set; }
         public byte Duration { get; set; }
