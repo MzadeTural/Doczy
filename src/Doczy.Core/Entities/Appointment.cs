@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Doczy.Core.Entities
 {
-    public class Appointment : BaseSectionEntity
+    public class Appointment : BaseAuditableEntity
     {
         public string? PainDescription { get; set; }
         [DataType(DataType.Date)]

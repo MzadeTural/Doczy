@@ -3,7 +3,7 @@ using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Core.Entities
 {
-    public class Experiance:BaseSectionEntity
+    public class Experiance:BaseAuditableEntity
     {
         public string Title { get; set; }
         public DoctorAppUser? Doctor{ get; set; }
