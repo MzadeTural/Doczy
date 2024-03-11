@@ -1,7 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.FieldOfStudyDtos;
+using Doczy.Business.Exceptions.FieldOfStudyExceptions;
 using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,19 +27,56 @@ namespace Doczy.Business.Services.Implementations
             return _mapper.Map<List<GetFieldOfStudyDto>>(dbFields);
         }
 
-        public Task<ResponseDto> CreateFieldOfStudyAsync(CreateFieldOfStudyDto createFieldOfStudy)
+        public async Task<GetFieldOfStudyDto> GetFieldOfStudyAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var field = await _fieldOfStudyRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (field is null) throw new FieldOfStudyNotFoundExceptions("Field is not found");
+            var model = _mapper.Map<GetFieldOfStudyDto>(field);
+            return model;
         }
 
-        public Task<ResponseDto> UpdateFieldOfStudy(Guid id, UpdateFieldOfStudyDto updateFieldOfStudy)
+        public async Task<ResponseDto> CreateFieldOfStudyAsync(CreateFieldOfStudyDto createFieldOfStudy)
         {
-            throw new NotImplementedException();
+            var dbFields = await _fieldOfStudyRepository.FindAll(x => !x.IsDeleted).ToListAsync();
+            var isExist = dbFields.Any(x => x.Name.Trim().ToLower() ==
+                                            createFieldOfStudy.Name.Trim().ToLower());
+
+            if (isExist) throw new FieldOfStudyAlreadyExistExceptions("Field is already exist");
+            var newField = _mapper.Map<FieldOfStudy>(createFieldOfStudy);
+            var result = await _fieldOfStudyRepository.CreateAsync(newField);
+            await _fieldOfStudyRepository.SaveAsync();
+            return new ResponseDto(
+                StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+                Message: result ? "Filed successfully created" : "Something went wrong");
         }
 
-        public Task<ResponseDto> DeleteFieldOfStudy(Guid id)
+        public async Task<ResponseDto> UpdateFieldOfStudy(Guid id, UpdateFieldOfStudyDto updateFieldOfStudy)
         {
-            throw new NotImplementedException();
+            var dbField = await _fieldOfStudyRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (dbField is null) throw new FieldOfStudyNotFoundExceptions("Field is not found");
+
+            if (updateFieldOfStudy.Name != null)
+            {
+                dbField.Name = updateFieldOfStudy.Name;
+            }
+            var result = _fieldOfStudyRepository.Update(dbField);
+            await _fieldOfStudyRepository.SaveAsync();
+            return new ResponseDto(
+                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                         Message: result ? "Field successfully updated" : "Something went wrong"
+                         );
+        }
+
+        public async Task<ResponseDto> DeleteFieldOfStudy(Guid id)
+        {
+            var dbField = await _fieldOfStudyRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (dbField is null) throw new FieldOfStudyNotFoundExceptions("Field is not found");
+            var result = _fieldOfStudyRepository.SoftDelete(dbField);
+            await _fieldOfStudyRepository.SaveAsync();
+            return new ResponseDto(
+                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                         Message: result ? "Field successfully deleted" : "Something went wrong"
+                         );
         }
 
     }
