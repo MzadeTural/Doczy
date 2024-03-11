@@ -3,7 +3,7 @@ using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Core.Entities
 {
-    public class Blog:BaseSectionEntity
+    public class Blog:BaseAuditableEntity
     {
         public string Title { get; set; }
         public string Subtitle { get; set; }
