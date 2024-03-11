@@ -1,7 +1,10 @@
 ﻿
 using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Abstractions.Common.Implementations;
+using Doczy.DataAccess.Abstractions.Common;
 using Doczy.DataAccess.Configurations;
 using Doczy.DataAccess.Contexts;
+using Doczy.DataAccess.Interceptors;
 using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Implementations.Base;
 using Doczy.DataAccess.Repositories.Interfaces;
@@ -42,6 +45,9 @@ namespace Doczy.DataAccess.Repositories
             services.AddScoped<IDoctorRatingRepository,DoctorRatingRepository>();
             services.AddScoped<IEducationRepository,EducationRepository>();
             services.AddScoped<IFieldOfStudyRepository,FieldOfStudyRepository>();
+
+            services.AddTransient<IDateTime, DateTimeService>();
+            services.AddScoped<AuditableEntitySaveChangesInterceptor>();
         }
 
     }

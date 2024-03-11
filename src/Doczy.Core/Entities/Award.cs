@@ -2,7 +2,7 @@
 
 namespace Doczy.Core.Entities
 {
-    public class Award:BaseSectionEntity
+    public class Award:BaseAuditableEntity
     {
         public string? AwardImageUrl { get; set; }
     }

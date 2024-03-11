@@ -2,7 +2,7 @@
 
 namespace Doczy.Core.Entities
 {
-    public class ServiceType:BaseSectionEntity
+    public class ServiceType:BaseAuditableEntity
     {
         public string IconUrl { get; set; }
         public string Name { get; set; }

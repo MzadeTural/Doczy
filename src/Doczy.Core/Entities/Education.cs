@@ -3,7 +3,7 @@ using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Core.Entities
 {
-    public class Education:BaseSectionEntity
+    public class Education:BaseAuditableEntity
     {
         public DoctorAppUser? Doctor { get; set; }
         public Guid DoctorId { get; set; }
