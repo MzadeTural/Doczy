@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.FieldOfStudyDtos;
+using Doczy.Business.Exceptions.FieldOfStudyExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,12 @@ namespace Doczy.Business.Services.Implementations
             return _mapper.Map<List<GetFieldOfStudyDto>>(dbFields);
         }
 
-        public Task<ResponseDto> CreateFieldOfStudyAsync(CreateFieldOfStudyDto createFieldOfStudy)
+        public async Task<ResponseDto> CreateFieldOfStudyAsync(CreateFieldOfStudyDto createFieldOfStudy)
         {
+            var dbFields = await _fieldOfStudyRepository.FindAll(x => !x.IsDeleted).ToListAsync();
+            var isExist = dbFields.Any(x => x.Name.Trim().ToLower() == createFieldOfStudy.Name.Trim().ToLower());
+            if (isExist) throw new FieldOfStudyAlreadyExistExceptions("Field is already exist");
+
             throw new NotImplementedException();
         }
 

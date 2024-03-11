@@ -31,7 +31,13 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateUnivercityAsync(CreateUnivercityDto model)
         {
             Univercity newUnivercity = _mapper.Map<Univercity>(model);
-            var isExist = _univercityRepository.FindAll(x => x.Name == newUnivercity.Name).FirstOrDefault();
+            var isExist = _univercityRepository.FindAll(x => x.Name
+                                                              .Trim()
+                                                              .ToLower() ==
+                                                              newUnivercity.Name.
+                                                              Trim()
+                                                              .ToLower())
+                                                              .FirstOrDefault();
 
             if (isExist != null)
             {
