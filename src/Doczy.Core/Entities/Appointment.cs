@@ -8,11 +8,8 @@ namespace Doczy.Core.Entities
     public class Appointment : BaseAuditableEntity
     {
         public string? PainDescription { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
-
-        [DataType(DataType.Time)]
-        public DateTime Time { get; set; }
+        public DateTime AppointmentDate { get; set; }
+        public TimeSpan AppointmentTime { get; set; }
         public DoctorAppUser? Doctor { get; set; }     
         public Guid DoctorId { get; set; }     
         public PatientAppUser? Patient { get; set; }      

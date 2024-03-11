@@ -7,8 +7,6 @@ using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -86,7 +84,7 @@ namespace Doczy.API.Controllers.v1
             var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
             return StatusCode((int)response.StatusCode, response.Message);
         }
-        
+
         [HttpGet("languages")]
         public async Task<List<GetLanguageDto>> GetDoctorLanguages()
         {
@@ -94,5 +92,5 @@ namespace Doczy.API.Controllers.v1
             return languages;
         }
 
-        }
+    }
 }
