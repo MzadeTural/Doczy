@@ -9,6 +9,7 @@ namespace Doczy.Business.Services.Interfaces
 		Task<ResponseDto> UpdateFieldOfStudy(Guid id,UpdateFieldOfStudyDto updateFieldOfStudy);
 		Task<ResponseDto> DeleteFieldOfStudy(Guid id);
 		Task<List<GetFieldOfStudyDto>> GetAllFieldOfStudiesAsync();
+		Task<GetFieldOfStudyDto> GetFieldOfStudyAsync(Guid id);
     }
 }
 
