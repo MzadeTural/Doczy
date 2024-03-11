@@ -28,10 +28,24 @@ namespace Doczy.Business.Services.Implementations
             return model;
         }
 
+        public async Task<GetUnivercityDto> GetUnivercityAsync(Guid id)
+        {
+            var db = await _univercityRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (db is null) throw new UnivercityAlreadyExistExceptions("Univercity is not found");
+            GetUnivercityDto model = _mapper.Map<GetUnivercityDto>(db);
+            return model;
+        }
+
         public async Task<ResponseDto> CreateUnivercityAsync(CreateUnivercityDto model)
         {
             Univercity newUnivercity = _mapper.Map<Univercity>(model);
-            var isExist = _univercityRepository.FindAll(x => x.Name == newUnivercity.Name).FirstOrDefault();
+            var isExist = _univercityRepository.FindAll(x => x.Name
+                                                              .Trim()
+                                                              .ToLower() ==
+                                                              newUnivercity.Name.
+                                                              Trim()
+                                                              .ToLower())
+                                                              .FirstOrDefault();
 
             if (isExist != null)
             {
@@ -82,6 +96,8 @@ namespace Doczy.Business.Services.Implementations
                          Message: result ? "Univercity successfully deleted" : "Something went wrong"
                          );
         }
+
+        
     }
 }
 

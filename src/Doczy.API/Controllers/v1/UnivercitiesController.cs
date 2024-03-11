@@ -17,6 +17,13 @@ namespace Doczy.API.Controllers.v1
         {
             _univercityService = univercityService;
         }
+        [HttpGet("get-univercity/{id}")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetUnivercity(Guid id)
+        {
+            var response = await _univercityService.GetUnivercityAsync(id);
+            return Ok(response);
+        }
         [HttpGet("get-univercity")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetUnivercity()
