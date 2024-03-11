@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.FieldOfStudyDtos;
 using Doczy.Business.Exceptions.FieldOfStudyExceptions;
 using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,10 +30,16 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateFieldOfStudyAsync(CreateFieldOfStudyDto createFieldOfStudy)
         {
             var dbFields = await _fieldOfStudyRepository.FindAll(x => !x.IsDeleted).ToListAsync();
-            var isExist = dbFields.Any(x => x.Name.Trim().ToLower() == createFieldOfStudy.Name.Trim().ToLower());
-            if (isExist) throw new FieldOfStudyAlreadyExistExceptions("Field is already exist");
+            var isExist = dbFields.Any(x => x.Name.Trim().ToLower() ==
+                                            createFieldOfStudy.Name.Trim().ToLower());
 
-            throw new NotImplementedException();
+            if (isExist) throw new FieldOfStudyAlreadyExistExceptions("Field is already exist");
+            var newField = _mapper.Map<FieldOfStudy>(createFieldOfStudy);
+            var result = await _fieldOfStudyRepository.CreateAsync(newField);
+            await _fieldOfStudyRepository.SaveAsync();
+            return new ResponseDto(
+                StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+                Message: result ? "Filed successfully created" : "Something went wrong");
         }
 
         public Task<ResponseDto> UpdateFieldOfStudy(Guid id, UpdateFieldOfStudyDto updateFieldOfStudy)
