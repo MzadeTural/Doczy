@@ -10,7 +10,7 @@ namespace Doczy.Business.MappingProfiles
 		public FieldOfStudyMapper()
 		{
 			CreateMap<CreateFieldOfStudyDto, FieldOfStudy>();
-			CreateMap<UpdateFieldOfStudyDto, FieldOfStudy>();
+			//CreateMap<UpdateFieldOfStudyDto, FieldOfStudy>();
 			CreateMap<FieldOfStudy, GetFieldOfStudyDto>();
         }
 	}
