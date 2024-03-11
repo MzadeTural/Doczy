@@ -1,8 +1,8 @@
 ﻿using Doczy.Business.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
-using System.Text.Json;
 using System.Text;
-using Newtonsoft.Json;
+using Doczy.Core.Entities;
+using System.Diagnostics;
 
 namespace Doczy.Business.Services.Implementations
 {
@@ -14,7 +14,15 @@ namespace Doczy.Business.Services.Implementations
         {
             _configre = configre;
         }
-        public async Task<dynamic> Pay(double sumAmount,string desc)
+        public async Task Payment(string url)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        public async Task Pay(double sumAmount,string desc)
         {
             var api = _configre["Payriff:apiurl"].ToString() + "createOrder";
             var requestBody = new
@@ -40,9 +48,9 @@ namespace Doczy.Business.Services.Implementations
             string jsonBody = System.Text.Json.JsonSerializer.Serialize(requestBody);
             var response = await HttpRequest(api,jsonBody);
 
-            var responseObject = System.Text.Json.JsonSerializer.Deserialize<dynamic>(response);
-
-            return responseObject.payload.paymentUrl;
+            var responseObject = System.Text.Json.JsonSerializer.Deserialize<Payriff>(response);
+            Payriff.Payload payload = responseObject.payload;
+            await Payment(payload.paymentUrl);
 
         }
         private async Task<string> HttpRequest(string apiUrl, string jsonBody)

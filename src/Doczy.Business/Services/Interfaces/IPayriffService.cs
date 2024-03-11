@@ -2,6 +2,6 @@
 {
     public interface IPayriffService
     {
-        Task<dynamic> Pay(double sumAmount, string desc);
+        Task Pay(double sumAmount, string desc);
     }
 }
