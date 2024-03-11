@@ -5,7 +5,6 @@ using Doczy.Business.DTOs.FieldOfStudyDtos;
 using Doczy.Business.Exceptions.FieldOfStudyExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
-using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,9 +67,16 @@ namespace Doczy.Business.Services.Implementations
                          );
         }
 
-        public Task<ResponseDto> DeleteFieldOfStudy(Guid id)
+        public async Task<ResponseDto> DeleteFieldOfStudy(Guid id)
         {
-            throw new NotImplementedException();
+            var dbField = await _fieldOfStudyRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
+            if (dbField is null) throw new FieldOfStudyNotFoundExceptions("Field is not found");
+            var result = _fieldOfStudyRepository.SoftDelete(dbField);
+            await _fieldOfStudyRepository.SaveAsync();
+            return new ResponseDto(
+                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                         Message: result ? "Field successfully deleted" : "Something went wrong"
+                         );
         }
 
     }
