@@ -6,6 +6,6 @@ namespace Doczy.Core.Entities
     {
         public DoctorAvailability DoctorAvailability { get; set; }
         public Guid DoctorAvailabilityId { get; set; }
-        public TimeSpan Hour { get; set; }
+        public TimeSpan Time { get; set; }
     }
 }
