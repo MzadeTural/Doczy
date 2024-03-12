@@ -25,10 +25,8 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             return data.State == EntityState.Added;
         }
 
-        public void Delete(T entity)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Delete(T entity)
+          => Table.Remove(entity).State == EntityState.Deleted;
         public async Task<T> GetByIdAsync(Guid id)
            => await Table.FindAsync(id);
         public IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes)
@@ -50,8 +48,8 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
         public IQueryable<T> GetAll(bool tracking = true, params Expression<Func<T, object>>[] includes)
             => !tracking ? GetQuery(includes).AsNoTracking() : GetQuery(includes);
 
-        public async Task<T> GetSingleAysnc(Expression<Func<T, bool>> expression)
-            => await Table.Where(expression).FirstOrDefaultAsync();
+        public async Task<T> GetSingleAysnc(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>?[] includes)
+            => await GetQuery(includes).FirstOrDefaultAsync(expression);
 
         public async Task<bool> IsExistAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
           => await GetQuery(includes).AnyAsync(expression);
@@ -73,7 +71,11 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             return data.State == EntityState.Modified;
         }
 
-
+        public bool DeleteRange(List<T> entities)
+        {
+            Table.RemoveRange(entities);
+            return true;
+        }
 
         private IQueryable<T> GetQuery(params Expression<Func<T, object>>[] includes)
         {
@@ -88,6 +90,6 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             return query;
         }
 
-
+        
     }
 }

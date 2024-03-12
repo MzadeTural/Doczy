@@ -11,8 +11,5 @@ namespace Doczy.Core.Entities
         public DayOfWeek DayOfWeek { get; set; }
         public List<AvailableHour> AvailableHours { get; set; }
 
-
-
-
     }
 }

@@ -16,9 +16,9 @@ namespace Doczy.DataAccess.Contexts
 
     //        var optionsBuilder = new DbContextOptionsBuilder<DoczyContext>();
     //        var connectionString = configuration.GetConnectionString("Default");
-    //        optionsBuilder.UseSqlServer (connectionString, b => b.MigrationsAssembly("Doczy.DataAccess"));
+    //        optionsBuilder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Doczy.DataAccess"));
 
     //        return new DoczyContext(optionsBuilder.Options);
     //    }
-    //}  
+    //}
 }
