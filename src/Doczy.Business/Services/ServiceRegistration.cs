@@ -30,12 +30,13 @@ namespace Doczy.Business.Services
             services.AddScoped<IFavoriteDoctorService,FavoriteDoctorService>();
             services.AddScoped<IEducationService,EducationService>();
             services.AddScoped<IFieldOfStudyService,FieldOfStudyService>();
-<<<<<<< HEAD
+            services.AddScoped<IDoctorAvailabilityService,DoctorAvailabilityService>();
+
             services.AddScoped<IAppointmentService,AppointmentService>();
 
-=======
+
             services.AddScoped<IPayriffService,PayriffService>();
->>>>>>> 2c61ce92f1ffa181dde7073737dad42dd243bf85
+
             services.AddHostedService<ExpiredOTPCleanupService>();
             services.AddValidatorsFromAssemblyContaining<CreateUnivercityDtoValidation>();
             //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
