@@ -35,11 +35,11 @@ namespace Doczy.Business.Services
             services.AddScoped<IAppointmentService,AppointmentService>();
 
 
-            services.AddScoped<IPayriffService,PayriffService>();
+        
 
             services.AddScoped<IPayriffService,PayriffService>();
             services.AddScoped<IAppointmentService,AppointmentService>();
-            services.AddScoped<IPayriffService,PayriffService>();
+        
             services.AddHostedService<ExpiredOTPCleanupService>();
             services.AddValidatorsFromAssemblyContaining<CreateUnivercityDtoValidation>();
             //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
