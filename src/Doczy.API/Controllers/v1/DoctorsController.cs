@@ -1,4 +1,5 @@
 ﻿using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.DoctorAvailabilityDtos;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Experiance;
 using Doczy.Business.DTOs.Language;
@@ -21,12 +22,14 @@ namespace Doczy.API.Controllers.v1
         private readonly IUserService _userService;
         private readonly IDoctorService _doctorService;
         private readonly IExperianceService _experianceService;
-        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService)
+        private readonly IDoctorAvailabilityService _doctorAvailabilityService;
+        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService)
         {
 
             _userService = userService;
             _doctorService = doctorService;
             _experianceService = experianceService;
+            _doctorAvailabilityService = doctorAvailabilityService;
         }
         [AllowAnonymous]
         [HttpPost("register")]
@@ -85,6 +88,14 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
 
+        [HttpPost("create-doctor-availability")]
+        public async Task<IActionResult> CreateDoctorAvailability( CreateDoctorAvailabilityDto createDto)
+        {
+            var response = await _doctorAvailabilityService.CreateDoctorAvailabilityAsync(createDto);
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+
+        
         [HttpGet("languages")]
         public async Task<List<GetLanguageDto>> GetDoctorLanguages()
         {
