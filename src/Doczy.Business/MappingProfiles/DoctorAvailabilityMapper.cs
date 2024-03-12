@@ -9,7 +9,8 @@ namespace Doczy.Business.MappingProfiles
     {
         public DoctorAvailabilityMapper()
         {
-            CreateMap<DoctorAvailability, CreateDoctorAvailabilityDto>().ReverseMap();  
+            CreateMap<DoctorAvailability, CreateDoctorAvailabilityDto>()
+                .ReverseMap();  
         }
     }
 }

@@ -30,22 +30,34 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreateDoctorAvailabilityAsync(CreateDoctorAvailabilityDto model)
         {
-            bool result=true;
+            bool result = true;
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             if (model.AvailableHours == null || model.AvailableHours.Count == 0)
                 throw new ArgumentException("At least one available hour must be specified.");
+            var existingAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == model.DayOfWeek);
 
-            
-            var existingAvailability= await _doctorAvailabilityRepository.GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == model.DayOfWeek);
+
+
+            List<AvailableHour> AvailableHours = new List<AvailableHour>();
+            foreach (var availableHourDto in model.AvailableHours)
+            {
+                AvailableHours.Add(new AvailableHour
+                {
+                    Hour = new TimeSpan(availableHourDto.Hour, availableHourDto.Minute, 0),
+
+                });
+            }
             if (existingAvailability != null)
-                existingAvailability.AvailableHours = model.AvailableHours;
+                existingAvailability.AvailableHours = AvailableHours;
             else
             {
-                var newḊoctorAvailability = _mapper.Map<DoctorAvailability>(model);
-                newḊoctorAvailability.DoctorId = doctorId;
-                 result = await _doctorAvailabilityRepository.CreateAsync(newḊoctorAvailability);
+                var doctorAvailability = _mapper.Map<DoctorAvailability>(model);
+                doctorAvailability.DoctorId = doctorId;
+                result = await _doctorAvailabilityRepository.CreateAsync(doctorAvailability);
+
             }
-           await _doctorAvailabilityRepository.SaveAsync();
+
+            await _doctorAvailabilityRepository.SaveAsync();
             return new ResponseDto(
                         StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
                         Message: result ? "DoctorAvailability  successfully created" : "Something went wrong"

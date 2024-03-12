@@ -39,6 +39,7 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<DoctorRating> DoctorRatings { get; set; }
         public DbSet<FavoriteDoctor> FavoriteDoctors { get; set; }
         public DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
+        public DbSet<AvailableHour> AvailableHours { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
