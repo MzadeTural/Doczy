@@ -38,6 +38,8 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<Experiance> Experiances { get; set; }
         public DbSet<DoctorRating> DoctorRatings { get; set; }
         public DbSet<FavoriteDoctor> FavoriteDoctors { get; set; }
+        public DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
+        public DbSet<AvailableHour> AvailableHours { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
@@ -48,7 +50,7 @@ namespace Doczy.DataAccess.Contexts
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DoctorConfiguration).Assembly);
-
+      
             modelBuilder.Entity<Appointment>()
              .HasOne(r => r.Doctor)
              .WithMany(c => c.Appointments)
