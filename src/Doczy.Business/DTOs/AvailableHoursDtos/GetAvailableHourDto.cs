@@ -8,6 +8,7 @@ namespace Doczy.Business.DTOs.AvailableHoursDtos
 {
     public class GetAvailableHourDto
     {
+        public Guid Id { get; set; }
         public TimeSpan Time { get; set; }
     }
 }

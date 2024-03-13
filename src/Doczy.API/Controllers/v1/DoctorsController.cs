@@ -15,7 +15,7 @@ namespace Doczy.API.Controllers.v1
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+    //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
     public class DoctorsController : ControllerBase
     {
 

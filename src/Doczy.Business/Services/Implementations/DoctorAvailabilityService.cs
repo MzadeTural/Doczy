@@ -131,18 +131,23 @@ namespace Doczy.Business.Services.Implementations
             // Fetch appointments for this doctor and date
             var appointments = _appointmentRepository
                 .FindAll(a => a.DoctorId == doctorId &&
-                            a.AppointmentDate.Date == date.Date) // Filter appointments for the given date
+                            a.AppointmentDate.Date == date.Date && !a.IsDeleted) 
                 .Select(a => a.AppointmentTime)
                 .ToList();
 
             // Exclude appointment hours
+            //var availableHours = doctorAvailability.AvailableHours
+            //    .Select(ah => ah.Time)
+            //    .Except(appointments)
+            //    .ToList();
             var availableHours = doctorAvailability.AvailableHours
-                .Select(ah => ah.Time)
-                .Except(appointments)
+                .Where(ah => !appointments.Contains(ah.Time)) // Filter out occupied hours
+                .Select(ah => _mapper.Map<GetAvailableHourDto>(ah))
                 .ToList();
 
             var availabilityDto = _mapper.Map<GetDoctorAvailabilityDto>(doctorAvailability);
-            availabilityDto.AvailableHours = availableHours.Select(time => new GetAvailableHourDto { Time = time }).ToList();
+            //availabilityDto.AvailableHours = availableHours.Select(time => new GetAvailableHourDto { Time = time }).ToList();
+            availabilityDto.AvailableHours = availableHours;
             return availabilityDto;
 
         }
