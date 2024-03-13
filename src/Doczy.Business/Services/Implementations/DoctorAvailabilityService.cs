@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Doczy.Business.DTOs.AvailableHoursDtos;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorAvailabilityDtos;
+using Doczy.Business.Enums;
+using Doczy.Business.Exceptions.DoctorAvailabilityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
@@ -9,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -20,14 +24,16 @@ namespace Doczy.Business.Services.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IAvailableHourRepository _availableHourRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
 
-        public DoctorAvailabilityService(IDoctorAvailabilityRepository doctorAvailabilityRepository, UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, IMapper mapper, IAvailableHourRepository availableHourRepository)
+        public DoctorAvailabilityService(IDoctorAvailabilityRepository doctorAvailabilityRepository, UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, IMapper mapper, IAvailableHourRepository availableHourRepository, IAppointmentRepository appointmentRepository)
         {
             _doctorAvailabilityRepository = doctorAvailabilityRepository;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _availableHourRepository = availableHourRepository;
+            _appointmentRepository = appointmentRepository;
         }
 
         public async Task<ResponseDto> CreateDoctorAvailabilityAsync(CreateDoctorAvailabilityDto model)
@@ -64,10 +70,10 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> DeleteDoctorAvailability(Guid id)
         {
-            var doctorAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da=>da.Id==id,d=>d.AvailableHours);
+            var doctorAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da => da.Id == id, d => d.AvailableHours);
             var result = false;
-          var hourResponse=  _availableHourRepository.DeleteRange(doctorAvailability.AvailableHours);
-          var dayResponese=  _doctorAvailabilityRepository.Delete(doctorAvailability);
+            var hourResponse = _availableHourRepository.DeleteRange(doctorAvailability.AvailableHours);
+            var dayResponese = _doctorAvailabilityRepository.Delete(doctorAvailability);
             if (hourResponse && dayResponese)
                 result = true;
             await _doctorAvailabilityRepository.SaveAsync();
@@ -76,5 +82,72 @@ namespace Doczy.Business.Services.Implementations
                           Message: result ? "DoctorAvailability successfully deleted" : "Something went wrong"
                           );
         }
+
+        public async Task<List<GetDoctorAvailabilityDto>> GetDoctorOwnAvailabilityAsync()
+        {
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var doctorAvailability = await _doctorAvailabilityRepository
+           .FindAll(da => da.DoctorId == doctorId, tracking: false, da => da.AvailableHours).ToListAsync();
+
+            var result = new List<GetDoctorAvailabilityDto>();
+            foreach(DayOfWeek dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
+        {
+                var availabilityForDay = doctorAvailability.FirstOrDefault(da => da.DayOfWeek == dayOfWeek);
+
+                if (availabilityForDay != null)
+                {
+                    // Map entity to DTO
+                    var availabilityDto = _mapper.Map<GetDoctorAvailabilityDto>(availabilityForDay);
+                    result.Add(availabilityDto);
+                }
+                else
+                {
+                    // If availability for this day is not defined, create DTO with an empty list of available hours
+                    result.Add(new GetDoctorAvailabilityDto
+                    {
+                        DayOfWeek = dayOfWeek,
+                        AvailableHours = new List<GetAvailableHourDto>()
+                    });
+                }
+            }
+
+            return result;
+
+           
+        }
+
+
+
+        public async Task<GetDoctorAvailabilityDto> GetDoctorAvailabilityAsync(Guid doctorId, DateTime date)
+        {
+            ArgumentNullException.ThrowIfNull(doctorId);
+            var dayOfWeek = date.DayOfWeek;
+            var doctorAvailability = await _doctorAvailabilityRepository
+                .GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == dayOfWeek, da => da.AvailableHours);
+
+            if (doctorAvailability is null)
+                throw new DoctorAvailabilityNotFoundException();
+
+            // Fetch appointments for this doctor and date
+            var appointments = _appointmentRepository
+                .FindAll(a => a.DoctorId == doctorId &&
+                            a.AppointmentDate.Date == date.Date) // Filter appointments for the given date
+                .Select(a => a.AppointmentTime)
+                .ToList();
+
+            // Exclude appointment hours
+            var availableHours = doctorAvailability.AvailableHours
+                .Select(ah => ah.Time)
+                .Except(appointments)
+                .ToList();
+
+            var availabilityDto = _mapper.Map<GetDoctorAvailabilityDto>(doctorAvailability);
+            availabilityDto.AvailableHours = availableHours.Select(time => new GetAvailableHourDto { Time = time }).ToList();
+            return availabilityDto;
+
+        }
+
+
     }
 }
+

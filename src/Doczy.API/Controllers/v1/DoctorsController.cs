@@ -102,6 +102,20 @@ namespace Doczy.API.Controllers.v1
             var languages = await _doctorService.GetLanguageAsync();
             return languages;
         }
+        [HttpGet("get-doctor-availability")]
+        public async Task<GetDoctorAvailabilityDto> GetDoctorAvailability(Guid id ,DateTime date)
+        {
+            var response = await _doctorAvailabilityService.GetDoctorAvailabilityAsync(id,date);
+            return response;
 
+        }
+
+        [HttpGet("get-own-availability")]
+        public async Task<List<GetDoctorAvailabilityDto>> GetDoctorAvailability()
+        {
+            var response = await _doctorAvailabilityService.GetDoctorOwnAvailabilityAsync();
+            return response;
+
+        }
     }
 }
