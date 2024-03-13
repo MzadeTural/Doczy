@@ -1,6 +1,8 @@
 ﻿using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.Common;
+using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -22,6 +24,13 @@ namespace Doczy.API.Controllers.v1
         {
             var response = await _appointmentsService.CreateAppointmentAsync(appointmentRequest);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
+        }
+
+        [HttpGet("")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+        public async Task<IActionResult> GetAppointments()
+        {
+            return Ok(await _appointmentsService.GetAppointmentAsync());
         }
 
     }
