@@ -7,6 +7,9 @@ namespace Doczy.Business.Services.Interfaces
     public interface IDoctorAvailabilityService
     {
         Task<ResponseDto> CreateDoctorAvailabilityAsync(CreateDoctorAvailabilityDto model);
+        Task<GetDoctorAvailabilityDto> GetDoctorAvailabilityAsync(Guid doctorId, DateTime date);
+        Task<List<GetDoctorAvailabilityDto>> GetDoctorOwnAvailabilityAsync();
         Task<ResponseDto> DeleteDoctorAvailability(Guid id);
+
     }
 }
