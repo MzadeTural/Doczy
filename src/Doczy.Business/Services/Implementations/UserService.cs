@@ -26,10 +26,10 @@ namespace Doczy.Business.Services.Implementations
         private readonly LinkGenerator _linkGenerator;
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
-        private readonly IWorkPlaceRepository _workPlaceRepository;
+        private readonly IHospitalRepository _workPlaceRepository;
 
 
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IWorkPlaceRepository workPlaceRepository = null)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IHospitalRepository workPlaceRepository = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;

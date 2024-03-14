@@ -12,5 +12,7 @@ namespace Doczy.DataAccess.Configurations
             manager.AddJsonFile("appsettings.json");
             return manager.GetConnectionString("Default");
         }
+
+
     }
 }

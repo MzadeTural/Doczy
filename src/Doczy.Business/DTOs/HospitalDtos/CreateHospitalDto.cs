@@ -2,7 +2,7 @@
 
 namespace Doczy.Business.DTOs.WorkPlace
 {
-    public record CreateWorkPlaceDto(
+    public record CreateHospitalDto(
       string? Name,
       IFormFile Icon
    );

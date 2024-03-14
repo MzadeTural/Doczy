@@ -4,8 +4,8 @@ using Doczy.Business.DTOs.WorkPlace;
 
 namespace Doczy.Business.Services.Interfaces
 {
-    public interface IWorkPlaceService
+    public interface IHospitalService
     {
-        Task<ResponseDto> CreateWorkPlaceAsync(CreateWorkPlaceDto model);
+        Task<ResponseDto> CreateWorkPlaceAsync(CreateHospitalDto model);
     }
 }

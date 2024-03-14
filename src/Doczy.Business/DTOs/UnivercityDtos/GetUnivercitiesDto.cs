@@ -2,7 +2,8 @@
 namespace Doczy.Business.DTOs.UnivercityDtos
 {
     public record GetUnivercityDto(
-     string? Name,
+         Guid Id ,
+    string? Name,
      string? IconUrl
   );
 }

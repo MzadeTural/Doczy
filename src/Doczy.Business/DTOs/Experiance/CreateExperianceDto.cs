@@ -3,7 +3,7 @@
     public record CreateExperianceDto
     (
         string Title,       
-        Guid WorkPlaceId,
+        Guid HospitalId,
         string Location,
         bool currentlyWorking,
         DateTime StartDate,

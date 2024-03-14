@@ -10,7 +10,7 @@ namespace Doczy.Business.MappingProfiles
         {
             CreateMap<CreateExperianceDto, Experiance>().ReverseMap();
             CreateMap<Experiance, GetExperianceDto>()
-           .ForMember(dest => dest.WorkPlace, opt => opt.MapFrom(src => src.WorkPlace.Name));
+           .ForMember(dest => dest.Hospital, opt => opt.MapFrom(src => src.Hospital.Name));
          
         }
     }
