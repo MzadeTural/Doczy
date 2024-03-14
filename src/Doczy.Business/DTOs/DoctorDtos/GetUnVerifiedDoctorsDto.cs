@@ -11,5 +11,7 @@ namespace Doczy.Business.DTOs.DoctorDtos
         public string? IdCardImageUrl { get; set; }
         public string? DiplomaImageUrl { get; set; }
         public string? UserName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 }

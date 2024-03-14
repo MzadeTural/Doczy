@@ -54,7 +54,7 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<GetDoctorsDto>>> FilterDoctors([FromForm] GetDoctorFilterDto model)
+        public async Task<ActionResult<IEnumerable<GetDoctorsDto>>> FilterDoctors([FromQuery] GetDoctorFilterDto model)
         {
             var response = await _doctorService.GetFilterDoctors(model);
             return Ok(response);

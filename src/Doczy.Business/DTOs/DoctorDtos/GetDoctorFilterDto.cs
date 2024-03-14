@@ -2,11 +2,12 @@
 {
     public record GetDoctorFilterDto
     (
-        Guid Id,
+       
         Guid? CategoryId,
         Guid? ServiceTypeId,
+        string FullName,
         double? MinPrice,
         double? MaxPrice,
-        Guid HospitalId
+        Guid? HospitalId
         );
 }
