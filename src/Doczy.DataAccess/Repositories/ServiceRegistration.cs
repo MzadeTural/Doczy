@@ -12,6 +12,7 @@ using Doczy.DataAccess.Repositories.Interfaces.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 namespace Doczy.DataAccess.Repositories
 {
@@ -19,9 +20,10 @@ namespace Doczy.DataAccess.Repositories
     {
         public static void AddDataAccesServices(this IServiceCollection services)
         {
+            var builder = WebApplication.CreateBuilder();
             services.AddDbContext<DoczyContext>(opt =>
             {
-                opt.UseSqlServer(ServiceConfiguration.ConnectionString());
+                opt.UseSqlServer(builder.Configuration["ConnectionStrings:Default"]);
             }).AddIdentity<BaseAppUser, IdentityRole<Guid>>(x =>
             {
                 x.Password.RequiredLength = 8;
