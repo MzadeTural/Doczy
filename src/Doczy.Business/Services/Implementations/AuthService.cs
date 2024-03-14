@@ -209,5 +209,19 @@ namespace Doczy.Business.Services.Implementations
 
 
         }
+
+        public async Task<ResponseDto> VerifiedDoctorAsync(Guid doctorId)
+        {
+            var user = await _userManager.FindByIdAsync(doctorId.ToString());
+            if (user is null)
+                throw new UserNotFoundException("ID:",doctorId.ToString());
+           var result=  user.IsVerified = true;
+            return new ResponseDto
+       (
+           StatusCode:result? HttpStatusCode.OK:HttpStatusCode.BadRequest,
+           Message:  result?  "Doctor  successfully verfied": "Something went wrong"
+       );
+
+        }
     }
 }

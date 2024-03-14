@@ -37,7 +37,13 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
 
         }
-
-
+        [HttpPatch("verify-doctor")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> VerifiedDoctor(Guid doctorId )
+        {
+            var response = await _authService.VerifiedDoctorAsync(doctorId);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+        
     }
 }
