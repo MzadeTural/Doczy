@@ -130,18 +130,47 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetDoctorsDto>> GetFilterDoctors(GetDoctorFilterDto model)
         {
-            var doctors = await _doctorRepository.FindAll(u => u.DoctorCategoryId == model.CategoryId
-                                                           && u.Services.Any(s => s.ServiceTypeId == model.ServiceTypeId
-                                                           && u.Experiances.Any(e => e.currentlyWorking && e.HospitalId == model.HospitalId)
-                                                           && s.Price >= model.MinPrice && s.Price <= model.MinPrice),
-                                                           tracking: false,
-                                                           d => d.Services,
-                                                           d => d.FavoriteDoctors,
-                                                           d => d.Ratings,
-                                                           d => d.Experiances,
-                                                           d => d.DoctorCategory
-                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
-                                                           .ToListAsync();
+            var doctorsQuery = _doctorRepository.FindAll(u => true, // Initial condition to include all doctors
+         tracking: false,
+         d => d.Services,
+         d => d.FavoriteDoctors,
+         d => d.Ratings,
+         d => d.Experiances,
+         d => d.DoctorCategory
+     );
+
+            if (model.CategoryId != null)
+            {
+                doctorsQuery = doctorsQuery.Where(u => u.DoctorCategoryId == model.CategoryId);
+            }
+
+            if (!string.IsNullOrEmpty(model.FullName))
+            {
+                doctorsQuery = doctorsQuery.Where(u => u.FirstName.Contains(model.FullName) || u.LastName.Contains(model.FullName));
+            }
+
+            if (model.ServiceTypeId != null)
+            {
+                doctorsQuery = doctorsQuery.Where(u => u.Services.Any(s => s.ServiceTypeId == model.ServiceTypeId));
+            }
+
+            if (model.HospitalId != null)
+            {
+                doctorsQuery = doctorsQuery.Where(u => u.Experiances.Any(e => e.currentlyWorking && e.HospitalId == model.HospitalId));
+            }
+
+            if (model.MinPrice != null)
+            {
+                doctorsQuery = doctorsQuery.Where(u => u.Services.Any(s => s.Price >= model.MinPrice));
+            }
+
+            if (model.MaxPrice != null)
+            {
+                doctorsQuery = doctorsQuery.Where(u => u.Services.Any(s => s.Price <= model.MaxPrice));
+            }
+
+            var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
+
             return doctors;
         }
 
