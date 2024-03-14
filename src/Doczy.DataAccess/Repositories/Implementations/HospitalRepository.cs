@@ -5,9 +5,9 @@ using Doczy.DataAccess.Repositories.Interfaces;
 
 namespace Doczy.DataAccess.Repositories.Implementations
 {
-    public class WorkPlaceRepository : Repository<WorkPlace>, IWorkPlaceRepository
+    public class HospitalRepository : Repository<Hospital>, IHospitalRepository
     {
-        public WorkPlaceRepository(DoczyContext context) : base(context) { }
+        public HospitalRepository(DoczyContext context) : base(context) { }
 
     }
 }

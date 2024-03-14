@@ -7,6 +7,7 @@
 //        public static string ConnectionString()
 //        {
 
+
 //            ConfigurationManager manager = new ConfigurationManager();
 //            manager.SetBasePath(Directory.GetCurrentDirectory() + "../../Doczy.Api");
 //            manager.AddJsonFile("appsettings.json");
@@ -14,3 +15,4 @@
 //        }
 //    }
 //}
+

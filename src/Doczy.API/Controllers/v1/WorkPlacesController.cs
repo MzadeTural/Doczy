@@ -11,9 +11,9 @@ namespace Doczy.API.Controllers.v1
     [ApiController]
     public class WorkPlacesController : ControllerBase
     {
-        private readonly IWorkPlaceService _workPlaceService;
+        private readonly IHospitalService _workPlaceService;
 
-        public WorkPlacesController(IWorkPlaceService workPlaceService)
+        public WorkPlacesController(IHospitalService workPlaceService)
         {
             _workPlaceService = workPlaceService;
         }
@@ -21,7 +21,7 @@ namespace Doczy.API.Controllers.v1
         [HttpPost]
         [Route("create")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
-        public async Task<IActionResult> Create([FromForm] CreateWorkPlaceDto createWPDto)
+        public async Task<IActionResult> Create([FromForm] CreateHospitalDto createWPDto)
         {
 
             var response = await _workPlaceService.CreateWorkPlaceAsync(createWPDto);
