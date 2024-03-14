@@ -13,5 +13,6 @@ namespace Doczy.Business.Services.Interfaces
         Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordRequestDto model);
         Task<ResponseDto> ConfirmOTPAsync(ConfirmOTPDto model);
         Task<ResponseDto> ResetPasswordAsync(ResetPasswordDto model);
+        Task<ResponseDto> VerifiedDoctorAsync(Guid doctorId);
     }
 }
