@@ -27,16 +27,6 @@ namespace Doczy.API.Controllers.v1
             //rrn payment succes edirsen nagarsan ele
             return Ok("sagol");
             //Newtonsoft.Json.JsonConvert.SerializeObject(callbackData);
-            var orderStatus = callbackData.payload.orderStatus;
-            if(orderStatus == "APPROVED")
-            {
-
-            }
-            else
-            {
-                throw new Exception("sda");
-            }
-            return Ok();
         }
         [HttpPost("callbackDelete")]
         public IActionResult CallbackDelete()
@@ -44,6 +34,7 @@ namespace Doczy.API.Controllers.v1
             // hansi user aciqdisa onu aliriq
             // sonuncunu aliriq
             // silirik
+            return Ok();
         }
         public class CallbackData
         {
