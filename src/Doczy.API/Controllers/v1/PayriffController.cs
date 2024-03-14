@@ -22,7 +22,19 @@ namespace Doczy.API.Controllers.v1
         [HttpPost("callback")]
         public IActionResult Callback(CallbackData callbackData)
         {
-            return Ok(Newtonsoft.Json.JsonConvert.SerializeObject(callbackData));
+            // hansi user aciqdisa onu aliriq
+            // sonuncunu aliriq
+            //rrn payment succes edirsen nagarsan ele
+            return Ok("sagol");
+            //Newtonsoft.Json.JsonConvert.SerializeObject(callbackData);
+        }
+        [HttpPost("callbackDelete")]
+        public IActionResult CallbackDelete()
+        {
+            // hansi user aciqdisa onu aliriq
+            // sonuncunu aliriq
+            // silirik
+            return Ok();
         }
         public class CallbackData
         {

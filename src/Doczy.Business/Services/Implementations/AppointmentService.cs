@@ -26,7 +26,16 @@ namespace Doczy.Business.Services.Implementations
         private readonly UserManager<BaseAppUser> _userManager;
         private readonly IAvailableHourRepository _availableHourRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AppointmentService(IAppointmentRepository appointmentRepository, IMapper mapper, IHttpContextAccessor contextAccessor, UserManager<BaseAppUser> userManager, IServiceRepository serviceRepository, IAvailableHourRepository availableHourRepository, IHttpContextAccessor httpContextAccessor)
+        private readonly IPayriffService _payriffService;
+
+        public AppointmentService(IAppointmentRepository appointmentRepository,
+                                  IMapper mapper,
+                                  IHttpContextAccessor contextAccessor,
+                                  UserManager<BaseAppUser> userManager,
+                                  IServiceRepository serviceRepository,
+                                  IAvailableHourRepository availableHourRepository,
+                                  IHttpContextAccessor httpContextAccessor,
+                                  IPayriffService payriffService)
         {
             _appointmentRepository = appointmentRepository;
             _mapper = mapper;
@@ -35,10 +44,12 @@ namespace Doczy.Business.Services.Implementations
             _serviceRepository = serviceRepository;
             _availableHourRepository = availableHourRepository;
             _httpContextAccessor = httpContextAccessor;
+            _payriffService = payriffService;
         }
 
         public async Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model)
         {
+            
             var userId = (await _userManager.GetUserAsync(_contextAccessor?.HttpContext?.User)).Id;
            var existService= await _serviceRepository.IsExistAsync(s => s.Id == model.ServiceId);
             if (!existService)
@@ -47,6 +58,17 @@ namespace Doczy.Business.Services.Implementations
             Appointment newAppointment = _mapper.Map<Appointment>(model);
             newAppointment.PatientId = userId;
             newAppointment.AppointmentTime = time.Time;
+            try
+            {
+                await _payriffService.Pay(1, "salam olsun");
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto(
+            StatusCode: HttpStatusCode.BadRequest,
+            Message: $"Payment failed: {ex.Message}"
+        );
+            }
             var result = await _appointmentRepository.CreateAsync(newAppointment);
             await _appointmentRepository.SaveAsync();
 
