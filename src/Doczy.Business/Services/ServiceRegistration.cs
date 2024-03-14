@@ -22,7 +22,7 @@ namespace Doczy.Business.Services
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IServiceService, ServiceService>();
-            services.AddScoped<IWorkPlaceService, WorkPlaceService>();
+            services.AddScoped<IHospitalService, HospitalService>();
             services.AddScoped<IExperianceService,ExperianceService >();
             services.AddScoped<IOTPService,OTPService >();
             services.AddScoped<IUnivercityService,UnivercityService>(); 

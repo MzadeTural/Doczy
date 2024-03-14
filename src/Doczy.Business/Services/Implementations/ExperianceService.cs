@@ -47,7 +47,7 @@ namespace Doczy.Business.Services.Implementations
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             ArgumentNullException.ThrowIfNull(doctorId);
 
-            var experiances = await _experianceRepository.FindAll(c => c.DoctorId == doctorId, tracking: false, e => e.WorkPlace)
+            var experiances = await _experianceRepository.FindAll(c => c.DoctorId == doctorId, tracking: false, e => e.Hospital)
                                                             .ProjectTo<GetExperianceDto>(_mapper.ConfigurationProvider)
                                                              .ToListAsync();
             return experiances;

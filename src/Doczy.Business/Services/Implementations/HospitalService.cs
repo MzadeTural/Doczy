@@ -11,37 +11,37 @@ using System.Net;
 
 namespace Doczy.Business.Services.Implementations
 {
-    public class WorkPlaceService : IWorkPlaceService
+    public class HospitalService : IHospitalService
     {
-        private readonly IWorkPlaceRepository _workPlacerepository;
+        private readonly IHospitalRepository _hospitalracerepository;
         private readonly IWebHostEnvironment _environment;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public WorkPlaceService(IWorkPlaceRepository workPlacerepository, IWebHostEnvironment environment, IFileService fileService, IMapper mapper)
+        public HospitalService(IHospitalRepository workPlacerepository, IWebHostEnvironment environment, IFileService fileService, IMapper mapper)
         {
-            _workPlacerepository = workPlacerepository;
+            _hospitalracerepository = workPlacerepository;
             _environment = environment;
             _fileService = fileService;
             _mapper = mapper;
         }
 
-        public async Task<ResponseDto> CreateWorkPlaceAsync(CreateWorkPlaceDto model)
+        public async Task<ResponseDto> CreateWorkPlaceAsync(CreateHospitalDto model)
         {
-            bool isExist = await _workPlacerepository.IsExistAsync(s => s.Name == model.Name);
+            bool isExist = await _hospitalracerepository.IsExistAsync(s => s.Name == model.Name);
             if (isExist)
                 throw new ServiceTypeAlreadyExistExceptions("Service type already exist");
 
             string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/workplaceicons/");
 
-            var newWP = _mapper.Map<WorkPlace>(model);
+            var newWP = _mapper.Map<Hospital>(model);
             newWP.IconUrl = file;
-            var result = await _workPlacerepository.CreateAsync(newWP);
-            await _workPlacerepository.SaveAsync();
+            var result = await _hospitalracerepository.CreateAsync(newWP);
+            await _hospitalracerepository.SaveAsync();
 
             return new ResponseDto(
                          StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
-                         Message: result ? "Work Place  successfully created" : "Something went wrong"
+                         Message: result ? "Hospital  successfully created" : "Something went wrong"
                          );
         }
     }

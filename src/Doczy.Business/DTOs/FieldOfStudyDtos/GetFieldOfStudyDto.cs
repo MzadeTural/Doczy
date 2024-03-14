@@ -2,7 +2,8 @@
 {
     public record GetFieldOfStudyDto
     (
-        string Name
+          Guid Id ,
+    string Name
     );
 }
 

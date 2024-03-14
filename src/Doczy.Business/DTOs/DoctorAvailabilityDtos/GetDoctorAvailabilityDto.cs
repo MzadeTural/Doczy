@@ -6,6 +6,7 @@ namespace Doczy.Business.DTOs.DoctorAvailabilityDtos
 {
     public class GetDoctorAvailabilityDto
     {
+        public Guid Id { get; set; }
         public DayOfWeek DayOfWeek { get; set; }
         public List<GetAvailableHourDto> AvailableHours { get; set; }
     }

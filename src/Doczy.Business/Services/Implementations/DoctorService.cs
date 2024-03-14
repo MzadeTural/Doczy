@@ -132,7 +132,7 @@ namespace Doczy.Business.Services.Implementations
         {
             var doctors = await _doctorRepository.FindAll(u => u.DoctorCategoryId == model.CategoryId
                                                            && u.Services.Any(s => s.ServiceTypeId == model.ServiceTypeId
-                                                           && u.Experiances.Any(e => e.currentlyWorking && e.WorkPlaceId == model.workPlaceId)
+                                                           && u.Experiances.Any(e => e.currentlyWorking && e.HospitalId == model.HospitalId)
                                                            && s.Price >= model.MinPrice && s.Price <= model.MinPrice),
                                                            tracking: false,
                                                            d => d.Services,

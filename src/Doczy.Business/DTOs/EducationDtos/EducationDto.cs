@@ -12,6 +12,7 @@ namespace Doczy.Business.DTOs.EducationDtos
  //   );
     public class EducationDto
     {
+        public Guid Id { get; set; }
         public string Univercity { get; set; }
         public string UnivercityDegree { get; set; }
         public string FieldOfStudy { get; set; }

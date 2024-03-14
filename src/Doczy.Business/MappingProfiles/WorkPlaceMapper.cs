@@ -8,7 +8,7 @@ namespace Doczy.Business.MappingProfiles
     {
         public WorkPlaceMapper()
         {
-            CreateMap<CreateWorkPlaceDto, WorkPlace>().ForMember(s => s.IconUrl, e => e.Ignore())
+            CreateMap<CreateHospitalDto, Hospital>().ForMember(s => s.IconUrl, e => e.Ignore())
                 .ReverseMap();
         }
     }

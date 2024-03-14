@@ -28,7 +28,7 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<Service> Services { get; set; }
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
-        public DbSet<WorkPlace> WorkPlaces { get; set; }
+        public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Award> Awards { get; set; }
         public DbSet<Univercity> Univercities { get; set; }
