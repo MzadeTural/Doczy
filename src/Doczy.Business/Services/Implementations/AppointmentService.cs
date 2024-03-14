@@ -61,6 +61,7 @@ namespace Doczy.Business.Services.Implementations
         public async Task<List<GetAppointmentDto>> GetAppointmentAsync()
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+
             ArgumentNullException.ThrowIfNull(doctorId);
 
             var appointment = await _appointmentRepository.FindAll(c => c.DoctorId == doctorId,
