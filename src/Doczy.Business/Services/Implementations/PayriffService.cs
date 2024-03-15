@@ -50,7 +50,7 @@ namespace Doczy.Business.Services.Implementations
 
             var responseObject = System.Text.Json.JsonSerializer.Deserialize<Payriff>(response);
             Payriff.Payload payload = responseObject.payload;
-            await Payment(payload.paymentUrl);
+           await Payment(payload.PaymentUrl);
 
         }
         private async Task<string> HttpRequest(string apiUrl, string jsonBody)

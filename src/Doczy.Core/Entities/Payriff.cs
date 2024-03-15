@@ -2,19 +2,19 @@
 {
 	public class Payriff
 	{
-            public string code { get; set; }
-            public string message { get; set; }
-            public string route { get; set; }
-            public string internalMessage { get; set; }
-            public string responseId { get; set; }
+            public string Code { get; set; }
+            public string Message { get; set; }
+            public string Route { get; set; }
+            public string RnternalMessage { get; set; }
+            public string ResponseId { get; set; }
             public Payload payload { get; set; }
 
             public class Payload
             {
-                public string orderId { get; set; }
-                public string sessionId { get; set; }
-                public string paymentUrl { get; set; }
-                public int transactionId { get; set; }
+                public string OrderId { get; set; }
+                public string SessionId { get; set; }
+                public string PaymentUrl { get; set; }
+                public int TransactionId { get; set; }
             }
         
 	}
