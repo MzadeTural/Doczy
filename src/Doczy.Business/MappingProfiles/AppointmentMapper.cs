@@ -12,7 +12,7 @@ namespace Doczy.Business.MappingProfiles
             CreateMap<CreateAppointmentDto, Appointment>()
           .ForMember(dest => dest.AppointmentDate, opt => opt.MapFrom(src => src.ChosenDate))
                 .ReverseMap();
-
+            CreateMap<TempAppointment, Appointment>().ReverseMap();
             CreateMap<Appointment, GetAppointmentDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Service.Name))
             .ForMember(dest => dest.PatientLastName, opt => opt.MapFrom(src => src.Patient.LastName))

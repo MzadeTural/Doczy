@@ -6,8 +6,8 @@
         Guid? CategoryId,
         Guid? ServiceTypeId,
         string FullName,
-        double? MinPrice,
-        double? MaxPrice,
+        decimal? MinPrice,
+        decimal? MaxPrice,
         Guid? HospitalId
         );
 }
