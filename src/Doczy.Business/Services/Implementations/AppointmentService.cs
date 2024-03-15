@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.AppointmentDtos;
