@@ -5,7 +5,7 @@
     string Name,
     byte Duration,
     string Description,
-    double Price,
+    decimal Price,
     Guid ServiceTypeId
  );
 }

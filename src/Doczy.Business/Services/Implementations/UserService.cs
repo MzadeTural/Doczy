@@ -41,7 +41,7 @@ namespace Doczy.Business.Services.Implementations
             _mailService = mailService;
             _workPlaceRepository = workPlaceRepository;
         }
-        public Task<ResponseDto> CreateAsync(CreateUserDto model)
+        public async Task<ResponseDto> CreateAsync(CreateUserDto model)
         {
             throw new NotImplementedException();
         }
@@ -127,6 +127,20 @@ namespace Doczy.Business.Services.Implementations
             }
 
             throw new UserCreateFailedException(result.Errors);
+        }
+
+        public async Task<ResponseDto> ChangeProfilePhoto(UpdateProfilePhotoDto model)
+        {
+            string profilePhoto = await _fileService.CreateFileAsync(model.fileUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
+            var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var user =await _userManager.FindByIdAsync(userId.ToString());
+            user.ProfileImageUrl=profilePhoto;
+          var result= await _userManager.UpdateAsync(user);
+            return new ResponseDto(
+                    StatusCode: HttpStatusCode.NoContent,
+                    Message: "Profile photo successfully updated"
+                );
+
         }
     }
 }

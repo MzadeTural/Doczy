@@ -10,6 +10,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
         IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes);
         Task<T> GetSingleAysnc(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>?[] includes);
         Task<bool> CreateAsync(T entity);
+        Task<T> GetByUserIdAsync(Guid userId);
         bool Update(T entity);
         bool DeleteRange(List<T> entities);
         bool Delete(T entity);

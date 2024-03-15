@@ -90,6 +90,9 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             return query;
         }
 
-        
+        public Task<T> GetByUserIdAsync(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

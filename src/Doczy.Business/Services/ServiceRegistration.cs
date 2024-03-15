@@ -31,6 +31,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IEducationService,EducationService>();
             services.AddScoped<IFieldOfStudyService,FieldOfStudyService>();
             services.AddScoped<IDoctorAvailabilityService,DoctorAvailabilityService>();
+            services.AddScoped<IPaymentService,PaymentService>();
 
             services.AddScoped<IAppointmentService,AppointmentService>();
 
