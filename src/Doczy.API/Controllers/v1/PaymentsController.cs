@@ -37,9 +37,9 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("callback")]
-        public async Task<IActionResult> PaymentCallback([FromBody] CallbackData paymentCallback)
+        public async Task<IActionResult> PaymentCallback(CallbackData paymentCallback)
         {
-           var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
+            var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
     }
