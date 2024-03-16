@@ -3,6 +3,7 @@ using Doczy.Business.DTOs.DoctorAvailabilityDtos;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Experiance;
 using Doczy.Business.DTOs.Language;
+using Doczy.Business.DTOs.ServiceDtos;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -23,13 +24,15 @@ namespace Doczy.API.Controllers.v1
         private readonly IDoctorService _doctorService;
         private readonly IExperianceService _experianceService;
         private readonly IDoctorAvailabilityService _doctorAvailabilityService;
-        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService)
+        private readonly IServiceService _serviceService;
+        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService, IServiceService serviceService)
         {
 
             _userService = userService;
             _doctorService = doctorService;
             _experianceService = experianceService;
             _doctorAvailabilityService = doctorAvailabilityService;
+            _serviceService = serviceService;
         }
         [AllowAnonymous]
         [HttpPost("register")]
@@ -102,14 +105,35 @@ namespace Doczy.API.Controllers.v1
             var languages = await _doctorService.GetLanguageAsync();
             return languages;
         }
-        [HttpGet("get-doctor-availability")]
+        [HttpGet("availabilities")]
         public async Task<GetDoctorAvailabilityDto> GetDoctorAvailability(Guid id ,DateTime date)
         {
             var response = await _doctorAvailabilityService.GetDoctorAvailabilityAsync(id,date);
             return response;
 
         }
+        [HttpGet("resume/{id}")]
+        public async Task<GetDoctorResumeDto> GetDoctorResume(Guid id)
+        {
+            var response = await _doctorService.GetDoctorResumeAsync(id);
+            return response;
 
+        }
+
+        [HttpGet("about/{id}")]
+        public async Task<GetAboutDoctorDto> GetDoctorAbout(Guid id)
+        {
+            var response = await _doctorService.GetDoctorAboutAsync(id);
+            return response;
+
+        }
+        [HttpGet("services/{id}")]
+        public async Task<List<GetServiceDto>> GetDoctorService(Guid id)
+        {
+            var response = await _serviceService.GetServiceAsync(id);
+            return response;
+
+        }
         [HttpGet("get-own-availability")]
         public async Task<List<GetDoctorAvailabilityDto>> GetDoctorAvailability()
         {

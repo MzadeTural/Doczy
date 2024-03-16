@@ -6,5 +6,6 @@ namespace Doczy.Business.Services.Interfaces
     public interface IServiceService
     {
         Task<ResponseDto> CreateServiceAsync(CreateServiceDto model);
+        Task<List<GetServiceDto>> GetServiceAsync(Guid doctorId);
     }
 }

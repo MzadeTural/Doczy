@@ -41,6 +41,7 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
         public DbSet<AvailableHour> AvailableHours { get; set; }
         public DbSet<TempAppointment> TempAppointments { get; set; }
+        public DbSet<Speciality> Specialities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);

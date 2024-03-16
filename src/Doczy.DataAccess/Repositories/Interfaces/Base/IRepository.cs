@@ -9,6 +9,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
         IQueryable<T> FindAllPaginate(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, bool tracking = true, params Expression<Func<T, object>>?[] includes);
         IQueryable<T> FindAll(Expression<Func<T, bool>> expression, bool tracking = true, params Expression<Func<T, object>>?[] includes);
         Task<T> GetSingleAysnc(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>?[] includes);
+        Task<T> GetSingleStringIncludeAysnc(Expression<Func<T, bool>> expression, params string?[] stringIncludes);
         Task<bool> CreateAsync(T entity);
         Task<T> GetByUserIdAsync(Guid userId);
         bool Update(T entity);
