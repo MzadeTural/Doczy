@@ -3,10 +3,11 @@ using Doczy.Core.Entities.Identities;
 
 namespace Doczy.Core.Entities
 {
-    public class Award:BaseAuditableEntity
+    public class Speciality : BaseEntity
     {
-        public string? AwardImageUrl { get; set; }
-        public DoctorAppUser Doctor{ get; set; }
+
+        public DoctorAppUser Doctor { get; set; }
         public Guid DoctorId { get; set; }
+        public string Title { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.Experiance;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Core.Entities.Identities;
 
@@ -20,6 +21,7 @@ namespace Doczy.Business.MappingProfiles
                 .ForMember(dest => dest.Raiting, opt => opt.MapFrom(src => src.Ratings.Average(r => r.Rating)))
 
                    .ReverseMap();
+            CreateMap<DoctorAppUser, GetDoctorResumeDto>().ReverseMap();
 
         }
     }

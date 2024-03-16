@@ -38,7 +38,7 @@ namespace Doczy.API.Controllers.v1
             return Ok(response);
         }
         [HttpPost("create-education")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         public async Task<IActionResult> CreateEducation([FromForm] CreateEducationDto createDoctorDto)
         {
             var response = await _educationService.CreateEducationAsync(createDoctorDto);

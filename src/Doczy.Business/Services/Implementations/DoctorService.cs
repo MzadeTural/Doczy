@@ -184,5 +184,39 @@ namespace Doczy.Business.Services.Implementations
                                                            .ToListAsync();
             return doctors;
         }
+
+        public async Task<GetDoctorResumeDto> GetDoctorResumeAsync(Guid doctorId)
+        {
+            ArgumentNullException.ThrowIfNull(doctorId);
+            var isExist = await _userManager.FindByIdAsync(doctorId.ToString());
+            if (isExist is null)
+                throw new UserNotFoundException("DoctorId", $"{doctorId}");
+            var dbDoctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId,
+                                                          "Experiances",
+                                                          "Experiances.Hospital",
+                                                          "Educations",
+                                                          "Awards",
+                                                          "Educations.Univercity",
+                                                          "Educations.UnivercityDegree",
+                                                          "Educations.FieldOfStudy"
+
+                                                            );
+            var doctorResume = _mapper.Map<GetDoctorResumeDto>(dbDoctors);
+            
+            return doctorResume;
+        }
+
+        public async Task<GetAboutDoctorDto> GetDoctorAboutAsync(Guid doctorId)
+        {
+            ArgumentNullException.ThrowIfNull(doctorId);
+            var isExist = await _userManager.FindByIdAsync(doctorId.ToString());
+            if (isExist is null)
+                throw new UserNotFoundException("DoctorId", $"{doctorId}");
+            var dbDoctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId,
+                                                          "Languages",
+                                                          "Specialities");
+            var doctorResume = _mapper.Map<GetAboutDoctorDto>(dbDoctors);
+            return doctorResume;
+        }
     }
 }

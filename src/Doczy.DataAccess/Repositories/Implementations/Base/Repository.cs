@@ -89,10 +89,26 @@ namespace Doczy.DataAccess.Repositories.Implementations.Base
             }
             return query;
         }
+        public IQueryable<T> GetQueryy(params string[] includes)
+        {
+            var query = Table.AsQueryable();
 
+            if (includes is not null && includes.Length > 0)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query;
+        }
         public Task<T> GetByUserIdAsync(Guid userId)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<T> GetSingleStringIncludeAysnc(Expression<Func<T, bool>> expression, params string?[] stringIncludes)
+         => await GetQueryy(stringIncludes).FirstOrDefaultAsync(expression);
     }
 }

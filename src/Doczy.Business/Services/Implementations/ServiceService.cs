@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.ServiceDtos;
+using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
@@ -8,6 +10,7 @@ using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -45,6 +48,19 @@ namespace Doczy.Business.Services.Implementations
                          StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
                          Message: result ? "Service successfully created" : "Something went wrong"
                          );
+        }
+
+        public async Task<List<GetServiceDto>> GetServiceAsync(Guid doctorId)
+        {
+            var isExist=_userManager.FindByIdAsync(doctorId.ToString());    
+            if(isExist is null)
+                throw new UserNotFoundException("DoctorId", $"{doctorId}");
+            ArgumentNullException.ThrowIfNull(doctorId);
+            var services = await _serviceRepository.FindAll(s => s.DoctorId == doctorId,
+                                                     tracking: true, s => s.ServiceType)
+                                                      .ProjectTo<GetServiceDto>(_mapper.ConfigurationProvider).ToListAsync();
+
+            return services;
         }
     }
 }
