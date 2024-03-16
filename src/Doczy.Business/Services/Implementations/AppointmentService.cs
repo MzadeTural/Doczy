@@ -4,17 +4,14 @@ using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.AppointmentDtos;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.PaymentDtos;
-using Doczy.Business.Exceptions.PaymentExceptions;
 using Doczy.Business.Exceptions.ServiceExceptions;
 using Doczy.Business.Exceptions.TemporaryAppointmentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
-using Doczy.DataAccess.Migrations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -46,28 +43,7 @@ namespace Doczy.Business.Services.Implementations
             _tempAppointmentRepository = tempAppointmentRepository;
         }
 
-        //public async Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model)
-        //{
-        //    var userId = (await _userManager.GetUserAsync(_contextAccessor?.HttpContext?.User)).Id;
-        //    var existService = await _serviceRepository.IsExistAsync(s => s.Id == model.ServiceId);
-        //    if (!existService)
-        //        throw new ServiceNotFoundException("Service not found");
-        //    var time = await _availableHourRepository.GetByIdAsync(model.ChosenHourId);
-        //    Appointment newAppointment = _mapper.Map<Appointment>(model);
-        //    newAppointment.PatientId = userId;
-        //    newAppointment.AppointmentTime = time.Time;
-
-
-        //    var result = await _appointmentRepository.CreateAsync(newAppointment);
-        //    await _appointmentRepository.SaveAsync();
-
-        //    return new ResponseDto(
-        //                 StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
-        //                 Message: result ? "Appointment successfully created" : "Something went wrong"
-        //                 );
-
-
-        //}
+    
         public async Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model)
         {
             var userId = (await _userManager.GetUserAsync(_contextAccessor?.HttpContext?.User)).Id;
@@ -95,13 +71,13 @@ namespace Doczy.Business.Services.Implementations
             };
 
             // Make createOrder request to initiate payment
-            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder",amount, "Appointment payment");
+            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", amount, "Appointment payment");
 
             // Check if payment initiation was successful
             if (paymentResponse.IsSuccessStatusCode)
             {
                 // Parse paymentUrl from response
-                    var parsePaymentResponse= _paymentService.ParsePaymentDataFromResponse(paymentResponse);
+                var parsePaymentResponse = _paymentService.ParsePaymentDataFromResponse(paymentResponse);
                 var paymentUrl = parsePaymentResponse.Payload.PaymentUrl;
 
 
@@ -111,7 +87,7 @@ namespace Doczy.Business.Services.Implementations
                 newTempAppointment.AppointmentTime = time.Time;
                 newTempAppointment.PaymentUrl = paymentUrl;
                 newTempAppointment.PaymentAmount = amount;
-                newTempAppointment.SessionId= parsePaymentResponse.Payload.SessionId;
+                newTempAppointment.SessionId = parsePaymentResponse.Payload.SessionId;
                 newTempAppointment.OrderId = parsePaymentResponse.Payload.OrderId;
                 var result = await _tempAppointmentRepository.CreateAsync(newTempAppointment);
                 await _tempAppointmentRepository.SaveAsync();
@@ -153,7 +129,7 @@ namespace Doczy.Business.Services.Implementations
 
 
 
-       
+
 
 
         public async Task CleanupTemporaryAppointmentData()
@@ -170,11 +146,11 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> UpdateAppointmentPaymentStatusAsync(CallbackData paymentCallback)
         {
-            var tempAppointment = await _tempAppointmentRepository.GetSingleAysnc(ta=>ta.OrderId==paymentCallback.Payload.OrderId && ta.SessionId==paymentCallback.Payload.SessionId);
+            var tempAppointment = await _tempAppointmentRepository.GetSingleAysnc(ta => ta.OrderId == paymentCallback.Payload.OrderId && ta.SessionId == paymentCallback.Payload.SessionId && !ta.IsDeleted);
 
             if (tempAppointment is null)
                 throw new TemporaryAppointmentNotFoundException();
-            
+
 
             // Check the payment status from the callback
             if (paymentCallback.Payload.OrderStatus == "APPROVED")
@@ -196,11 +172,11 @@ namespace Doczy.Business.Services.Implementations
                    Message: $"Payment for appointment {tempAppointment.Id} failed: {paymentCallback.Payload.ResponseDescription}"
                );
             }
-           
-             _tempAppointmentRepository.SoftDelete(tempAppointment);
+
+            _tempAppointmentRepository.SoftDelete(tempAppointment);
             await _tempAppointmentRepository.SaveAsync();
             return new ResponseDto(
-                   StatusCode:  HttpStatusCode.Created ,
+                   StatusCode: HttpStatusCode.Created,
                    Message: "Appointment successfully created and paid"
                );
 

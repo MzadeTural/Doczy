@@ -11,6 +11,8 @@ namespace Doczy.Business.MappingProfiles
         {
             CreateMap<CreateServiceTypeDto, ServiceType>().ForMember(s=>s.IconUrl, e => e.Ignore())
                 .ReverseMap();
+            CreateMap<ServiceType,GetServiceTypeDto>()
+               .ReverseMap();
         }
     }
 }
