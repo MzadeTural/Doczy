@@ -2,6 +2,7 @@ using Doczy.API.Extensions;
 using Doczy.Business.Helpers.Settings;
 using Doczy.Business.MappingProfiles;
 using Doczy.Business.Services;
+using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -21,6 +22,16 @@ builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Google.Apis.Auth.AspNetCore3.GoogleOpenIdConnectDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Google.Apis.Auth.AspNetCore3.GoogleOpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddGoogleOpenIdConnect(options =>
+{
+    options.ClientId = "1061994404638-vf9ks6o9ddt90rbolq3h4l0phkpjjb4s.apps.googleusercontent.com";
+    options.ClientSecret = "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";
+});
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Doczy API", Version = "v1" });
