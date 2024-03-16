@@ -2,6 +2,7 @@ using Doczy.API.Extensions;
 using Doczy.Business.Helpers.Settings;
 using Doczy.Business.MappingProfiles;
 using Doczy.Business.Services;
+using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories;
 using Microsoft.OpenApi.Models;
 using Serilog;
