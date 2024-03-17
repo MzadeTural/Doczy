@@ -213,7 +213,7 @@ namespace Doczy.Business.Services.Implementations
             if (isExist is null)
                 throw new UserNotFoundException("DoctorId", $"{doctorId}");
             var dbDoctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId,
-                                                          "Languages",
+                                                          "Languages.Language",
                                                           "Specialities");
             var doctorResume = _mapper.Map<GetAboutDoctorDto>(dbDoctors);
             return doctorResume;
