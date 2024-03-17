@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Experiance;
+using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Core.Entities.Identities;
 
@@ -22,6 +23,9 @@ namespace Doczy.Business.MappingProfiles
 
                    .ReverseMap();
             CreateMap<DoctorAppUser, GetDoctorResumeDto>().ReverseMap();
+            CreateMap<DoctorAppUser, GetAboutDoctorDto>()
+                    .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.Languages.Select(language => new GetLanguageDto(language.Id, language.Language.Name))))
+                    .ReverseMap();
 
         }
     }
