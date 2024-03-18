@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.ServiceDtos;
+using Doczy.Business.Exceptions.ServiceTypeExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
@@ -21,13 +22,15 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<BaseAppUser> _userManager;
+        private readonly IServiceTypeRepository _serviceTypeRepository;
 
-        public ServiceService(IServiceRepository serviceRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<BaseAppUser> userManager)
+        public ServiceService(IServiceRepository serviceRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<BaseAppUser> userManager, IServiceTypeRepository serviceTypeRepository)
         {
             _serviceRepository = serviceRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
+            _serviceTypeRepository = serviceTypeRepository;
         }
 
         public async Task<ResponseDto> CreateServiceAsync(CreateServiceDto model)
@@ -52,14 +55,30 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetServiceDto>> GetServiceAsync(Guid doctorId)
         {
-            var isExist=_userManager.FindByIdAsync(doctorId.ToString());    
+            ArgumentNullException.ThrowIfNull(doctorId);
+            var isExist=await _userManager.FindByIdAsync(doctorId.ToString());    
             if(isExist is null)
                 throw new UserNotFoundException("DoctorId", $"{doctorId}");
-            ArgumentNullException.ThrowIfNull(doctorId);
             var services = await _serviceRepository.FindAll(s => s.DoctorId == doctorId,
                                                      tracking: true, s => s.ServiceType)
                                                       .ProjectTo<GetServiceDto>(_mapper.ConfigurationProvider).ToListAsync();
 
+            return services;
+        }
+
+        public async Task<List<GetServiceByTypeDto>> GetServiceByTypeAsync(Guid doctorId, Guid typeId)
+        {
+            ArgumentNullException.ThrowIfNull(doctorId);
+            ArgumentNullException.ThrowIfNull(typeId);
+            var isExistType = await _serviceTypeRepository.GetByIdAsync(typeId);
+            if (isExistType is null)
+                throw new ServiceTypeNotFoundException();
+            var isExist = await _userManager.FindByIdAsync(doctorId.ToString());
+            if (isExist is null)
+                throw new UserNotFoundException("DoctorId", $"{doctorId}");
+            var services = await _serviceRepository.FindAll(s => s.DoctorId == doctorId && s.ServiceTypeId==typeId,
+                                                     tracking: true)
+                                                      .ProjectTo<GetServiceByTypeDto>(_mapper.ConfigurationProvider).ToListAsync();
             return services;
         }
     }

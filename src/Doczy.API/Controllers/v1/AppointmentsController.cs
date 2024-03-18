@@ -21,7 +21,7 @@ namespace Doczy.API.Controllers.v1
             _appointmentService = appointmentsService;
         }
 
-        [HttpPost]
+        [HttpPost("")]
         public async Task<IActionResult> CreateAppointment([FromForm] CreateAppointmentDto appointmentRequest)
         {
            

@@ -16,9 +16,14 @@ namespace Doczy.API.Controllers.v1
         {
             _experianceService = experianceService;
         }
-
-        [HttpGet("/experiances")]
-        public async Task<List<GetExperianceDto>> GetDoctorAppointments()
+        [HttpPost("")]
+        public async Task<IActionResult> Create([FromForm] CreateExperianceDto createExperianceDto)
+        {
+            var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+        [HttpGet("")]
+        public async Task<List<GetExperianceDto>> Get()
         {
             var experiances = await _experianceService.GetExperiancesAsync();
             return experiances;

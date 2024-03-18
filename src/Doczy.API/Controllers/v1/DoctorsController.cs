@@ -84,12 +84,7 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
-        [HttpPost("create-experiance")]
-        public async Task<IActionResult> AddExperiance([FromForm] CreateExperianceDto createExperianceDto)
-        {
-            var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
-            return StatusCode((int)response.StatusCode, response.Message);
-        }
+        
 
         [HttpPost("create-doctor-availability")]
         public async Task<IActionResult> CreateDoctorAvailability( CreateDoctorAvailabilityDto createDto)
@@ -134,7 +129,7 @@ namespace Doczy.API.Controllers.v1
             return response;
 
         }
-        [HttpGet("get-own-availability")]
+        [HttpGet("own-availability")]
         public async Task<List<GetDoctorAvailabilityDto>> GetDoctorAvailability()
         {
             var response = await _doctorAvailabilityService.GetDoctorOwnAvailabilityAsync();

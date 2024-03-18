@@ -16,9 +16,7 @@ namespace Doczy.API.Controllers.v1
         {
             _languageService = languageService;
         }
-
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         public async Task<IActionResult> Create([FromForm] CreateLanguageDto createLanguageDto)
         {
