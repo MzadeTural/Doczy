@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.ServiceTypeDtos;
 using Doczy.Business.Exceptions.ServiceTypeExceptions;
@@ -6,9 +7,9 @@ using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
-using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+
 
 namespace Doczy.Business.Services.Implementations
 {
@@ -44,6 +45,11 @@ namespace Doczy.Business.Services.Implementations
                          StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
                          Message: result ? "Service type successfully created" : "Something went wrong"
                          );
+        }
+
+        public async Task<List<GetServiceTypeDto>> GetServiceTypeAsync()
+        {
+            return await _serviceTypeRepository.GetAll().ProjectTo<GetServiceTypeDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
     }
 }

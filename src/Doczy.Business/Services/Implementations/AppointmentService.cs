@@ -9,6 +9,7 @@ using Doczy.Business.Exceptions.TemporaryAppointmentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Migrations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -26,10 +27,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly UserManager<BaseAppUser> _userManager;
         private readonly IAvailableHourRepository _availableHourRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPayriffService _payriffService;
         private readonly IPaymentService _paymentService;
         private readonly ITempAppointmentRepository _tempAppointmentRepository;
-        public AppointmentService(IAppointmentRepository appointmentRepository, IMapper mapper, IHttpContextAccessor contextAccessor, UserManager<BaseAppUser> userManager, IServiceRepository serviceRepository, IAvailableHourRepository availableHourRepository, IHttpContextAccessor httpContextAccessor, IPayriffService payriffService, IPaymentService paymantService, ITempAppointmentRepository tempAppointmentRepository)
+        public AppointmentService(IAppointmentRepository appointmentRepository, IMapper mapper, IHttpContextAccessor contextAccessor, UserManager<BaseAppUser> userManager, IServiceRepository serviceRepository, IAvailableHourRepository availableHourRepository, IHttpContextAccessor httpContextAccessor, IPaymentService paymantService, ITempAppointmentRepository tempAppointmentRepository)
         {
             _appointmentRepository = appointmentRepository;
             _mapper = mapper;
@@ -38,12 +38,12 @@ namespace Doczy.Business.Services.Implementations
             _serviceRepository = serviceRepository;
             _availableHourRepository = availableHourRepository;
             _httpContextAccessor = httpContextAccessor;
-            _payriffService = payriffService;
             _paymentService = paymantService;
             _tempAppointmentRepository = tempAppointmentRepository;
+
         }
 
-    
+
         public async Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model)
         {
             var userId = (await _userManager.GetUserAsync(_contextAccessor?.HttpContext?.User)).Id;
@@ -105,10 +105,9 @@ namespace Doczy.Business.Services.Implementations
                 );
             }
         }
-        public async Task<List<GetAppointmentDto>> GetAppointmentAsync()
+        public async Task<List<GetDoctorAppointmentDto>> GetDoctorAppointmentAsync()
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
-
             ArgumentNullException.ThrowIfNull(doctorId);
 
             var appointment = await _appointmentRepository.FindAll(c => c.DoctorId == doctorId,
@@ -116,16 +115,27 @@ namespace Doczy.Business.Services.Implementations
                                                                     a => a.Service,
                                                                     a => a.Service.ServiceType,
                                                                     a => a.Patient)
-                                                                    .ProjectTo<GetAppointmentDto>(_mapper.ConfigurationProvider)
+                                                                    .ProjectTo<GetDoctorAppointmentDto>(_mapper.ConfigurationProvider)
                                                                     .ToListAsync();
-
-
-
 
             return appointment;
         }
 
+        public async Task<List<GetPatientAppointmentDto>> GetPatientAppointmentAsync()
+        {
+            var patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            ArgumentNullException.ThrowIfNull(patientId);
 
+            var appointment = await _appointmentRepository.FindAll(c => c.PatientId == patientId,
+                                                                    tracking: false,
+                                                                    a => a.Service,
+                                                                    a => a.Service.ServiceType,
+                                                                    a => a.Doctor)
+                                                                    .ProjectTo<GetPatientAppointmentDto>(_mapper.ConfigurationProvider)
+                                                                    .ToListAsync();
+
+            return appointment;
+        }
 
 
 
@@ -181,5 +191,7 @@ namespace Doczy.Business.Services.Implementations
                );
 
         }
+
+
     }
 }

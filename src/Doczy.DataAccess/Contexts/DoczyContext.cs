@@ -31,7 +31,7 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<Hospital> Hospitals { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Award> Awards { get; set; }
-        public DbSet<Univercity> Univercities { get; set; }
+        public DbSet<Univercity> Universities { get; set; }
         public DbSet<UnivercityDegree> UnivercityDegrees { get; set; }
         public DbSet<FieldOfStudy> FieldOfStudies { get; set; }
         public DbSet<Education> Educations { get; set; }

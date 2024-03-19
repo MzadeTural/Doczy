@@ -24,16 +24,21 @@ namespace Doczy.API.Controllers.v1
         [HttpPost("")]
         public async Task<IActionResult> CreateAppointment([FromForm] CreateAppointmentDto appointmentRequest)
         {
-           
-                var response= await _appointmentService.CreateAppointmentAsync(appointmentRequest);
+            var response = await _appointmentService.CreateAppointmentAsync(appointmentRequest);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
-        [HttpGet("")]
+        [HttpGet("doctor")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
-        public async Task<IActionResult> GetAppointments()
+        public async Task<IActionResult> GetDoctorAppointments()
         {
-            return Ok(await _appointmentService.GetAppointmentAsync());
+            return Ok(await _appointmentService.GetDoctorAppointmentAsync());
+        }
+        [HttpGet("patient")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
+        public async Task<IActionResult> GetPatientAppointments()
+        {
+            return Ok(await _appointmentService.GetPatientAppointmentAsync());
         }
 
     }
