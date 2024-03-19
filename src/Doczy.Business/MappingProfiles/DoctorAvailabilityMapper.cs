@@ -8,13 +8,14 @@ namespace Doczy.Business.MappingProfiles
     {
         public DoctorAvailabilityMapper()
         {
-            CreateMap<DoctorAvailability, CreateDoctorAvailabilityDto>()
+            CreateMap< CreateDoctorAvailabilityDto, DoctorAvailability>()
+                  .ForMember(usc => usc.AvailableHours, e => e.Ignore())
                 .ReverseMap();
 
-            //CreateMap<DoctorAvailability, GetDoctorAvailabilityDto>()
-            //        .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
-            //.ForMember(dest => dest.AvailableHours, opt => opt.MapFrom(src => src.AvailableHours.Select(ah => new AvailableHour { Time = ah.Time }).ToList()));
-            CreateMap<DoctorAvailability, GetDoctorAvailabilityDto>();
+            CreateMap<DoctorAvailability, GetDoctorAvailabilityDto>()
+                    .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
+            .ForMember(dest => dest.AvailableHours, opt => opt.MapFrom(src => src.AvailableHours.Select(ah => new AvailableHour { Time = ah.Time }).ToList()));
+
         }
     }
 }

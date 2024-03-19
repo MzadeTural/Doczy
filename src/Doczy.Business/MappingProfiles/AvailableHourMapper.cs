@@ -8,7 +8,10 @@ namespace Doczy.Business.MappingProfiles
     {
         public AvailableHourMapper()
         {
-            CreateMap<AvailableHour, GetAvailableHourDto>();
+            CreateMap<AvailableHour, GetAvailableHourDto>()
+                
+                .ReverseMap();
+         
         }
     }
 }
