@@ -7,6 +7,7 @@ using Doczy.Business.Exceptions.DoctorAvailabilityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -43,19 +44,32 @@ namespace Doczy.Business.Services.Implementations
             if (model.AvailableHours == null || model.AvailableHours.Count == 0)
                 throw new ArgumentException("At least one available hour must be specified.");
             var existingAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == model.DayOfWeek);
+            var existTime = await _availableHourRepository.FindAll(da => da.DoctorAvailabilityId == existingAvailability.Id).ToListAsync();
             List<AvailableHour> AvailableHours = new List<AvailableHour>();
             foreach (var availableHourDto in model.AvailableHours)
             {
-                AvailableHours.Add(new AvailableHour
-                {
-                    Time = new TimeSpan(availableHourDto.Hour, availableHourDto.Minute, 0),
-                });
+                var time =new TimeSpan(availableHourDto.Hour, availableHourDto.Minute, 0);
+                //foreach (var hour in existTime)
+                //{
+                //    if (hour.Time !=time)
+                //    {
+                        AvailableHours.Add(new AvailableHour
+                        {
+                            Time = time
+                        }) ;
+                //    }
+                   
+                //}
+               
+
+               
             }
             if (existingAvailability != null)
                 existingAvailability.AvailableHours = AvailableHours;
             else
             {
                 var doctorAvailability = _mapper.Map<DoctorAvailability>(model);
+                doctorAvailability.AvailableHours=AvailableHours;
                 doctorAvailability.DoctorId = doctorId;
                 result = await _doctorAvailabilityRepository.CreateAsync(doctorAvailability);
 
