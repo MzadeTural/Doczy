@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using System;
-using Doczy.Core.Entities.Common;
+﻿using Doczy.Core.Entities.Common;
 using Doczy.DataAccess.Abstractions.Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Doczy.DataAccess.Interceptors
 {
@@ -41,9 +40,9 @@ namespace Doczy.DataAccess.Interceptors
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedDate = DateTime.UtcNow;
+                        entry.Entity.CreatedDate = _dateTime.UtcNow;
                         entry.Entity.CreatedBy = userName ?? "UserInfo";
-                        entry.Entity.LastModifiedDate = DateTime.UtcNow;
+                        entry.Entity.LastModifiedDate = _dateTime.UtcNow;
                         entry.Entity.LastModifiedBy = userName ?? "UserInfo";
                         break;
                     case EntityState.Modified:

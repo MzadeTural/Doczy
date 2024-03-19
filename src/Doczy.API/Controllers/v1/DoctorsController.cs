@@ -49,12 +49,7 @@ namespace Doczy.API.Controllers.v1
         {
             return Ok(await _doctorService.GetDoctors());
         }
-        [HttpGet("appointments")]
-        public async Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments()
-        {
-            var appointments = await _doctorService.GetDoctorAppointments();
-            return appointments;
-        }
+       
 
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<GetDoctorsDto>>> FilterDoctors([FromQuery] GetDoctorFilterDto model)
@@ -72,30 +67,16 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPost("add-language/{languageId}")]
-        public async Task<IActionResult> AddLanguage(Guid languageId)
+        public async Task<IActionResult> AddLanguage([FromRoute] Guid languageId)
         {
             var response = await _doctorService.AddLanguageAsync(languageId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPatch("add-category/{categoryId}")]
-        public async Task<IActionResult> UpdateCategory(Guid categoryId)
+        public async Task<IActionResult> UpdateCategory([FromRoute] Guid categoryId)
         {
             var response = await _doctorService.UpdateCategoryAsync(categoryId);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
-        }
-
-        [HttpPost("create-experiance")]
-        public async Task<IActionResult> AddExperiance([FromForm] CreateExperianceDto createExperianceDto)
-        {
-            var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
-            return StatusCode((int)response.StatusCode, response.Message);
-        }
-
-        [HttpPost("create-doctor-availability")]
-        public async Task<IActionResult> CreateDoctorAvailability( CreateDoctorAvailabilityDto createDto)
-        {
-            var response = await _doctorAvailabilityService.CreateDoctorAvailabilityAsync(createDto);
-            return StatusCode((int)response.StatusCode, response.Message);
         }
 
         
@@ -105,41 +86,23 @@ namespace Doczy.API.Controllers.v1
             var languages = await _doctorService.GetLanguageAsync();
             return languages;
         }
-        [HttpGet("availabilities")]
-        public async Task<GetDoctorAvailabilityDto> GetDoctorAvailability(Guid id ,DateTime date)
+        
+        [HttpGet("resume/{doctorId}")]
+        public async Task<GetDoctorResumeDto> GetDoctorResume([FromRoute] Guid doctorId)
         {
-            var response = await _doctorAvailabilityService.GetDoctorAvailabilityAsync(id,date);
-            return response;
-
-        }
-        [HttpGet("resume/{id}")]
-        public async Task<GetDoctorResumeDto> GetDoctorResume(Guid id)
-        {
-            var response = await _doctorService.GetDoctorResumeAsync(id);
+            var response = await _doctorService.GetDoctorResumeAsync(doctorId);
             return response;
 
         }
 
-        [HttpGet("about/{id}")]
-        public async Task<GetAboutDoctorDto> GetDoctorAbout(Guid id)
+        [HttpGet("about/{doctorId}")]
+        public async Task<GetAboutDoctorDto> GetDoctorAbout([FromRoute] Guid doctorId)
         {
-            var response = await _doctorService.GetDoctorAboutAsync(id);
+            var response = await _doctorService.GetDoctorAboutAsync(doctorId);
             return response;
 
         }
-        [HttpGet("services/{id}")]
-        public async Task<List<GetServiceDto>> GetDoctorService(Guid id)
-        {
-            var response = await _serviceService.GetServiceAsync(id);
-            return response;
-
-        }
-        [HttpGet("get-own-availability")]
-        public async Task<List<GetDoctorAvailabilityDto>> GetDoctorAvailability()
-        {
-            var response = await _doctorAvailabilityService.GetDoctorOwnAvailabilityAsync();
-            return response;
-
-        }
+       
+        
     }
 }
