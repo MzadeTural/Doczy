@@ -17,9 +17,7 @@ namespace Doczy.API.Controllers.v1
         {
             _serviceService = serviceService;
         }
-
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
         public async Task<IActionResult> Create([FromForm] CreateServiceDto createServiceDto)
         {
@@ -28,5 +26,21 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
 
         }
+
+        [HttpGet("by-type/{doctorId}/{typeId}")]
+        public async Task<List<GetServiceByTypeDto>> GetDoctorServiceByType([FromRoute] Guid doctorId , [FromRoute] Guid typeId)
+        {
+            var response = await _serviceService.GetServiceByTypeAsync(doctorId,typeId);
+            return response;
+
+        }
+        [HttpGet("{doctorId}")]
+        public async Task<List<GetServiceDto>> GetDoctorService([FromRoute] Guid doctorId)
+        {
+            var response = await _serviceService.GetServiceAsync(doctorId);
+            return response;
+
+        }
+
     }
 }

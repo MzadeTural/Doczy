@@ -95,21 +95,7 @@ namespace Doczy.Business.Services.Implementations
                                     );
         }
 
-        public async Task<ResponseDto> UpdateWorkPlaceAsync(Guid id, Guid worpPlaceId)
-        {
-            //ArgumentNullException.ThrowIfNull(id);
-            //ArgumentNullException.ThrowIfNull(worpPlaceId);
-            //var doct = await _doctorRepository.GetByIdAsync(id);
-            //var workPlace = await _workPlaceRepository.GetByIdAsync(worpPlaceId);
-            //if (doct is null) throw new UserNotFoundException("Doctor Not Found");
-            //if (workPlace is null) throw new WokrPlaceNotFoundException("Work Place Not Found");
-            //doct.WorkPlaceId = worpPlaceId;
-            await _doctorRepository.SaveAsync();
-            return new ResponseDto(
-                                     StatusCode: HttpStatusCode.OK,
-                                     Message: "Work place successfully modified"
-                                     );
-        }
+    
 
         public async Task<ResponseDto> UpdateCategoryAsync(Guid categoryId)
         {

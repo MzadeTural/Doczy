@@ -6,5 +6,6 @@ namespace Doczy.Business.Services.Interfaces
     public interface IServiceTypeService
     {
         Task<ResponseDto> CreateServiceTypeAsync(CreateServiceTypeDto model);
+        Task<List<GetServiceTypeDto>> GetServiceTypeAsync();
     }
 }

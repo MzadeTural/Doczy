@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.Exceptions.LanguageExceptions;
@@ -6,6 +7,7 @@ using Doczy.Business.Exceptions.ServiceTypeExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -25,7 +27,7 @@ namespace Doczy.Business.Services.Implementations
         {
             bool isExist = await _languageRepository.IsExistAsync(s => s.Name == model.Name);
             if (isExist)
-                throw new LanguageAlreadyExistExceptions("Service type already exist");
+                throw new LanguageAlreadyExistExceptions("Language type already exist");
             var newLanguage = _mapper.Map<Language>(model);
          
             var result = await _languageRepository.CreateAsync(newLanguage);
@@ -36,5 +38,12 @@ namespace Doczy.Business.Services.Implementations
                          Message: result ? "Language successfully created" : "Something went wrong"
                          );
         }
+
+        public async Task<List<GetLanguageDto>> GetLanguageAsync()
+        {
+          return await _languageRepository.GetAll().ProjectTo<GetLanguageDto>(_mapper.ConfigurationProvider).ToListAsync();
+
+        }
     }
 }
+ 
