@@ -102,7 +102,13 @@ namespace Doczy.API.Controllers.v1
             return response;
 
         }
-       
-        
+
+        [HttpGet("detail/{doctorId}")]
+        public async Task<GetDoctorDetailDto> GetDoctorDetail([FromRoute] Guid doctorId)
+        {
+            var response = await _doctorService.GetDoctorDetailAsync(doctorId);
+            return response;
+
+        }
     }
 }

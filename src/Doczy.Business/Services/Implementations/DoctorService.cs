@@ -3,8 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
-using Doczy.Business.DTOs.RaitingDtos;
-using Doczy.Business.Enums;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -14,7 +12,6 @@ using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -23,14 +20,15 @@ namespace Doczy.Business.Services.Implementations
     public class DoctorService : IDoctorService
     {
         private readonly UserManager<BaseAppUser> _userManager;
+        private readonly IDoctorRatingRepository _doctorRatingRepository;
         private readonly IDoctorRepository _doctorRepository;
         private readonly ILanguageRepository _languageRepository;
         private readonly IDoctorLanguageRepository _doctorLanguageRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IDoctorCategoryRepository _categoryRepository;
-       
-        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository)
+
+        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository, IDoctorRatingRepository doctorRatingRepository)
         {
             _userManager = userManager;
             _doctorRepository = doctorRepository;
@@ -39,7 +37,7 @@ namespace Doczy.Business.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _categoryRepository = categoryRepository;
-           
+            _doctorRatingRepository = doctorRatingRepository;
         }
 
         public async Task<ResponseDto> AddLanguageAsync(Guid languageId)
@@ -79,7 +77,6 @@ namespace Doczy.Business.Services.Implementations
         {
             throw new NotImplementedException();
         }
-
         public async Task<ResponseDto> UpdatePhoneNumberAsync(UserPhoneUpdateDto model)
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
@@ -94,9 +91,6 @@ namespace Doczy.Business.Services.Implementations
                                     Message: "Phone number successfully modified"
                                     );
         }
-
-    
-
         public async Task<ResponseDto> UpdateCategoryAsync(Guid categoryId)
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
@@ -162,7 +156,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetDoctorsDto>> GetDoctors()
         {
-            var doctors = await _doctorRepository.GetAll(  tracking: false,
+            var doctors = await _doctorRepository.GetAll(tracking: false,
                                                            d => d.FavoriteDoctors,
                                                            d => d.Ratings,
                                                            d => d.DoctorCategory
@@ -188,7 +182,7 @@ namespace Doczy.Business.Services.Implementations
 
                                                             );
             var doctorResume = _mapper.Map<GetDoctorResumeDto>(dbDoctors);
-            
+
             return doctorResume;
         }
 
@@ -203,6 +197,22 @@ namespace Doczy.Business.Services.Implementations
                                                           "Specialities");
             var doctorResume = _mapper.Map<GetAboutDoctorDto>(dbDoctors);
             return doctorResume;
+        }
+
+        public async Task<GetDoctorDetailDto> GetDoctorDetailAsync(Guid doctorId)
+        {
+            var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
+                                                     "FavoriteDoctors",
+                                                     "Ratings",
+                                                     "DoctorCategory",
+                                                     "Experiances",
+                                                     "Experiances.Hospital"
+                                                     );
+            var reviews =await _doctorRatingRepository.FindAll(r => r.DoctorId == doctorId).ToListAsync();
+            
+            var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
+                doctorDetail.Reviews = reviews.Count();
+            return doctorDetail;
         }
     }
 }

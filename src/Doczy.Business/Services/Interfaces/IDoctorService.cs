@@ -9,6 +9,8 @@ namespace Doczy.Business.Services.Interfaces
     {
         Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments();
         Task<GetAboutDoctorDto> GetDoctorAboutAsync(Guid doctorId);
+        Task<GetDoctorDetailDto> GetDoctorDetailAsync(Guid doctorId);
+
         Task<List<GetDoctorsDto>> GetFilterDoctors(GetDoctorFilterDto model);
         Task<List<GetDoctorsDto>> GetDoctors();
         Task<GetDoctorResumeDto> GetDoctorResumeAsync(Guid doctorId);
