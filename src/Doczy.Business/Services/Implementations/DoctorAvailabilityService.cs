@@ -2,18 +2,14 @@
 using Doczy.Business.DTOs.AvailableHoursDtos;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorAvailabilityDtos;
-using Doczy.Business.Enums;
 using Doczy.Business.Exceptions.DoctorAvailabilityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
-using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -69,13 +65,13 @@ namespace Doczy.Business.Services.Implementations
 
 
             }
-                existTime.AddRange(AvailableHours);
+            existTime.AddRange(AvailableHours);
             if (existingAvailability != null)
                 existingAvailability.AvailableHours = existTime;
             else
             {
                 var doctorAvailability = _mapper.Map<DoctorAvailability>(model);
-                doctorAvailability.AvailableHours= existTime;
+                doctorAvailability.AvailableHours = existTime;
                 doctorAvailability.DoctorId = doctorId;
                 result = await _doctorAvailabilityRepository.CreateAsync(doctorAvailability);
 
@@ -110,8 +106,8 @@ namespace Doczy.Business.Services.Implementations
            .FindAll(da => da.DoctorId == doctorId, tracking: false, da => da.AvailableHours).ToListAsync();
 
             var result = new List<GetDoctorAvailabilityDto>();
-            foreach(DayOfWeek dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
-        {
+            foreach (DayOfWeek dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
+            {
                 var availabilityForDay = doctorAvailability.FirstOrDefault(da => da.DayOfWeek == dayOfWeek);
 
                 if (availabilityForDay != null)
@@ -133,7 +129,7 @@ namespace Doczy.Business.Services.Implementations
 
             return result;
 
-           
+
         }
 
 
@@ -151,7 +147,7 @@ namespace Doczy.Business.Services.Implementations
             // Fetch appointments for this doctor and date
             var appointments = _appointmentRepository
                 .FindAll(a => a.DoctorId == doctorId &&
-                            a.AppointmentDate.Date == date.Date && !a.IsDeleted) 
+                            a.AppointmentDate.Date == date.Date && !a.IsDeleted)
                 .Select(a => a.AppointmentTime)
                 .ToList();
 
