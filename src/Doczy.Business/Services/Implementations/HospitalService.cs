@@ -4,7 +4,6 @@ using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.HospitalDtos;
 using Doczy.Business.DTOs.WorkPlace;
 using Doczy.Business.Exceptions.HospitalExceptions;
-using Doczy.Business.Exceptions.ServiceTypeExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Implementations;
@@ -15,7 +14,7 @@ using System.Net;
 
 namespace Doczy.Business.Services.Implementations
 {
-    public class HospitalService : IHospitalService
+    public class HospitalService : IHospitalService 
     {
         private readonly IHospitalRepository _hospitalracerepository;
         private readonly IWebHostEnvironment _environment;
@@ -36,7 +35,7 @@ namespace Doczy.Business.Services.Implementations
             if (isExist)
                 throw new HospitalAlreadyExistExceptions("Hospital type already exist");
 
-            string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/workplaceicons/");
+            string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/hospitalicons/");
 
             var newWP = _mapper.Map<Hospital>(model);
             newWP.IconUrl = file;
@@ -51,7 +50,28 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetHospitalDto>> GetHospitalAsync()
         {
-          return await _hospitalracerepository.GetAll().ProjectTo<GetHospitalDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return await _hospitalracerepository.GetAll().ProjectTo<GetHospitalDto>(_mapper.ConfigurationProvider).ToListAsync();
+        }
+
+        public async Task<ResponseDto> UpdateHospitalAsync(Guid hospitalId,UpdateHospitalDto model)
+        {
+            var dbHospital = await _hospitalracerepository.GetByIdAsync(hospitalId);
+            if (dbHospital is null)
+                throw new HospitalNotFoundException();
+            if (model.Name is not null)
+                dbHospital.Name = model.Name;
+            if (model.Icon is not null)
+            {
+                string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/hospitalicons/");
+                dbHospital.IconUrl = file;
+            }
+            var result = _hospitalracerepository.Update(dbHospital);
+            await _hospitalracerepository.SaveAsync();
+            return new ResponseDto(
+                StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                Message: result ? "Hospital successfully Updated" : "Something went wrong");
+
+            
         }
     }
 }
