@@ -37,5 +37,11 @@ namespace Doczy.API.Controllers.v1
             var hospitals = await _hospitalService.GetHospitalAsync();
             return hospitals;
         }
+        [HttpPut("{hospitalId}")]
+        public async Task<IActionResult> Update([FromRoute]Guid hospitalId,[FromForm]UpdateHospitalDto hospitalDto)
+        {
+            var response = await _hospitalService.UpdateHospitalAsync(hospitalId,hospitalDto);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
     }
 }

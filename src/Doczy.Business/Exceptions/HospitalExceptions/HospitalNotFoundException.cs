@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Doczy.Business.Exceptions.WorkPlaceExceptions
+namespace Doczy.Business.Exceptions.HospitalExceptions
 {
   
     public class HospitalNotFoundException : Exception, IBaseException
