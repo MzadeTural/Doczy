@@ -40,6 +40,8 @@ namespace Doczy.Business.Services.Implementations
             if (model.AvailableHours == null || model.AvailableHours.Count == 0)
                 throw new ArgumentException("At least one available hour must be specified.");
             var existingAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == model.DayOfWeek);
+            if (existingAvailability is null)
+                throw new DoctorAvailabilityNotFoundException();
             var existTime = await _availableHourRepository.FindAll(da => da.DoctorAvailabilityId == existingAvailability.Id).ToListAsync();
             List<AvailableHour> AvailableHours = new List<AvailableHour>();
 
