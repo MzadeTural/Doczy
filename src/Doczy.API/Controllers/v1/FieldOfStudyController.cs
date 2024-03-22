@@ -44,14 +44,14 @@ namespace Doczy.API.Controllers.v1
             var response = await _fieldOfStudyService.CreateFieldOfStudyAsync(createDoctorDto);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> UpdateFieldOfStudy(Guid id, [FromForm] UpdateFieldOfStudyDto updateDoctorDto)
         {
             var response = await _fieldOfStudyService.UpdateFieldOfStudy(id, updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPut("delete/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> DeleteFieldOfStudy(Guid id)
         {

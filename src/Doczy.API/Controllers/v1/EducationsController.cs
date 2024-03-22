@@ -44,14 +44,14 @@ namespace Doczy.API.Controllers.v1
             var response = await _educationService.CreateEducationAsync(createDoctorDto);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPatch("update-education/{id}")]
+        [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> UpdateEducation(Guid id,[FromForm] UpdateEducationDto updateDoctorDto)
         {
             var response = await _educationService.UpdateEducation(id,updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPut("delete-education/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> DeleteEducation(Guid id)
         {
