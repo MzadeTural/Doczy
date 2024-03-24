@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-
-namespace Doczy.Core.Entities.Identities
+﻿namespace Doczy.Core.Entities.Identities
 {
-    public class AppUser: IdentityUser<Guid>
+    public class AppUser : BaseAppUser
     {
     }
 }

@@ -7,7 +7,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Doczy.DataAccess\Doczy.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Exceptions\UnivercityExceptions\" />
+    <None Remove="DTOs\UnivercityDtos\" />
+    <None Remove="Validations\" />
+    <None Remove="Validations\UnivercityValidation\" />
+    <None Remove="DTOs\EducationDtos\" />
+    <None Remove="Exceptions\EducationExceptions\" />
+    <None Remove="Validations\EducationValidations\" />
+    <None Remove="DTOs\FieldOfStudyDtos\" />
+    <None Remove="Validations\FieldOfStudyValidations\" />
+    <None Remove="Exceptions\FieldOfStudyExceptions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\UnivercityExceptions\" />
+    <Folder Include="DTOs\UnivercityDtos\" />
+    <Folder Include="DTOs\EducationDtos\" />
+    <Folder Include="Exceptions\EducationExceptions\" />
+    <Folder Include="Validations\EducationValidations\" />
+    <Folder Include="DTOs\FieldOfStudyDtos\" />
+    <Folder Include="Validations\FieldOfStudyValidations\" />
+    <Folder Include="Exceptions\FieldOfStudyExceptions\" />
+  </ItemGroup>
 </Project>

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Doczy.Core.Entities.Identities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Doczy.DataAccess.Configurations
 {
-    internal class DoctorConfiguration
+    public class DoctorConfiguration: IEntityTypeConfiguration<DoctorAppUser>
     {
+        public void Configure(EntityTypeBuilder<DoctorAppUser> builder)
+        {
+            builder.Property(x => x.FirstName).HasMaxLength(30).IsRequired(true); 
+            builder.Property(x => x.LastName).HasMaxLength(250).IsRequired(true); 
+        }
     }
 }
