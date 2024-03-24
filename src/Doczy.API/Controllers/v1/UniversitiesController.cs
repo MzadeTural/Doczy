@@ -33,14 +33,14 @@ namespace Doczy.API.Controllers.v1
         }
         [HttpPost("")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> CreateUnivercity([FromForm] CreateUnivercityDto createDoctorDto)
+        public async Task<IActionResult> CreateUnivercity( CreateUnivercityDto createDoctorDto)
         {
             var response = await _univercityService.CreateUnivercityAsync(createDoctorDto);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> UpdateUnivercity(Guid id,[FromForm] UpdateUnivercityDto updateDoctorDto)
+        public async Task<IActionResult> UpdateUnivercity(Guid id, UpdateUnivercityDto updateDoctorDto)
         {
             var response = await _univercityService.UpdateUnivercity(id, updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
