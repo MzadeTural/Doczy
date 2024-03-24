@@ -31,9 +31,9 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreateHospitalAsync(CreateHospitalDto model)
         {
-            bool isExist = await _hospitalracerepository.IsExistAsync(s => s.Name == model.Name);
+            bool isExist = await _hospitalracerepository.IsExistAsync(s => s.Name.ToLower().Trim() == model.Name.ToLower().Trim());
             if (isExist)
-                throw new HospitalAlreadyExistExceptions("Hospital type already exist");
+                throw new HospitalAlreadyExistExceptions("Hospital  already exist");
 
             string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/hospitalicons/");
 
@@ -55,9 +55,12 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> UpdateHospitalAsync(Guid hospitalId,UpdateHospitalDto model)
         {
-            var dbHospital = await _hospitalracerepository.GetByIdAsync(hospitalId);
+            var dbHospital = await _hospitalracerepository.GetSingleAysnc(h => h.Id == hospitalId && !h.IsDeleted); 
             if (dbHospital is null)
                 throw new HospitalNotFoundException();
+            bool isExist = await _hospitalracerepository.IsExistAsync(s => s.Name.ToLower().Trim() == model.Name.ToLower().Trim());
+            if (isExist)
+                throw new HospitalAlreadyExistExceptions("Hospital  already exist");
             if (model.Name is not null)
                 dbHospital.Name = model.Name;
             if (model.Icon is not null)
