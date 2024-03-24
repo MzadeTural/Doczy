@@ -10,10 +10,12 @@ using Doczy.Business.HelperServices.Interfaces;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -116,7 +118,14 @@ namespace Doczy.Business.Services.Implementations
                 return false;
             }
         }
+        public async Task LogOutAsync()
+        {
+            var loginCheck = _httpContextAccessor?.HttpContext?.User?.Identity;
+            if (loginCheck?.IsAuthenticated == true)
+                throw new AlreadyAuthenticationException("You are already authenticated", HttpStatusCode.BadGateway);
+            await _signInManager.SignOutAsync();
 
+        }
         public async Task<LoginResponseDto> LoginAsync(LoginDto model, int accessTokenLifeTime)
         {
             var loginCheck = _httpContextAccessor?.HttpContext?.User?.Identity;
@@ -131,7 +140,11 @@ namespace Doczy.Business.Services.Implementations
             if (!await _userManager.IsEmailConfirmedAsync(user))
                 throw new EmailNotConfirmedException();
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            AuthenticationProperties properties = new() { IsPersistent = model.RememberMe };
+
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe,false);
+
+           
             if (result.Succeeded)
             {
                 var tokenResponse = await GenerateJwtTokenAsync(user, accessTokenLifeTime);
