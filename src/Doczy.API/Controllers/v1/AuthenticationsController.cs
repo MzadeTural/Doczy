@@ -1,6 +1,7 @@
 ﻿using Doczy.Business.DTOs.AuthDtos;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
@@ -46,7 +47,7 @@ namespace Doczy.API.Controllers.v1
 
         }
         [HttpPatch("verify-doctor")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> VerifiedDoctor(Guid doctorId )
         {
             var response = await _authService.VerifiedDoctorAsync(doctorId);
