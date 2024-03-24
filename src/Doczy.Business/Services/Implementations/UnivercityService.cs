@@ -6,6 +6,7 @@ using Doczy.Business.Exceptions.UnivercityExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Doczy.Business.Services.Implementations
@@ -14,11 +15,15 @@ namespace Doczy.Business.Services.Implementations
 	{
         private IMapper _mapper;
         private IUnivercityRepository _univercityRepository;
+        private readonly IFileService _fileService;
+        private readonly IWebHostEnvironment _environment;
 
-        public UnivercityService(IMapper mapper,IUnivercityRepository univercityRepository)
+        public UnivercityService(IMapper mapper, IUnivercityRepository univercityRepository, IFileService fileService, IWebHostEnvironment environment)
         {
             _mapper = mapper;
             _univercityRepository = univercityRepository;
+            _fileService = fileService;
+            _environment = environment;
         }
 
         public async Task<List<GetUnivercityDto>> GetUnivercitiesAsync()
@@ -39,27 +44,26 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateUnivercityAsync(CreateUnivercityDto model)
         {
             Univercity newUnivercity = _mapper.Map<Univercity>(model);
-            var isExist = _univercityRepository.FindAll(x => x.Name
+
+            var isExist = await _univercityRepository.GetSingleAysnc(x => x.Name
                                                               .Trim()
                                                               .ToLower() ==
                                                               newUnivercity.Name.
                                                               Trim()
-                                                              .ToLower())
-                                                              .FirstOrDefault();
+                                                              .ToLower()
+                                                              && !x.IsDeleted);
+                                                             
 
             if (isExist != null)
-            {
                 throw new UnivercityAlreadyExistExceptions("Univercity name is exist");
-            }
-            else
-            {
-                var result = await _univercityRepository.CreateAsync(newUnivercity);
+
+            var result = await _univercityRepository.CreateAsync(newUnivercity);
                 await _univercityRepository.SaveAsync();
                 return new ResponseDto(
                          StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
                          Message: result ? "Univercity successfully created" : "Something went wrong"
                          );
-            }
+            
         }
 
         public async Task<ResponseDto> UpdateUnivercity(Guid id, UpdateUnivercityDto model)

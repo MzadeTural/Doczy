@@ -2,6 +2,7 @@
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
 
 namespace Doczy.API.Controllers.v1
@@ -18,10 +19,17 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromForm] LoginDto loginUserDto)
+        public async Task<IActionResult> Login( LoginDto loginUserDto)
         {
             var response = await _authService.LoginAsync(loginUserDto, 15);
             return Ok(response);
+        }
+        [HttpPost("[Action]")]
+        public async Task<IActionResult> LogOut()
+        {
+            await _authService.LogOutAsync();
+            return Ok();
+
         }
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordRequestDto model)
