@@ -6,6 +6,7 @@ namespace Doczy.Business.Services.Interfaces
     public interface IExperianceService
     {
         Task<ResponseDto> CreateExperianceAsync(CreateExperianceDto model);
+        Task<ResponseDto> UpdateExperianceAsync(Guid experianceId ,UpdateExperianceDto model);
         Task<List<GetExperianceDto>> GetExperiancesAsync();
     }
 }

@@ -2,6 +2,7 @@
 {
     public record GetServiceByTypeDto
    (
+        Guid Id,
      string? Name,
      byte Duration,
      decimal Price

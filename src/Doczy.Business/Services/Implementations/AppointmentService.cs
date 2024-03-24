@@ -4,6 +4,7 @@ using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.AppointmentDtos;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.PaymentDtos;
+using Doczy.Business.Exceptions.DoctorAvailabilityExceptions;
 using Doczy.Business.Exceptions.ServiceExceptions;
 using Doczy.Business.Exceptions.TemporaryAppointmentExceptions;
 using Doczy.Business.Services.Interfaces;
@@ -47,12 +48,15 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model)
         {
             var userId = (await _userManager.GetUserAsync(_contextAccessor?.HttpContext?.User)).Id;
-            var existService = await _serviceRepository.IsExistAsync(s => s.Id == model.ServiceId);
+            var existService = await _serviceRepository.IsExistAsync(s => s.Id == model.ServiceId && s.DoctorId==model.DoctorId);
             if (!existService)
-                throw new ServiceNotFoundException("Service not found");
+                throw new ServiceNotFoundException();
 
             var time = await _availableHourRepository.GetByIdAsync(model.ChosenHourId);
+            if (time is null)
+                throw new TimeNotFoundByIdException(model.ChosenHourId);
             var service = await _serviceRepository.GetByIdAsync(model.ServiceId);
+           
             var amount = service.Price;
             // Calculate payment amount based on service or any other relevant factors
             decimal paymentAmount = _paymentService.CalculatePaymentAmount(model);

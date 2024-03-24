@@ -2,6 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.Experiance;
+using Doczy.Business.Exceptions.ExperianceExceptions;
+using Doczy.Business.Exceptions.HospitalExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
@@ -9,6 +11,7 @@ using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -19,12 +22,14 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<BaseAppUser> _userManager;
-        public ExperianceService(IExperianceRepository experianceRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<BaseAppUser> userManager)
+        private readonly IHospitalRepository _hospitalRepository;
+        public ExperianceService(IExperianceRepository experianceRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, UserManager<BaseAppUser> userManager, IHospitalRepository hospitalRepository)
         {
             _experianceRepository = experianceRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
+            _hospitalRepository = hospitalRepository;
         }
 
         public async Task<ResponseDto> CreateExperianceAsync(CreateExperianceDto model)
@@ -52,6 +57,30 @@ namespace Doczy.Business.Services.Implementations
                                                              .ToListAsync();
             return experiances;
 
+        }
+
+        public async Task<ResponseDto> UpdateExperianceAsync(Guid experianceId ,UpdateExperianceDto model)
+        {
+            var dbExperiance = await _experianceRepository.GetSingleAysnc(e => e.Id == experianceId && !e.IsDeleted);
+            var IsExist = await _hospitalRepository.IsExistAsync(e => e.Id == model.HospitalId && !e.IsDeleted);
+            if (dbExperiance is null)
+                throw new ExperianceNotFoundException();
+            if (IsExist)
+                throw new HospitalNotFoundByIdException(model.HospitalId);
+
+            dbExperiance.Title= model.Title is not null ? model.Title : dbExperiance.Title;
+
+            dbExperiance.Location= model.Location is not null ? model.Location : dbExperiance.Location;
+            dbExperiance.Location= model.Location is not null ? model.Location : dbExperiance.Location;
+            dbExperiance.HospitalId= model.HospitalId !=null ? model.HospitalId : dbExperiance.HospitalId;
+            dbExperiance.StartDate= model.StartDate !=null ? model.StartDate : dbExperiance.StartDate;
+            dbExperiance.EndDate= model.EndDate != null ? model.EndDate : dbExperiance.EndDate;
+            dbExperiance.currentlyWorking = model.currentlyWorking;
+
+            
+
+
+            throw new NotImplementedException();
         }
     }
 }

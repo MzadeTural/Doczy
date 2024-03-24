@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 
 namespace Doczy.Business.Exceptions.ServiceExceptions
 {
+    
     public class ServiceNotFoundException : Exception, IBaseException
     {
 
-        public HttpStatusCode StatusCode => HttpStatusCode.NotFound;
+        public HttpStatusCode StatusCode => HttpStatusCode.SeeOther;
 
         public string ErrorMessage { get; }
+        public ServiceNotFoundException()
+        {
+            ErrorMessage = "There is no any service  items";
+        }
 
         public ServiceNotFoundException(string Message) : base(Message) { ErrorMessage = Message; }
-
-
     }
 }
