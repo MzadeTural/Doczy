@@ -26,10 +26,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly LinkGenerator _linkGenerator;
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
-        private readonly IHospitalRepository _workPlaceRepository;
+        private readonly IGenderRepository _genderRepository;
 
-
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IHospitalRepository workPlaceRepository = null)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IGenderRepository genderRepository = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
@@ -39,7 +38,7 @@ namespace Doczy.Business.Services.Implementations
             _context = context;
             _fileService = fileService;
             _mailService = mailService;
-            _workPlaceRepository = workPlaceRepository;
+            _genderRepository = genderRepository;
         }
         public async Task<ResponseDto> CreateAsync(CreateUserDto model)
         {
@@ -133,9 +132,9 @@ namespace Doczy.Business.Services.Implementations
         {
             string profilePhoto = await _fileService.CreateFileAsync(model.fileUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
             var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
-            var user =await _userManager.FindByIdAsync(userId.ToString());
-            user.ProfileImageUrl=profilePhoto;
-          var result= await _userManager.UpdateAsync(user);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            user.ProfileImageUrl = profilePhoto;
+            var result = await _userManager.UpdateAsync(user);
             return new ResponseDto(
                     StatusCode: HttpStatusCode.NoContent,
                     Message: "Profile photo successfully updated"
@@ -143,14 +142,15 @@ namespace Doczy.Business.Services.Implementations
 
         }
 
-        public async Task<GetUserDto> GetUserById()
+        public async Task<GetUserDto> GetAuthUserInfo()
         {
             var user = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User));
 
-            if (user == null)
+            if (user is null)
                 throw new UserNotFoundException("User Not Found");
-            _mapper.Map<GetUserDto>(user);
+            var userInfo = _mapper.Map<GetUserDto>(user);
 
+            return userInfo;
         }
     }
 }

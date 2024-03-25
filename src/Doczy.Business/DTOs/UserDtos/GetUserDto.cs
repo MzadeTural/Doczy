@@ -6,6 +6,7 @@ namespace Doczy.Business.DTOs.UserDtos
     (
         string FirstName  ,
          string LastName ,
+         string UserName,
          string ProfileImageUrl,
          string? Gender
         );

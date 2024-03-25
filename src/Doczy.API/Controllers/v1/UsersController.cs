@@ -2,6 +2,7 @@
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Enums;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -29,6 +30,7 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
         [HttpGet("profile-info")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetAuthUserInfo()
         {
             var response = await _userService.GetAuthUserInfo();
