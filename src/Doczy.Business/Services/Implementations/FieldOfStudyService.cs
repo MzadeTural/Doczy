@@ -12,8 +12,8 @@ namespace Doczy.Business.Services.Implementations
 {
     public class FieldOfStudyService : IFieldOfStudyService
 	{
-        private IFieldOfStudyRepository _fieldOfStudyRepository;
-        private IMapper _mapper;
+        private readonly IFieldOfStudyRepository _fieldOfStudyRepository;
+        private readonly IMapper _mapper;
 
         public FieldOfStudyService(IFieldOfStudyRepository fieldOfStudyRepository, IMapper mapper)
 		{

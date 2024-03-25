@@ -13,8 +13,8 @@ namespace Doczy.Business.Services.Implementations
 {
     public class UnivercityService : IUnivercityService
 	{
-        private IMapper _mapper;
-        private IUnivercityRepository _univercityRepository;
+        private readonly IMapper _mapper;
+        private readonly IUnivercityRepository _univercityRepository;
         private readonly IFileService _fileService;
         private readonly IWebHostEnvironment _environment;
 
