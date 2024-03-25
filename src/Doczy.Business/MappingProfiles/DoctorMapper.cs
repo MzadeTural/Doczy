@@ -48,7 +48,7 @@ namespace Doczy.Business.MappingProfiles
             if (workingExperience != null)
             {
                 return new GetHospitalDto
-                (
+                (   id:workingExperience.Hospital.Id,
                     Name: workingExperience.Hospital?.Name,
                     IconUrl: workingExperience.Hospital?.IconUrl
                 );
