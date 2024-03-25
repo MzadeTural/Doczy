@@ -13,8 +13,8 @@ namespace Doczy.Business.Services.Implementations
 {
     public class EducationService : IEducationService
 	{
-        private IEducationRepository _educationRepository;
-        private IMapper _mapper;
+        private readonly IEducationRepository _educationRepository;
+        private readonly IMapper _mapper;
 
         public EducationService(IEducationRepository educationRepository,IMapper mapper)
         {
