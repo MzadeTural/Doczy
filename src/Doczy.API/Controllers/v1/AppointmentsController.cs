@@ -20,7 +20,7 @@ namespace Doczy.API.Controllers.v1
 
         [HttpPost("")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
-        public async Task<IActionResult> CreateAppointment([FromForm] CreateAppointmentDto appointmentRequest)
+        public async Task<IActionResult> Createt([FromForm] CreateAppointmentDto appointmentRequest)
         {
             var response = await _appointmentService.CreateAppointmentAsync(appointmentRequest);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
