@@ -24,7 +24,7 @@ namespace Doczy.API.Controllers.v1
         [HttpPost]
         [Route("")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> Create([FromForm] CreateHospitalDto createHDto)
+        public async Task<IActionResult> Create( CreateHospitalDto createHDto)
         {
 
             var response = await _hospitalService.CreateHospitalAsync(createHDto);
@@ -50,7 +50,7 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Update([FromRoute]Guid Id,[FromForm]UpdateHospitalDto hospitalDto)
+        public async Task<IActionResult> Update([FromRoute]Guid Id,UpdateHospitalDto hospitalDto)
         {
             var response = await _hospitalService.UpdateHospitalAsync(Id,hospitalDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
