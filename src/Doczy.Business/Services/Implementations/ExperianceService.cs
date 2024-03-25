@@ -7,6 +7,7 @@ using Doczy.Business.Exceptions.HospitalExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -37,6 +38,8 @@ namespace Doczy.Business.Services.Implementations
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             Experiance newExperiance = _mapper.Map<Experiance>(model);
             newExperiance.DoctorId = doctorId;
+            if (model.currentlyWorking)
+                newExperiance.EndDate = null;
             var result = await _experianceRepository.CreateAsync(newExperiance);
             await _experianceRepository.SaveAsync();
 
@@ -74,13 +77,20 @@ namespace Doczy.Business.Services.Implementations
             dbExperiance.Location= model.Location is not null ? model.Location : dbExperiance.Location;
             dbExperiance.HospitalId= model.HospitalId !=null ? model.HospitalId : dbExperiance.HospitalId;
             dbExperiance.StartDate= model.StartDate !=null ? model.StartDate : dbExperiance.StartDate;
+            if(!model.currentlyWorking)
             dbExperiance.EndDate= model.EndDate != null ? model.EndDate : dbExperiance.EndDate;
+
             dbExperiance.currentlyWorking = model.currentlyWorking;
 
-            
+            var result = _experianceRepository.Update(dbExperiance);
+            await _experianceRepository.SaveAsync();
+            return new ResponseDto(
+                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                         Message: result ? "Experiance successfully updated" : "Something went wrong"
+                         );
 
 
-            throw new NotImplementedException();
+           
         }
     }
 }
