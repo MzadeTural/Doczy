@@ -37,10 +37,22 @@ namespace Doczy.API.Controllers.v1
             var hospitals = await _hospitalService.GetHospitalAsync();
             return hospitals;
         }
-        [HttpPut("{hospitalId}")]
-        public async Task<IActionResult> Update([FromRoute]Guid hospitalId,[FromForm]UpdateHospitalDto hospitalDto)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetCategoryById(Guid Id)
         {
-            var response = await _hospitalService.UpdateHospitalAsync(hospitalId,hospitalDto);
+            var hospitals = await _hospitalService.GetHospitalByIdAsync(Id);
+            return Ok(hospitals);
+        }
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteHospital(Guid Id)
+        {
+            var response = await _hospitalService.DeleteHospitalAsync(Id);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> Update([FromRoute]Guid Id,[FromForm]UpdateHospitalDto hospitalDto)
+        {
+            var response = await _hospitalService.UpdateHospitalAsync(Id,hospitalDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
     }

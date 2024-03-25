@@ -73,10 +73,7 @@ namespace Doczy.Business.Services.Implementations
                                                              .ToListAsync();
             return languages;
         }
-        public Task<List<GetDoctorAppointmentsDto>> GetDoctorAppointments()
-        {
-            throw new NotImplementedException();
-        }
+       
         public async Task<ResponseDto> UpdatePhoneNumberAsync(UserPhoneUpdateDto model)
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
@@ -213,6 +210,26 @@ namespace Doczy.Business.Services.Implementations
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
                 doctorDetail.Reviews = reviews.Count();
             return doctorDetail;
+        }
+
+        public async Task<List<GetWillVerifiedDoctorDto>> GetWillVerifiedDoctors()
+        {
+            var doctors = await _doctorRepository.FindAll(d=>!d.IsVerified,tracking: false,
+                                                           d => d.DoctorCategory
+                                                           ).ProjectTo<GetWillVerifiedDoctorDto>(_mapper.ConfigurationProvider)
+                                                           .ToListAsync();
+            return doctors;
+        }
+
+        public async Task<List<GetDoctorsDto>> GetDoctorsByCategoryId(Guid categoryId)
+        {
+            var doctors = await _doctorRepository.FindAll(d=>d.DoctorCategoryId==categoryId,tracking: false,
+                                                           d => d.FavoriteDoctors,
+                                                           d => d.Ratings,
+                                                           d => d.DoctorCategory
+                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
+                                                           .ToListAsync();
+            return doctors;
         }
     }
 }

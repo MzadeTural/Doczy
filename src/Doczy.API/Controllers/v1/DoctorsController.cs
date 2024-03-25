@@ -1,9 +1,6 @@
 ﻿using Doczy.Business.DTOs.Common;
-using Doczy.Business.DTOs.DoctorAvailabilityDtos;
 using Doczy.Business.DTOs.DoctorDtos;
-using Doczy.Business.DTOs.Experiance;
 using Doczy.Business.DTOs.Language;
-using Doczy.Business.DTOs.ServiceDtos;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -49,7 +46,19 @@ namespace Doczy.API.Controllers.v1
         {
             return Ok(await _doctorService.GetDoctors());
         }
-       
+        [HttpGet("by-categroryId/{categoryId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDoctorsBycategory(Guid categoryId)
+        {
+            return Ok(await _doctorService.GetDoctorsByCategoryId(categoryId));
+        }
+
+        [HttpGet("will-verified")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetWillVerifiedDoctors()
+        {
+            return Ok(await _doctorService.GetWillVerifiedDoctors());
+        }
 
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<GetDoctorsDto>>> FilterDoctors([FromQuery] GetDoctorFilterDto model)
@@ -79,14 +88,14 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
-        
+
         [HttpGet("languages")]
         public async Task<List<GetLanguageDto>> GetDoctorLanguages()
         {
             var languages = await _doctorService.GetLanguageAsync();
             return languages;
         }
-        
+
         [HttpGet("resume/{doctorId}")]
         public async Task<GetDoctorResumeDto> GetDoctorResume([FromRoute] Guid doctorId)
         {

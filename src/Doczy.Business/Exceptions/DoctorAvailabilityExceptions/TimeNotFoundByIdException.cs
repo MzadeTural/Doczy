@@ -16,7 +16,7 @@ namespace Doczy.Business.Exceptions.DoctorAvailabilityExceptions
 
         public TimeNotFoundByIdException(Guid id)
         {
-            ErrorMessage = $"Comment not found with id: {id}";
+            ErrorMessage = $"Time not found with id: {id}";
         }
 
         public TimeNotFoundByIdException(string message) : base(message)

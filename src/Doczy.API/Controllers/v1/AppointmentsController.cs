@@ -1,8 +1,5 @@
 ﻿using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.Common;
-using Doczy.Business.Exceptions.PaymentExceptions;
-using Doczy.Business.Exceptions.ServiceExceptions;
-using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

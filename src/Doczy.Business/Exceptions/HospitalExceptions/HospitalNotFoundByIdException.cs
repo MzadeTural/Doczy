@@ -17,7 +17,7 @@ namespace Doczy.Business.Exceptions.HospitalExceptions
 
         public HospitalNotFoundByIdException(Guid id)
         {
-            ErrorMessage = $"Comment not found with id: {id}";
+            ErrorMessage = $"Hospital not found with id: {id}";
         }
 
         public HospitalNotFoundByIdException(string message) : base(message)

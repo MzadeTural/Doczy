@@ -22,6 +22,12 @@ namespace Doczy.API.Controllers.v1
             var response = await _experianceService.CreateExperianceAsync(createExperianceDto);
             return StatusCode((int)response.StatusCode, response.Message);
         }
+        [HttpPut("{experianceId}")]
+        public async Task<IActionResult> Update([FromRoute] Guid experianceId,[FromForm] UpdateExperianceDto updateExperianceDto)
+        {
+            var response = await _experianceService.UpdateExperianceAsync(experianceId,updateExperianceDto);
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
         [HttpGet("")]
         public async Task<List<GetExperianceDto>> Get()
         {
