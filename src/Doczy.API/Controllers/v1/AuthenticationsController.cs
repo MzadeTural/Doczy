@@ -25,7 +25,7 @@ namespace Doczy.API.Controllers.v1
             var response = await _authService.LoginAsync(loginUserDto, 15);
             return Ok(response);
         }
-        [HttpPost("[Action]")]
+        [HttpPost("logout")]
         public async Task<IActionResult> LogOut()
         {
             await _authService.LogOutAsync();

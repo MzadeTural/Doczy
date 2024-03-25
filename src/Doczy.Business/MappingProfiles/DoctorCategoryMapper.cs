@@ -9,6 +9,7 @@ namespace Doczy.Business.MappingProfiles
         public DoctorCategoryMapper()
         {
             CreateMap<CreateDoctorCategoryDto,DoctorCategory>().ReverseMap();
+            CreateMap<DoctorCategory,GetDoctorCategoryDto>().ReverseMap();
         }
     }
 }

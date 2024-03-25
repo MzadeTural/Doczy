@@ -164,7 +164,7 @@ namespace Doczy.Business.Services.Implementations
 
             if (user?.RefreshTokenEndDate > DateTime.UtcNow)
             {
-                return await GenerateJwtTokenAsync(user, 2);
+                return await GenerateJwtTokenAsync(user, 15);
             }
 
             throw new RefreshTokenExpiredException();
