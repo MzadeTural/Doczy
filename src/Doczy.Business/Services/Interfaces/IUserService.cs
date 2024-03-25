@@ -10,6 +10,7 @@ namespace Doczy.Business.Services.Interfaces
         Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model);
         Task<ResponseDto> CreatePatientAsync(CreatePatientDto model);
         Task<ResponseDto> ChangeProfilePhoto(UpdateProfilePhotoDto model);
+        Task<GetUserDto> GetAuthUserInfo();
         Task UpdateRefreshToken(string refreshToken, BaseAppUser user, DateTime accessTokenEndDate, int refreshTokenLifeTime);
     }
 }
