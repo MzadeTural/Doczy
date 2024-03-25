@@ -142,5 +142,15 @@ namespace Doczy.Business.Services.Implementations
                 );
 
         }
+
+        public async Task<GetUserDto> GetUserById()
+        {
+            var user = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User));
+
+            if (user == null)
+                throw new UserNotFoundException("User Not Found");
+            _mapper.Map<GetUserDto>(user);
+
+        }
     }
 }
