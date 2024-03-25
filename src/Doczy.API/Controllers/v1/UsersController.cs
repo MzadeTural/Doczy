@@ -2,6 +2,7 @@
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Enums;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -27,6 +28,13 @@ namespace Doczy.API.Controllers.v1
         {
             var response = await _authService.ConfirmEmailAsync(confirmEmailDto);
             return StatusCode((int)response.StatusCode, response.Message);
+        }
+        [HttpGet("profile-info")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetAuthUserInfo()
+        {
+            var response = await _userService.GetAuthUserInfo();
+            return Ok(response);
         }
         [HttpPost("refresh-token-login")]
         public async Task<IActionResult> RefreshTokenLogin(string refreshToken)
