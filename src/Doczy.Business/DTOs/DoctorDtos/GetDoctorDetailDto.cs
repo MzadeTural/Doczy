@@ -8,7 +8,7 @@ namespace Doczy.Business.DTOs.DoctorDtos
         public string LastName { get; set; }
         public string? CategoryName { get; set; }
         public string? ProfileImageUrl { get; set; }
-        public double? Raiting { get; set; }
+        public double? Rating { get; set; }
         public int? Favourite { get; set; }
         public GetHospitalDto Hospital { get; set; }
         public DateTime EarliestAvailable { get; set; }
