@@ -34,7 +34,8 @@ namespace Doczy.Business.MappingProfiles
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.DoctorCategory.Name))
                .ForMember(dest => dest.Hospital, opt => opt.MapFrom(src => GetHospitalDtoFromExperiences(src.Experiances)))
                 .ForMember(dest => dest.Favourite, opt => opt.MapFrom(src => src.FavoriteDoctors.Count()))
-                .ForMember(dest => dest.Raiting, opt => opt.MapFrom(src => src.Ratings.Average(r => r.Rating)))
+               .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Ratings != null && src.Ratings.Any() ? src.Ratings.Average(r => r.Rating) : (double?)null))
+                .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src =>src.Ratings !=null? src.Ratings.Count():0))
                 .ReverseMap();
             CreateMap<DoctorAppUser, GetWillVerifiedDoctorDto>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.DoctorCategory.Name))
