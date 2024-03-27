@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.HospitalDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
@@ -73,7 +74,7 @@ namespace Doczy.Business.Services.Implementations
                                                              .ToListAsync();
             return languages;
         }
-       
+
         public async Task<ResponseDto> UpdatePhoneNumberAsync(UserPhoneUpdateDto model)
         {
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
@@ -153,7 +154,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetDoctorsDto>> GetDoctors()
         {
-            var doctors = await _doctorRepository.GetAll(tracking: false,
+            var doctors = await _doctorRepository.FindAll(d=>d.IsVerified,tracking: false,
                                                            d => d.FavoriteDoctors,
                                                            d => d.Ratings,
                                                            d => d.DoctorCategory
@@ -203,18 +204,21 @@ namespace Doczy.Business.Services.Implementations
                                                      "Ratings",
                                                      "DoctorCategory",
                                                      "Experiances",
-                                                     "Experiances.Hospital"
+                                                     "Experiances.Hospital",
+                                                     "Availabilities",
+                                                     "Availabilities.AvailableHours"
                                                      );
-            var reviews =await _doctorRatingRepository.FindAll(r => r.DoctorId == doctorId).ToListAsync();
-            
+            var availabilities = doctors.Availabilities;
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
-                doctorDetail.Reviews = reviews.Count();
+            if(availabilities.Any())
+            doctorDetail.EarliestAvailable = GetMostRecentDate(availabilities);
+
             return doctorDetail;
         }
-
+       
         public async Task<List<GetWillVerifiedDoctorDto>> GetWillVerifiedDoctors()
         {
-            var doctors = await _doctorRepository.FindAll(d=>!d.IsVerified,tracking: false,
+            var doctors = await _doctorRepository.FindAll(d => !d.IsVerified, tracking: false,
                                                            d => d.DoctorCategory
                                                            ).ProjectTo<GetWillVerifiedDoctorDto>(_mapper.ConfigurationProvider)
                                                            .ToListAsync();
@@ -223,13 +227,42 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetDoctorsDto>> GetDoctorsByCategoryId(Guid categoryId)
         {
-            var doctors = await _doctorRepository.FindAll(d=>d.DoctorCategoryId==categoryId,tracking: false,
+            var doctors = await _doctorRepository.FindAll(d => d.DoctorCategoryId == categoryId, tracking: false,
                                                            d => d.FavoriteDoctors,
                                                            d => d.Ratings,
                                                            d => d.DoctorCategory
                                                            ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
                                                            .ToListAsync();
             return doctors;
+        }
+
+        private DateTime GetMostRecentDate(IEnumerable<DoctorAvailability> availabilities)
+        {
+            DateTime mostRecentDate = GetMostRecentDateFirst(availabilities);
+            foreach (var availability in availabilities)
+            {
+                if (availability.AvailableHours != null && availability.AvailableHours.Count > 0)
+                {
+                    int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
+                    int availabilityDayOfWeek = ((int)availability.DayOfWeek);
+                    int daysAgo = (7 + availabilityDayOfWeek - currentDayOfWeek) % 7;
+                    DateTime availabilityDate = DateTime.Now.Date.AddDays(daysAgo);
+
+                    if (availabilityDate < mostRecentDate)
+                        mostRecentDate = availabilityDate;
+
+                }
+            }
+            return mostRecentDate;
+        }
+
+        private DateTime GetMostRecentDateFirst(IEnumerable<DoctorAvailability> availabilities)
+        {
+            int availabilityDayOfWeek = ((int)availabilities.ElementAt(0).DayOfWeek);
+            int currentDayOfWeek = (int)DateTime.Now.DayOfWeek;
+            int daysAgo = (7 + availabilityDayOfWeek - currentDayOfWeek) % 7;
+            DateTime availabilityDate = DateTime.Now.Date.AddDays(daysAgo);
+            return availabilityDate;
         }
     }
 }
