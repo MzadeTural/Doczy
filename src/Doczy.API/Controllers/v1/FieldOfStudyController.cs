@@ -24,29 +24,29 @@ namespace Doczy.API.Controllers.v1
             _fieldOfStudyService = fieldOfStudyService;
         }
         [HttpGet("{id}")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetFieldOfStudy(Guid id)
         {
             var response = await _fieldOfStudyService.GetFieldOfStudyAsync(id);
             return Ok(response);
         }
         [HttpGet("")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Patient")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor,Admin,Patient")]
         public async Task<IActionResult> GetFieldOfStudy()
         {
             var response = await _fieldOfStudyService.GetAllFieldOfStudiesAsync();
             return Ok(response);
         }
         [HttpPost("")]
-       // [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> CreateFieldOfStudy([FromForm] CreateFieldOfStudyDto createDoctorDto)
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> CreateFieldOfStudy( CreateFieldOfStudyDto createDoctorDto)
         {
             var response = await _fieldOfStudyService.CreateFieldOfStudyAsync(createDoctorDto);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> UpdateFieldOfStudy(Guid id, [FromForm] UpdateFieldOfStudyDto updateDoctorDto)
+        public async Task<IActionResult> UpdateFieldOfStudy(Guid id,  UpdateFieldOfStudyDto updateDoctorDto)
         {
             var response = await _fieldOfStudyService.UpdateFieldOfStudy(id, updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));

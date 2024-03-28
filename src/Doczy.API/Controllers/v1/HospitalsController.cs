@@ -5,6 +5,7 @@ using Doczy.Business.DTOs.ServiceDtos;
 using Doczy.Business.DTOs.WorkPlace;
 using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -23,7 +24,7 @@ namespace Doczy.API.Controllers.v1
 
         [HttpPost]
         [Route("")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] CreateHospitalDto createHDto)
         {
 
@@ -38,18 +39,21 @@ namespace Doczy.API.Controllers.v1
             return hospitals;
         }
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetCategoryById(Guid Id)
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetHospitalById(Guid Id)
         {
             var hospitals = await _hospitalService.GetHospitalByIdAsync(Id);
             return Ok(hospitals);
         }
         [HttpDelete("{Id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> DeleteHospital(Guid Id)
         {
             var response = await _hospitalService.DeleteHospitalAsync(Id);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPut("{Id}")]
+        [HttpPatch("{Id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute]Guid Id,[FromForm]UpdateHospitalDto hospitalDto)
         {
             var response = await _hospitalService.UpdateHospitalAsync(Id,hospitalDto);
