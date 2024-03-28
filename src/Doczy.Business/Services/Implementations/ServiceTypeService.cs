@@ -2,9 +2,14 @@
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.ServiceTypeDtos;
+using Doczy.Business.Exceptions.ExperianceExceptions;
+using Doczy.Business.Exceptions.FileExceptions;
+using Doczy.Business.Exceptions.HospitalExceptions;
 using Doczy.Business.Exceptions.ServiceTypeExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
+using Doczy.DataAccess.Migrations;
+using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +54,35 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetServiceTypeDto>> GetServiceTypeAsync()
         {
-            return await _serviceTypeRepository.GetAll().ProjectTo<GetServiceTypeDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return await _serviceTypeRepository.FindAll(st=>!st.IsDeleted,tracking:false).ProjectTo<GetServiceTypeDto>(_mapper.ConfigurationProvider).ToListAsync();
+        }
+
+        public async Task<ResponseDto> UpdateServiceTypeAsync(Guid id, UpdateServiceTypeDto model)
+        {
+            var dbType = await _serviceTypeRepository.GetSingleAysnc(e => e.Id == id && !e.IsDeleted);
+            if (dbType is null)
+                throw new ServiceTypeNotFoundException();
+            dbType.Name = model.Name ?? dbType.Name;
+            if (model.Icon is not null)
+            {
+                string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/hospitalicons/");
+                if (!string.IsNullOrEmpty(file))
+                {
+                    _fileService.DeteleFile(_environment.WebRootPath + $"/uploads/hospitalicons/{dbType.IconUrl}");
+                    dbType.IconUrl = file;
+                }
+                else
+                {
+                    throw new FileCreationFailureException("file creation failure");
+                }
+            }
+            bool result = _serviceTypeRepository.Update(dbType);
+           await _serviceTypeRepository.SaveAsync();
+
+            return new ResponseDto(
+                          StatusCode: result ? HttpStatusCode.NoContent : HttpStatusCode.BadRequest,
+                          Message: result ? "Service type successfully updated" : "Something went wrong"
+                          );
         }
     }
 }
