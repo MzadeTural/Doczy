@@ -280,5 +280,19 @@ namespace Doczy.Business.Services.Implementations
             DateTime availabilityDate = DateTime.Now.Date.AddDays(daysAgo);
             return availabilityDate;
         }
+
+        public async Task<List<GetDoctorsDto>> GetDoctorsPaginate(int pageIndex, int pageSize)
+        {
+            ArgumentNullException.ThrowIfNull(pageSize);
+            ArgumentNullException.ThrowIfNull(pageIndex);
+            var doctors = await _doctorRepository.FindAllPaginate(d => d.IsVerified, pageIndex, pageSize, tracking: false,
+                                                           d => d.FavoriteDoctors,
+                                                           d => d.Ratings,
+                                                           d => d.DoctorCategory
+                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
+                                                           .ToListAsync();
+            return doctors;
+
+        }
     }
 }
