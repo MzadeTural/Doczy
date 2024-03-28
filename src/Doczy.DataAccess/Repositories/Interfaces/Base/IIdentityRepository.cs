@@ -8,6 +8,7 @@ namespace Doczy.DataAccess.Repositories.Interfaces.Base
     {
         Task<int> SaveAsync();
         IQueryable<T> GetAll(bool tracking = true, params Expression<Func<T, object>>?[] includes);
+        IQueryable<T> FindAllPaginate(Expression<Func<T, bool>> expression, int pageIndex, int pageSize, bool tracking = true, params Expression<Func<T, object>>?[] includes);
         Task<T> GetByIdAsync(Guid id);
         Task<T> GetUserByEmailOrPhoneNumberAsync(string emailOrPhoneNumber);
         Task<T> GetSingleAysnc(Expression<Func<T, bool>> expression, params string[] includes);

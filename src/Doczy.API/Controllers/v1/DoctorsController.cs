@@ -51,6 +51,12 @@ namespace Doczy.API.Controllers.v1
         {
             return Ok(await _doctorService.GetDoctors());
         }
+        [HttpGet("{pageSize}/{pageIndex}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllDoctorsPaginate([FromRoute]int pageSize,[FromRoute]int pageIndex)
+        {
+            return Ok(await _doctorService.GetDoctorsPaginate(pageIndex,pageSize));
+        }
         [HttpGet("by-categroryId/{categoryId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetDoctorsBycategory(Guid categoryId)
