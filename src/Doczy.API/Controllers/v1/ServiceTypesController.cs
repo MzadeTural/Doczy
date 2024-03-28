@@ -24,11 +24,21 @@ namespace Doczy.API.Controllers.v1
 
         [HttpPost]
         [Route("")]
-       // [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] CreateServiceTypeDto createDto)
         {
 
             var response = await _serviceTypeService.CreateServiceTypeAsync(createDto);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+
+        }
+        [HttpPatch]
+        [Route("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> Update(Guid id,[FromForm] UpdateServiceTypeDto updateDto)
+        {
+
+            var response = await _serviceTypeService.UpdateServiceTypeAsync(id,updateDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
 
         }

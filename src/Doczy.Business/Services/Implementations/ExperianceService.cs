@@ -62,35 +62,31 @@ namespace Doczy.Business.Services.Implementations
 
         }
 
-        public async Task<ResponseDto> UpdateExperianceAsync(Guid experianceId ,UpdateExperianceDto model)
+        public async Task<ResponseDto> UpdateExperianceAsync(Guid experianceId, UpdateExperianceDto model)
         {
-            var dbExperiance = await _experianceRepository.GetSingleAysnc(e => e.Id == experianceId && !e.IsDeleted);
+            var dbExperience = await _experianceRepository.GetSingleAysnc(e => e.Id == experianceId && !e.IsDeleted);
             var IsExist = await _hospitalRepository.IsExistAsync(e => e.Id == model.HospitalId && !e.IsDeleted);
-            if (dbExperiance is null)
+            if (dbExperience is null)
                 throw new ExperianceNotFoundException();
-            if (IsExist)
+            if (!IsExist)
                 throw new HospitalNotFoundByIdException(model.HospitalId);
 
-            dbExperiance.Title= model.Title is not null ? model.Title : dbExperiance.Title;
-
-            dbExperiance.Location= model.Location is not null ? model.Location : dbExperiance.Location;
-            dbExperiance.Location= model.Location is not null ? model.Location : dbExperiance.Location;
-            dbExperiance.HospitalId= model.HospitalId !=null ? model.HospitalId : dbExperiance.HospitalId;
-            dbExperiance.StartDate= model.StartDate !=null ? model.StartDate : dbExperiance.StartDate;
-            if(!model.currentlyWorking)
-            dbExperiance.EndDate= model.EndDate != null ? model.EndDate : dbExperiance.EndDate;
-
-            dbExperiance.currentlyWorking = model.currentlyWorking;
-
-            var result = _experianceRepository.Update(dbExperiance);
+            dbExperience.Title = model.Title ?? dbExperience.Title;
+            dbExperience.Location = model.Location ?? dbExperience.Location;
+            dbExperience.HospitalId = model?.HospitalId != null ? model.HospitalId : dbExperience.HospitalId;
+            dbExperience.StartDate = model?.StartDate != null ? model.StartDate : dbExperience.StartDate;
+            if (!model.currentlyWorking)
+                dbExperience.EndDate = model?.EndDate != null ? model.EndDate : dbExperience.EndDate;
+            dbExperience.currentlyWorking = model.currentlyWorking;
+            var result = _experianceRepository.Update(dbExperience);
             await _experianceRepository.SaveAsync();
             return new ResponseDto(
-                         StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                         StatusCode: result ? HttpStatusCode.NoContent : HttpStatusCode.BadRequest,
                          Message: result ? "Experiance successfully updated" : "Something went wrong"
                          );
 
 
-           
+
         }
     }
 }
