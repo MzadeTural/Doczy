@@ -7,6 +7,7 @@ using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Contexts;
+using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,8 +28,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IGenderRepository _genderRepository;
+        private readonly BaseAppUserRepository _baseAppUserRepository;
 
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IGenderRepository genderRepository = null)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IGenderRepository genderRepository = null, BaseAppUserRepository baseAppUserRepository = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
@@ -39,6 +41,7 @@ namespace Doczy.Business.Services.Implementations
             _fileService = fileService;
             _mailService = mailService;
             _genderRepository = genderRepository;
+            _baseAppUserRepository = baseAppUserRepository;
         }
         public async Task<ResponseDto> CreateAsync(CreateUserDto model)
         {
@@ -144,8 +147,8 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<GetUserDto> GetAuthUserInfo()
         {
-            var user = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User));
-
+            var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var user = _baseAppUserRepository.GetSingleAysnc(ba => ba.Id == userId && !ba.IsVerified, ba => ba.Gender);
             if (user is null)
                 throw new UserNotFoundException("User Not Found");
             var userInfo = _mapper.Map<GetUserDto>(user);

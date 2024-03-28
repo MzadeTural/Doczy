@@ -2,6 +2,7 @@
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.RaitingDtos;
+using Microsoft.AspNetCore.Http;
 
 namespace Doczy.Business.Services.Interfaces
 {
