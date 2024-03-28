@@ -125,18 +125,18 @@ namespace Doczy.API.Controllers.v1
 
         }
 
-        [HttpPost("add-to-favourite")]
+        [HttpPost("add-to-favourite/{doctorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
-        public async Task<IActionResult> AddFavouriteDoctor(Guid doctorId)
+        public async Task<IActionResult> AddFavouriteDoctor([FromRoute]Guid doctorId)
         {
             var response = await _favoriteDoctorService.CreateFavoriteDoctorAsync(doctorId);
 
             return StatusCode((int)response.StatusCode, response.Message);
         }
 
-        [HttpDelete("remove-to-favourite")]
+        [HttpDelete("remove-to-favourite/{doctorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
-        public async Task<IActionResult> RemoveFavouriteDoctor(Guid doctorId)
+        public async Task<IActionResult> RemoveFavouriteDoctor([FromRoute]Guid doctorId)
         {
             var response = await _favoriteDoctorService.RemoveFavoriteDoctorAsync(doctorId);
 
