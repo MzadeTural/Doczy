@@ -208,10 +208,7 @@ namespace Doczy.Business.Services.Implementations
                 Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
                 IsFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
             }
-            else
-            {
-                throw new AuthorizationException("Please login to unlike any post", HttpStatusCode.Unauthorized);
-            }
+           
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
                                                      "FavoriteDoctors",
                                                      "Ratings",
