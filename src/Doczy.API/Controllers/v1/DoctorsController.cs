@@ -1,9 +1,12 @@
 ﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.FavoriteDoctorDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.UserDtos;
+using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -22,7 +25,8 @@ namespace Doczy.API.Controllers.v1
         private readonly IExperianceService _experianceService;
         private readonly IDoctorAvailabilityService _doctorAvailabilityService;
         private readonly IServiceService _serviceService;
-        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService, IServiceService serviceService)
+        private readonly IFavoriteDoctorService _favoriteDoctorService;
+        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService, IServiceService serviceService, IFavoriteDoctorService favoriteDoctorService)
         {
 
             _userService = userService;
@@ -30,6 +34,7 @@ namespace Doczy.API.Controllers.v1
             _experianceService = experianceService;
             _doctorAvailabilityService = doctorAvailabilityService;
             _serviceService = serviceService;
+            _favoriteDoctorService = favoriteDoctorService;
         }
         [AllowAnonymous]
         [HttpPost("register")]
@@ -118,6 +123,24 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorService.GetDoctorDetailAsync(doctorId);
             return response;
 
+        }
+
+        [HttpPost("add-to-favourite")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
+        public async Task<IActionResult> AddFavouriteDoctor(Guid doctorId)
+        {
+            var response = await _favoriteDoctorService.CreateFavoriteDoctorAsync(doctorId);
+
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+
+        [HttpDelete("remove-to-favourite")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
+        public async Task<IActionResult> RemoveFavouriteDoctor(Guid doctorId)
+        {
+            var response = await _favoriteDoctorService.RemoveFavoriteDoctorAsync(doctorId);
+
+            return StatusCode((int)response.StatusCode, response.Message);
         }
     }
 }

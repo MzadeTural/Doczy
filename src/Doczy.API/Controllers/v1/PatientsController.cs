@@ -2,6 +2,7 @@
 using Doczy.Business.DTOs.RaitingDtos;
 using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,12 +38,5 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
 
-        [HttpPost("add-doctor-to-favourite/{Id}")]
-        public async Task<IActionResult> AddFavouriteDoctor([FromForm] CreateFavoriteDoctorDto createDto)
-        {
-            var response = await _favoriteDoctorService.CreateFavoriteDoctorAsync(createDto);
-
-            return StatusCode((int)response.StatusCode, response.Message);
-        }
     }
 }
