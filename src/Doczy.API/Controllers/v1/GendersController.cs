@@ -21,7 +21,7 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("")]
-       // [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> Create( CreateGenderDto createDto)
         {
             var response = await _genderService.CreateGender(createDto);

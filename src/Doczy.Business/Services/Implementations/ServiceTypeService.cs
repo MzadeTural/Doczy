@@ -65,10 +65,10 @@ namespace Doczy.Business.Services.Implementations
             dbType.Name = model.Name ?? dbType.Name;
             if (model.Icon is not null)
             {
-                string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/hospitalicons/");
+                string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/servicetypeicons/");
                 if (!string.IsNullOrEmpty(file))
                 {
-                    _fileService.DeteleFile(_environment.WebRootPath + $"/uploads/hospitalicons/{dbType.IconUrl}");
+                    _fileService.DeteleFile(_environment.WebRootPath + $"/uploads/servicetypeicons/{dbType.IconUrl}");
                     dbType.IconUrl = file;
                 }
                 else

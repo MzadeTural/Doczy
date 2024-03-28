@@ -75,7 +75,7 @@ namespace Doczy.API.Controllers.v1
 
 
         [HttpPatch("update-phone")]
-        public async Task<IActionResult> UpdatePhoneNumber([FromForm] UserPhoneUpdateDto model)
+        public async Task<IActionResult> UpdatePhoneNumber( UserPhoneUpdateDto model)
         {
             var response = await _doctorService.UpdatePhoneNumberAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
