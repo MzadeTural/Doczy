@@ -1,11 +1,7 @@
 ﻿using Doczy.Business.DTOs.Common;
-using Doczy.Business.DTOs.HospitalDtos;
-using Doczy.Business.DTOs.ServiceDtos;
 using Doczy.Business.DTOs.ServiceTypeDtos;
-using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -34,11 +30,11 @@ namespace Doczy.API.Controllers.v1
         }
         [HttpPatch]
         [Route("{id}")]
-         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> Update(Guid id,[FromForm] UpdateServiceTypeDto updateDto)
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> Update(Guid id, [FromForm] UpdateServiceTypeDto updateDto)
         {
 
-            var response = await _serviceTypeService.UpdateServiceTypeAsync(id,updateDto);
+            var response = await _serviceTypeService.UpdateServiceTypeAsync(id, updateDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
 
         }
