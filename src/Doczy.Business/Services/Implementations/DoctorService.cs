@@ -156,12 +156,15 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetDoctorsDto>> GetDoctors()
         {
-            var doctors = await _doctorRepository.FindAll(d => d.IsVerified, tracking: false,
-                                                           d => d.FavoriteDoctors,
-                                                           d => d.Ratings,
-                                                           d => d.DoctorCategory
-                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
-                                                           .ToListAsync();
+            var doctorsQuery = _doctorRepository.FindAll(d => d.IsVerified, tracking: false,
+                                                         d => d.FavoriteDoctors,
+                                                         d => d.Ratings,
+                                                         d => d.DoctorCategory);
+
+            var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
+
+            await SetIsFavouriteForDoctors(doctors);
+
             return doctors;
         }
 
@@ -208,7 +211,7 @@ namespace Doczy.Business.Services.Implementations
                 Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
                 IsFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
             }
-           
+
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
                                                      "FavoriteDoctors",
                                                      "Ratings",
@@ -248,7 +251,20 @@ namespace Doczy.Business.Services.Implementations
                                                            .ToListAsync();
             return doctors;
         }
+        public async Task<List<GetDoctorsDto>> GetDoctorsPaginate(int pageIndex, int pageSize)
+        {
+            ArgumentNullException.ThrowIfNull(pageSize);
+            ArgumentNullException.ThrowIfNull(pageIndex);
+            var doctorsQuery = _doctorRepository.FindAllPaginate(d => d.IsVerified, pageIndex, pageSize, tracking: false,
+                                                           d => d.FavoriteDoctors,
+                                                           d => d.Ratings,
+                                                           d => d.DoctorCategory);
 
+            var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
+            await SetIsFavouriteForDoctors(doctors);
+            return doctors;
+
+        }
         private DateTime GetMostRecentDate(IEnumerable<DoctorAvailability> availabilities)
         {
             DateTime mostRecentDate = GetMostRecentDateFirst(availabilities);
@@ -278,18 +294,21 @@ namespace Doczy.Business.Services.Implementations
             return availabilityDate;
         }
 
-        public async Task<List<GetDoctorsDto>> GetDoctorsPaginate(int pageIndex, int pageSize)
+        
+        private async Task SetIsFavouriteForDoctors(List<GetDoctorsDto> doctors)
         {
-            ArgumentNullException.ThrowIfNull(pageSize);
-            ArgumentNullException.ThrowIfNull(pageIndex);
-            var doctors = await _doctorRepository.FindAllPaginate(d => d.IsVerified, pageIndex, pageSize, tracking: false,
-                                                           d => d.FavoriteDoctors,
-                                                           d => d.Ratings,
-                                                           d => d.DoctorCategory
-                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
-                                                           .ToListAsync();
-            return doctors;
+            var user = _httpContextAccessor?.HttpContext?.User.Identity;
+            if (user.IsAuthenticated)
+            {
+                Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
 
+                foreach (var doctor in doctors)
+                {
+                    bool isFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctor.Id && fd.PatientId == patientId);
+                    doctor.IsFavourite = isFav;
+                }
+            }
         }
+
     }
 }
