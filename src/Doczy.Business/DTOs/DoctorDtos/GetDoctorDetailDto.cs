@@ -13,5 +13,6 @@ namespace Doczy.Business.DTOs.DoctorDtos
         public GetHospitalDto Hospital { get; set; }
         public DateTime EarliestAvailable { get; set; }
         public int? Reviews { get; set; }
+        public bool IsFavourite { get; set; }
     }
 }

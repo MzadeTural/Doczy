@@ -93,12 +93,13 @@ namespace Doczy.Business.Services.Implementations
             if (model.Icon is not null)
             {
                 string file = await _fileService.CreateFileAsync(model.Icon, _environment.WebRootPath + "/uploads/hospitalicons/");
+                _fileService.DeteleFile(_environment.WebRootPath + $"/uploads/hospitalicons/{dbHospital.IconUrl}");
                 dbHospital.IconUrl = file;
             }
             var result = _hospitalrepository.Update(dbHospital);
             await _hospitalrepository.SaveAsync();
             return new ResponseDto(
-                StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+                StatusCode: result ? HttpStatusCode.NoContent : HttpStatusCode.BadRequest,
                 Message: result ? "Hospital successfully Updated" : "Something went wrong");
 
 

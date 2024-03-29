@@ -1,9 +1,12 @@
 ﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.FavoriteDoctorDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.UserDtos;
+using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -22,7 +25,8 @@ namespace Doczy.API.Controllers.v1
         private readonly IExperianceService _experianceService;
         private readonly IDoctorAvailabilityService _doctorAvailabilityService;
         private readonly IServiceService _serviceService;
-        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService, IServiceService serviceService)
+        private readonly IFavoriteDoctorService _favoriteDoctorService;
+        public DoctorsController(IUserService userService, IDoctorService doctorService, IExperianceService experianceService, IDoctorAvailabilityService doctorAvailabilityService, IServiceService serviceService, IFavoriteDoctorService favoriteDoctorService)
         {
 
             _userService = userService;
@@ -30,6 +34,7 @@ namespace Doczy.API.Controllers.v1
             _experianceService = experianceService;
             _doctorAvailabilityService = doctorAvailabilityService;
             _serviceService = serviceService;
+            _favoriteDoctorService = favoriteDoctorService;
         }
         [AllowAnonymous]
         [HttpPost("register")]
@@ -45,6 +50,12 @@ namespace Doczy.API.Controllers.v1
         public async Task<IActionResult> GetAllDoctors()
         {
             return Ok(await _doctorService.GetDoctors());
+        }
+        [HttpGet("{pageSize}/{pageIndex}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllDoctorsPaginate([FromRoute]int pageSize,[FromRoute]int pageIndex)
+        {
+            return Ok(await _doctorService.GetDoctorsPaginate(pageIndex,pageSize));
         }
         [HttpGet("by-categroryId/{categoryId}")]
         [AllowAnonymous]
@@ -70,7 +81,7 @@ namespace Doczy.API.Controllers.v1
 
 
         [HttpPatch("update-phone")]
-        public async Task<IActionResult> UpdatePhoneNumber([FromForm] UserPhoneUpdateDto model)
+        public async Task<IActionResult> UpdatePhoneNumber( UserPhoneUpdateDto model)
         {
             var response = await _doctorService.UpdatePhoneNumberAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
@@ -118,6 +129,24 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorService.GetDoctorDetailAsync(doctorId);
             return response;
 
+        }
+
+        [HttpPost("add-to-favourite/{doctorId}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
+        public async Task<IActionResult> AddFavouriteDoctor([FromRoute]Guid doctorId)
+        {
+            var response = await _favoriteDoctorService.CreateFavoriteDoctorAsync(doctorId);
+
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+
+        [HttpDelete("remove-to-favourite/{doctorId}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
+        public async Task<IActionResult> RemoveFavouriteDoctor([FromRoute]Guid doctorId)
+        {
+            var response = await _favoriteDoctorService.RemoveFavoriteDoctorAsync(doctorId);
+
+            return StatusCode((int)response.StatusCode, response.Message);
         }
     }
 }

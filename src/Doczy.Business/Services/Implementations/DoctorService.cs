@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
-using Doczy.Business.DTOs.HospitalDtos;
 using Doczy.Business.DTOs.Language;
+using Doczy.Business.Exceptions.AuthExceptions;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -28,8 +28,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IDoctorCategoryRepository _categoryRepository;
+        private readonly IFavoriteDoctorRepository _favoriteDoctorRepository;
 
-        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository, IDoctorRatingRepository doctorRatingRepository)
+        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository, IDoctorRatingRepository doctorRatingRepository, IFavoriteDoctorRepository favoriteDoctorRepository)
         {
             _userManager = userManager;
             _doctorRepository = doctorRepository;
@@ -39,6 +40,7 @@ namespace Doczy.Business.Services.Implementations
             _mapper = mapper;
             _categoryRepository = categoryRepository;
             _doctorRatingRepository = doctorRatingRepository;
+            _favoriteDoctorRepository = favoriteDoctorRepository;
         }
 
         public async Task<ResponseDto> AddLanguageAsync(Guid languageId)
@@ -154,7 +156,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<List<GetDoctorsDto>> GetDoctors()
         {
-            var doctors = await _doctorRepository.FindAll(d=>d.IsVerified,tracking: false,
+            var doctors = await _doctorRepository.FindAll(d => d.IsVerified, tracking: false,
                                                            d => d.FavoriteDoctors,
                                                            d => d.Ratings,
                                                            d => d.DoctorCategory
@@ -199,6 +201,14 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<GetDoctorDetailDto> GetDoctorDetailAsync(Guid doctorId)
         {
+            var user = _httpContextAccessor?.HttpContext?.User.Identity;
+            bool IsFav = false;
+            if (user.IsAuthenticated)
+            {
+                Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+                IsFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
+            }
+           
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
                                                      "FavoriteDoctors",
                                                      "Ratings",
@@ -208,14 +218,17 @@ namespace Doczy.Business.Services.Implementations
                                                      "Availabilities",
                                                      "Availabilities.AvailableHours"
                                                      );
+
             var availabilities = doctors.Availabilities;
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
-            if(availabilities.Any())
-            doctorDetail.EarliestAvailable = GetMostRecentDate(availabilities);
+            doctorDetail.IsFavourite = IsFav;
+
+            if (availabilities.Any())
+                doctorDetail.EarliestAvailable = GetMostRecentDate(availabilities);
 
             return doctorDetail;
         }
-       
+
         public async Task<List<GetWillVerifiedDoctorDto>> GetWillVerifiedDoctors()
         {
             var doctors = await _doctorRepository.FindAll(d => !d.IsVerified, tracking: false,
@@ -263,6 +276,20 @@ namespace Doczy.Business.Services.Implementations
             int daysAgo = (7 + availabilityDayOfWeek - currentDayOfWeek) % 7;
             DateTime availabilityDate = DateTime.Now.Date.AddDays(daysAgo);
             return availabilityDate;
+        }
+
+        public async Task<List<GetDoctorsDto>> GetDoctorsPaginate(int pageIndex, int pageSize)
+        {
+            ArgumentNullException.ThrowIfNull(pageSize);
+            ArgumentNullException.ThrowIfNull(pageIndex);
+            var doctors = await _doctorRepository.FindAllPaginate(d => d.IsVerified, pageIndex, pageSize, tracking: false,
+                                                           d => d.FavoriteDoctors,
+                                                           d => d.Ratings,
+                                                           d => d.DoctorCategory
+                                                           ).ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider)
+                                                           .ToListAsync();
+            return doctors;
+
         }
     }
 }

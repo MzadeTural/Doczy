@@ -7,5 +7,6 @@ namespace Doczy.Business.Services.Interfaces
     {
         Task<ResponseDto> CreateServiceTypeAsync(CreateServiceTypeDto model);
         Task<List<GetServiceTypeDto>> GetServiceTypeAsync();
+        Task<ResponseDto> UpdateServiceTypeAsync(Guid id, UpdateServiceTypeDto model);
     }
 }

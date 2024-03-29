@@ -39,14 +39,14 @@ namespace Doczy.API.Controllers.v1
         }
         [HttpPost("")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
-        public async Task<IActionResult> CreateEducation([FromForm] CreateEducationDto createDoctorDto)
+        public async Task<IActionResult> CreateEducation(CreateEducationDto createDoctorDto)
         {
             var response = await _educationService.CreateEducationAsync(createDoctorDto);
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> UpdateEducation(Guid id,[FromForm] UpdateEducationDto updateDoctorDto)
+        public async Task<IActionResult> UpdateEducation(Guid id, UpdateEducationDto updateDoctorDto)
         {
             var response = await _educationService.UpdateEducation(id,updateDoctorDto);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
