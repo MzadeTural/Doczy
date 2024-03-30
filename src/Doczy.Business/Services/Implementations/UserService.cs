@@ -50,9 +50,9 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreateDoctorAsync(CreateDoctorDto model)
         {
-
-            string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
-            string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/users/doctors/idcard/");
+            string[] allowedContentTypes = { "image/jpeg", "image/png", "application/pdf" };
+            string diplomaFile = await _fileService.CreateFileAsync(model.DiplomaImageUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/", allowedContentTypes);
+            string idCardFile = await _fileService.CreateFileAsync(model.IdCardImageUrl, _environment.WebRootPath + "/uploads/users/doctors/idcard/", allowedContentTypes);
             var doct = _mapper.Map<DoctorAppUser>(model);
             doct.CreatedAt = DateTime.Now;
             doct.DiplomaImageUrl = diplomaFile;

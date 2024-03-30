@@ -26,6 +26,7 @@
   <ItemGroup>
     <Folder Include="Middleware\" />
     <Folder Include="wwwroot\uploads\hospitalicons\" />
+    <Folder Include="wwwroot\uploads\categoryslideicon\" />
     <Folder Include="wwwroot\uploads\slides\" />
     <Folder Include="wwwroot\uploads\univercityicons\" />
     <Folder Include="wwwroot\uploads\servicetypeicons\" />
