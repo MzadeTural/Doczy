@@ -10,17 +10,17 @@ namespace Doczy.Business.Services.Implementations
         {
             if (!file.ContentType.Contains("image/"))
             {
-                throw new FileTypeException("Only Images");
+                throw new FileTypeException("file type not supported");
             }
             if (file.Length / 1024 > 600)
             {
-                throw new FileSizeException("Image too large, you can upload files up to 0.6 MB");
+                throw new FileSizeException("file too large, you can upload files up to 0.6 MB");
             }
             string FileName = $"{Guid.NewGuid()}-{file.FileName}";
             string ResultPath = Path.Combine(path, FileName);
             using (FileStream fileStream = new FileStream(ResultPath, FileMode.Create))
             {
-                await file.CopyToAsync(fileStream);
+              await file.CopyToAsync(fileStream);
             }
 
             return FileName;
