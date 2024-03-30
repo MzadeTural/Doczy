@@ -213,14 +213,14 @@ namespace Doczy.Business.Services.Implementations
             }
 
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
-                                                     "FavoriteDoctors",
-                                                     "Ratings",
-                                                     "DoctorCategory",
-                                                     "Experiances",
-                                                     "Experiances.Hospital",
-                                                     "Availabilities",
-                                                     "Availabilities.AvailableHours"
-                                                     );
+                                                                 "FavoriteDoctors",
+                                                                 "Ratings",
+                                                                 "DoctorCategory",
+                                                                 "Experiances",
+                                                                 "Experiances.Hospital",
+                                                                 "Availabilities",
+                                                                 "Availabilities.AvailableHours"
+                                                                 );
 
             var availabilities = doctors.Availabilities;
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
@@ -294,7 +294,7 @@ namespace Doczy.Business.Services.Implementations
             return availabilityDate;
         }
 
-        
+
         private async Task SetIsFavouriteForDoctors(List<GetDoctorsDto> doctors)
         {
             var user = _httpContextAccessor?.HttpContext?.User.Identity;
