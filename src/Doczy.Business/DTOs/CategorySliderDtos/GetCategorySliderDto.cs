@@ -1,8 +1,8 @@
-﻿using Doczy.Core.Entities.Common;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace Doczy.Core.Entities
+namespace Doczy.Business.DTOs.CategorySliderDtos
 {
-    public class CategorySlider:BaseAuditableEntity
+    public class GetCategorySliderDto
     {
         public string Title { get; set; }
         public string IconUrl { get; set; }
