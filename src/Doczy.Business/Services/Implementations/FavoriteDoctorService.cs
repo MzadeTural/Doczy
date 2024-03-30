@@ -37,7 +37,7 @@ namespace Doczy.Business.Services.Implementations
             Guid patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             ArgumentNullException.ThrowIfNull(patientId);
            
-            var isExistDoctor = await _userManager.FindByEmailAsync(doctorId.ToString());
+            var isExistDoctor = await _userManager.FindByIdAsync(doctorId.ToString());
             if (isExistDoctor is null)
                 throw new UserNotFoundException("Id", doctorId.ToString());
 
