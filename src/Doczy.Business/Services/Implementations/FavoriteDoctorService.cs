@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.DoctorDtos;
+using Doczy.Business.DTOs.FavoriteDoctorDtos;
 using Doczy.Business.Exceptions.AuthExceptions;
 using Doczy.Business.Exceptions.FavoriteDoctorExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -9,6 +11,7 @@ using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace Doczy.Business.Services.Implementations
@@ -54,6 +57,24 @@ namespace Doczy.Business.Services.Implementations
                        );
         }
 
+        public async Task<GetFavouriteDoctorDto> GetFavoriteDoctorAsync(Guid doctorId)
+        {
+            var user = _httpContextAccessor?.HttpContext?.User.Identity;
+            bool IsFav = false;
+            if (user.IsAuthenticated)
+            {
+                Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+                IsFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
+            }
+            var favourites =await _favoriteDoctorRepository.FindAll(fd=>fd.DoctorId == doctorId).ToListAsync();
+            GetFavouriteDoctorDto getFavouriteDoctorDto = new GetFavouriteDoctorDto() 
+            {
+            Favourite= favourites.Count(),
+            IsFavourite=IsFav
+            };
+            return getFavouriteDoctorDto;
+        }
+
         public async Task<ResponseDto> RemoveFavoriteDoctorAsync(Guid doctorId)
         {
             var user = _httpContextAccessor.HttpContext.User.Identity;
@@ -76,5 +97,7 @@ namespace Doczy.Business.Services.Implementations
                        Message: result ? "Favourite successfully removed" : "Something went wrong"
                        );
         }
+
+        
     }
 }
