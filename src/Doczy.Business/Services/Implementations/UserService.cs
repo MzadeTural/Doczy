@@ -148,7 +148,7 @@ namespace Doczy.Business.Services.Implementations
         public async Task<GetUserDto> GetAuthUserInfo()
         {
             var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
-            var user = _baseAppUserRepository.GetSingleAysnc(ba => ba.Id == userId && !ba.IsVerified, ba => ba.Gender);
+            var user =await _baseAppUserRepository.GetSingleAysnc(ba => ba.Id == userId && !ba.IsVerified, ba => ba.Gender);
             if (user is null)
                 throw new UserNotFoundException("User Not Found");
             var userInfo = _mapper.Map<GetUserDto>(user);
