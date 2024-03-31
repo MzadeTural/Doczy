@@ -25,6 +25,11 @@ namespace Doczy.API.Controllers.v1
             var response = await _appointmentService.CreateAppointmentAsync(appointmentRequest);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
+        [HttpGet("test")]
+        public async Task<IActionResult> testw()
+        {
+            return Ok(DateTime.Now.AddMinutes(-15));
+        }
 
         [HttpGet("doctor")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]

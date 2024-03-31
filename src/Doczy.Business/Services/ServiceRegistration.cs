@@ -36,6 +36,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IAppointmentService,AppointmentService>();
             services.AddScoped<IGenderService,GenderService>();
             services.AddScoped<ICategorySliderService,CategorySliderService>();
+            services.AddScoped<IVideoMeetingService,VideoMeetingService>();
 
 
         
@@ -44,6 +45,7 @@ namespace Doczy.Business.Services
             services.AddScoped<IAppointmentService,AppointmentService>();
         
             services.AddHostedService<ExpiredOTPCleanupService>();
+            services.AddHostedService<GenerateApoointmentMeetLinkService>();
             services.AddValidatorsFromAssemblyContaining<CreateUnivercityDtoValidation>();
             //services.AddScoped<IOTPCleanupService, OTPCleanupService>();
             //services.AddHostedService<OTPCleanupBackgroundService>();
