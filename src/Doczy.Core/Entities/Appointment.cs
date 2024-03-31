@@ -16,5 +16,6 @@ namespace Doczy.Core.Entities
         public Guid PatientId { get; set; }
         public Service? Service { get; set; }
         public Guid ServiceId { get; set; }
+        public string? MeetLink { get; set; }
     }
 }
