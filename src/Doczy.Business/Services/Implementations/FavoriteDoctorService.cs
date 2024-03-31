@@ -59,7 +59,7 @@ namespace Doczy.Business.Services.Implementations
             var user = _httpContextAccessor.HttpContext.User.Identity;
             if (!user.IsAuthenticated)
                 throw new AuthorizationException("Please login to add favourite any doctor", HttpStatusCode.Unauthorized);
-            var isExistDoctor = await _userManager.FindByEmailAsync(doctorId.ToString());
+            var isExistDoctor = await _userManager.FindByIdAsync(doctorId.ToString());
             if (isExistDoctor is null)
                 throw new UserNotFoundException("Id", doctorId.ToString());
             Guid patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
