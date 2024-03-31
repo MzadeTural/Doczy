@@ -71,7 +71,7 @@ namespace Doczy.API.Controllers.v1
             return Ok(await _doctorService.GetWillVerifiedDoctors());
         }
 
-        [HttpGet("favourite{doctorId}")]
+        [HttpGet("favourite/{doctorId}")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetFavoriteDoctorAsync([FromRoute]Guid doctorId)
         {
