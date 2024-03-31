@@ -163,7 +163,7 @@ namespace Doczy.Business.Services.Implementations
 
             var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
 
-            await SetIsFavouriteForDoctors(doctors);
+            //await SetIsFavouriteForDoctors(doctors);
 
             return doctors;
         }
@@ -204,13 +204,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<GetDoctorDetailDto> GetDoctorDetailAsync(Guid doctorId)
         {
-            var user = _httpContextAccessor?.HttpContext?.User.Identity;
-            bool IsFav = false;
-            if (user.IsAuthenticated)
-            {
-                Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
-                IsFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
-            }
+         
 
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
                                                                  "FavoriteDoctors",
@@ -224,7 +218,7 @@ namespace Doczy.Business.Services.Implementations
 
             var availabilities = doctors.Availabilities;
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
-            doctorDetail.IsFavourite = IsFav;
+           
 
             if (availabilities.Any())
                 doctorDetail.EarliestAvailable = GetMostRecentDate(availabilities);
@@ -261,7 +255,7 @@ namespace Doczy.Business.Services.Implementations
                                                            d => d.DoctorCategory);
 
             var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
-            await SetIsFavouriteForDoctors(doctors);
+            //await SetIsFavouriteForDoctors(doctors);
             return doctors;
 
         }
@@ -295,20 +289,20 @@ namespace Doczy.Business.Services.Implementations
         }
 
 
-        private async Task SetIsFavouriteForDoctors(List<GetDoctorsDto> doctors)
-        {
-            var user = _httpContextAccessor?.HttpContext?.User.Identity;
-            if (user.IsAuthenticated)
-            {
-                Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+        //private async Task SetIsFavouriteForDoctors(List<GetDoctorsDto> doctors)
+        //{
+        //    var user = _httpContextAccessor?.HttpContext?.User.Identity;
+        //    if (user.IsAuthenticated)
+        //    {
+        //        Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
 
-                foreach (var doctor in doctors)
-                {
-                    bool isFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctor.Id && fd.PatientId == patientId);
-                    doctor.IsFavourite = isFav;
-                }
-            }
-        }
+        //        foreach (var doctor in doctors)
+        //        {
+        //            bool isFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctor.Id && fd.PatientId == patientId);
+        //            doctor.IsFavourite = isFav;
+        //        }
+        //    }
+        //}
 
     }
 }

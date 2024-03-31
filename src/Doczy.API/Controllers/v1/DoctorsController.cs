@@ -66,9 +66,16 @@ namespace Doczy.API.Controllers.v1
 
         [HttpGet("will-verified")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> GetWillVerifiedDoctors()
+        public async Task<IActionResult> GetWillVerifiedDoctors ()
         {
             return Ok(await _doctorService.GetWillVerifiedDoctors());
+        }
+
+        [HttpGet("favourite{doctorId}")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<IActionResult> GetFavoriteDoctorAsync([FromRoute]Guid doctorId)
+        {
+            return Ok(await _favoriteDoctorService.GetFavoriteDoctorAsync(doctorId));
         }
 
         [HttpGet("filter")]
@@ -140,7 +147,7 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
 
-        [HttpDelete("remove-to-favourite/{doctorId}")]
+        [HttpDelete("remove-from-favourite/{doctorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
         public async Task<IActionResult> RemoveFavouriteDoctor([FromRoute]Guid doctorId)
         {
