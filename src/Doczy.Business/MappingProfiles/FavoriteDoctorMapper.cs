@@ -8,7 +8,9 @@ namespace Doczy.Business.MappingProfiles
     {
         public FavoriteDoctorMapper()
         {
-            CreateMap<FavoriteDoctor,CreateFavoriteDoctorDto>().ReverseMap();
+            CreateMap<CreateFavoriteDoctorDto ,FavoriteDoctor>().ReverseMap();
+            CreateMap<FavoriteDoctor,GetFavouriteDoctorDto>()
+                .ReverseMap();
         }
     }
 }

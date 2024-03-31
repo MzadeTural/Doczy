@@ -8,8 +8,8 @@
         public string? CategoryName { get; set; }
         public string? ProfileImageUrl { get; set; }
         public double? Raiting { get; set; }
-        public int? Favourite{ get; set; }
+       
         public int? Reviews { get; set; }
-        public bool IsFavourite { get; set; }
+    
     }
 }
