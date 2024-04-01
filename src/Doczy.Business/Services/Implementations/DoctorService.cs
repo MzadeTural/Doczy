@@ -163,7 +163,7 @@ namespace Doczy.Business.Services.Implementations
 
             var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
 
-            //await SetIsFavouriteForDoctors(doctors);
+            await SetIsFavouriteForDoctors(doctors);
 
             return doctors;
         }
@@ -255,7 +255,7 @@ namespace Doczy.Business.Services.Implementations
                                                            d => d.DoctorCategory);
 
             var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
-            //await SetIsFavouriteForDoctors(doctors);
+            await SetIsFavouriteForDoctors(doctors);
             return doctors;
 
         }
@@ -289,20 +289,20 @@ namespace Doczy.Business.Services.Implementations
         }
 
 
-        //private async Task SetIsFavouriteForDoctors(List<GetDoctorsDto> doctors)
-        //{
-        //    var user = _httpContextAccessor?.HttpContext?.User.Identity;
-        //    if (user.IsAuthenticated)
-        //    {
-        //        Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+        private async Task SetIsFavouriteForDoctors(List<GetDoctorsDto> doctors)
+        {
+            var user = _httpContextAccessor?.HttpContext?.User.Identity;
+            if (user.IsAuthenticated)
+            {
+                Guid? patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
 
-        //        foreach (var doctor in doctors)
-        //        {
-        //            bool isFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctor.Id && fd.PatientId == patientId);
-        //            doctor.IsFavourite = isFav;
-        //        }
-        //    }
-        //}
+                foreach (var doctor in doctors)
+                {
+                    bool isFav = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctor.Id && fd.PatientId == patientId);
+                    doctor.IsFavourite = isFav;
+                }
+            }
+        }
 
     }
 }
