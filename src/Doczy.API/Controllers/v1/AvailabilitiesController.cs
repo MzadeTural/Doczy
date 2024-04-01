@@ -22,7 +22,7 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorAvailabilityService.CreateDoctorAvailabilityAsync(createDto);
             return StatusCode((int)response.StatusCode, response.Message);
         }
-        [HttpGet("")]
+        [HttpGet("DoctorPage")]
         public async Task<List<GetDoctorAvailabilityDto>> GetDoctorAvailability()
         {
             var response = await _doctorAvailabilityService.GetDoctorOwnAvailabilityAsync();
