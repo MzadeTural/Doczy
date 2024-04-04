@@ -27,7 +27,6 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.Created, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpGet("")]
-         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetCategoriesAsync()
         {
             var response = await _doctorCategoryService.GetCategoryAsync();

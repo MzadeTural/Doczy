@@ -12,10 +12,12 @@ namespace Doczy.API.Controllers.v1
     public class AppointmentsController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
+        private readonly IVideoMeetingService _videoMeetingService;
 
-        public AppointmentsController(IAppointmentService appointmentsService)
+        public AppointmentsController(IAppointmentService appointmentsService, IVideoMeetingService videoMeetingService)
         {
             _appointmentService = appointmentsService;
+            _videoMeetingService = videoMeetingService;
         }
 
         [HttpPost("")]
@@ -29,6 +31,12 @@ namespace Doczy.API.Controllers.v1
         public async Task<IActionResult> testw()
         {
             return Ok(DateTime.Now.AddMinutes(-15));
+        }
+        [HttpGet("meet")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
+        public async Task<IActionResult> GetMeet()
+        {
+            return Ok(await _videoMeetingService.GetMeetingSpaceDataAsync());
         }
 
         [HttpGet("doctor")]
