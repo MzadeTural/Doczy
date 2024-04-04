@@ -12,6 +12,7 @@
         public IEnumerable<Experiance>? Experiances { get; set; }
         public IEnumerable<Award>? Awards { get; set; }
         public IEnumerable<Speciality>? Specialities { get; set; }
+        public IEnumerable<UserSocialMedia>? SocialMedias { get; set; }
         public IEnumerable<DoctorAvailability>? Availabilities { get; set; }
         public string? AboutDoctor { get; set; }
         public DoctorCategory? DoctorCategory { get; set; }

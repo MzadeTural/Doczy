@@ -43,10 +43,13 @@ namespace Doczy.Business.Services.Implementations
                 {
                     Text = mailRequest.Body
                 };
+                MailAddress fromAddress = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
                 MailMessage msg = new MailMessage(_mailSettings.Mail, mailRequest.ToEmail);
                 msg.IsBodyHtml = true;
                 msg.Body = mailRequest.Body;
                 msg.Subject = mailRequest.Subject;
+                msg.Sender=fromAddress;
+                
 
                 client.Send(msg);
                 //  await  client.SendMailAsync(msg);

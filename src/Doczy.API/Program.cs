@@ -17,6 +17,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddBusinessServices();
 builder.Services.AddDataAccesServices();
 builder.Services.AddRouting();
+builder.Services.AddHttpClient();
 builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);

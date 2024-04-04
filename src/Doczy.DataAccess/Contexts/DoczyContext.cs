@@ -43,6 +43,8 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<TempAppointment> TempAppointments { get; set; }
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<CategorySlider> CategorySliders { get; set; }
+        public DbSet<SocialMedia> SocialMedias { get; set; }
+        public DbSet<UserSocialMedia> UserSocialMedias { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
