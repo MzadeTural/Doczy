@@ -19,7 +19,7 @@ namespace Doczy.API.Controllers.v1
         }
         [HttpPost("")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Doctor")]
-        public async Task<IActionResult> Create([FromForm] CreateServiceDto createServiceDto)
+        public async Task<IActionResult> Create(CreateServiceDto createServiceDto)
         {
 
             var response = await _serviceService.CreateServiceAsync(createServiceDto);

@@ -16,5 +16,7 @@ namespace Doczy.Business.DTOs.UserDtos
         public IFormFile DiplomaImageUrl { get; set; }
         public string? Password { get; set; }
         public Guid DoctorCategoryId { get; set; }
+        public Guid? GenderId { get; set; }
+
     }
 }
