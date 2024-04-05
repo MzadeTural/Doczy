@@ -43,5 +43,13 @@ namespace Doczy.Business.Services.Implementations
                                                             .ToListAsync();
             return categories; 
         }
+
+        public async Task<List<GetEntityIdDto>> GetCategoryIdAsync()
+        {
+            var categories = await _doctorCategoryRepository.FindAll(dc => !dc.IsDeleted)
+                                                           .ProjectTo<GetEntityIdDto>(_mapper.ConfigurationProvider)
+                                                            .ToListAsync();
+            return categories;
+        }
     }
 }

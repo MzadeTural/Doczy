@@ -32,5 +32,11 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorCategoryService.GetCategoryAsync();
             return Ok(response);
         }
+        [HttpGet("id")]
+        public async Task<IActionResult> GetCategoriIdsAsync()
+        {
+            var response = await _doctorCategoryService.GetCategoryIdAsync();
+            return Ok(response);
+        }
     }
 }
