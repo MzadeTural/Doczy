@@ -9,5 +9,6 @@ namespace Doczy.Business.Services.Interfaces
         
         Task<ResponseDto> CreateCategoryAsync(CreateDoctorCategoryDto model);
         Task<List<GetDoctorCategoryDto>> GetCategoryAsync();
+        Task<List<GetEntityIdDto>> GetCategoryIdAsync();
     }
 }
