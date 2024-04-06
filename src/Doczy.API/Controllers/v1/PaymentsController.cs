@@ -23,11 +23,13 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePayment( double sumAmount, string desc)
+        public async Task<IActionResult> CreatePayment( decimal amount, string desc)
         {
             try
             {
-                var paymentUrl = await _paymentService.InitiatePaymentAsync( sumAmount,  desc);
+                var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", amount,  desc);
+                var parsePaymentResponse = _paymentService.ParsePaymentDataFromResponse(paymentResponse);
+                var paymentUrl = parsePaymentResponse.Payload.PaymentUrl;
                 return Ok(new { PaymentUrl = paymentUrl });
             }
             catch (PaymentFailedException ex)
