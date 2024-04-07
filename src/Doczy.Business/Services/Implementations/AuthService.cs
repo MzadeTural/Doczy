@@ -204,8 +204,6 @@ namespace Doczy.Business.Services.Implementations
             if (user == null)
                 throw new UserNotFoundException($"User not found by email or phone: {model.EmailorPhoneNumber}", HttpStatusCode.BadRequest);
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            if (user.OTP != model.OTP || user.OTPExpiryDate < DateTime.UtcNow)
-                return new ResponseDto(StatusCode: HttpStatusCode.BadRequest, Message: "Invalid or expired OTP.");
             var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
 
             if (resetPasswordResult.Succeeded)
@@ -235,6 +233,18 @@ namespace Doczy.Business.Services.Implementations
            Message:  result?  "Doctor  successfully verfied": "Something went wrong"
        );
 
+        }
+
+        public async Task<ResponseDto> VerifyOTPAsync(VerifyOTPDto model)
+        {
+            var user = await _baseAppUserRepository.GetUserByEmailOrPhoneNumberAsync(model.EmailorPhoneNumber);
+            if (user == null)
+                throw new UserNotFoundException($"User not found by email or phone: {model.EmailorPhoneNumber}", HttpStatusCode.BadRequest);
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if (user.OTP != model.OTP || user.OTPExpiryDate < DateTime.UtcNow)
+                return new ResponseDto(StatusCode: HttpStatusCode.BadRequest, Message: "Invalid or expired OTP.");
+
+            return new ResponseDto(StatusCode: HttpStatusCode.Accepted, Message: "OTP Verified.");
         }
     }
 }
