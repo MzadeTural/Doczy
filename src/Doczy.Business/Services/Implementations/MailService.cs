@@ -48,7 +48,7 @@ namespace Doczy.Business.Services.Implementations
                 msg.IsBodyHtml = true;
                 msg.Body = mailRequest.Body;
                 msg.Subject = mailRequest.Subject;
-                msg.Sender=fromAddress;
+                msg.From=fromAddress;
                 
 
                 client.Send(msg);
