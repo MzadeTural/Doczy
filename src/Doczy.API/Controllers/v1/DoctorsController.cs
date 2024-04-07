@@ -63,9 +63,14 @@ namespace Doczy.API.Controllers.v1
         {
             return Ok(await _doctorService.GetDoctorsByCategoryId(categoryId));
         }
-
+        [HttpGet("profile")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor")]
+        public async Task<IActionResult> GetDoctorProfile()
+        {
+            return Ok(await _doctorService.GetDoctorProfileAsync());
+        }
         [HttpGet("will-verified")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetWillVerifiedDoctors ()
         {
             return Ok(await _doctorService.GetWillVerifiedDoctors());
