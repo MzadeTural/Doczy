@@ -40,7 +40,9 @@ namespace Doczy.Business.MappingProfiles
             CreateMap<DoctorAppUser, GetWillVerifiedDoctorDto>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.DoctorCategory.Name))
                .ReverseMap();
-
+            CreateMap<DoctorAppUser, GetDoctorProfileDto>()
+               .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.DoctorCategory.Name))
+               .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.Name));
 
         }
         private GetHospitalDto GetHospitalDtoFromExperiences(IEnumerable<Experiance> experiences)

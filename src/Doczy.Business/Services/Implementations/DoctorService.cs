@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
-using Doczy.Business.Exceptions.AuthExceptions;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
@@ -204,7 +203,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<GetDoctorDetailDto> GetDoctorDetailAsync(Guid doctorId)
         {
-         
+
 
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
                                                                  "FavoriteDoctors",
@@ -218,7 +217,7 @@ namespace Doczy.Business.Services.Implementations
 
             var availabilities = doctors.Availabilities;
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
-           
+
 
             if (availabilities.Any())
                 doctorDetail.EarliestAvailable = GetMostRecentDate(availabilities);
@@ -304,5 +303,14 @@ namespace Doczy.Business.Services.Implementations
             }
         }
 
+        public async Task<GetDoctorProfileDto> GetDoctorProfileAsync()
+        {
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
+                                                              "DoctorCategory",
+                                                               "Gender");
+            var doctorDetail = _mapper.Map<GetDoctorProfileDto>(doctors);
+            return doctorDetail;
+        }
     }
 }
