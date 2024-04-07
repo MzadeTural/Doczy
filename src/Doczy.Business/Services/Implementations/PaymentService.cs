@@ -1,31 +1,23 @@
 ﻿using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.PaymentDtos;
 using Doczy.Business.Services.Interfaces;
-using Doczy.Core.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Doczy.Business.Services.Implementations
 {
     public class PaymentService : IPaymentService
     {
         private IConfiguration _configre;
-       
 
-        public PaymentService( IConfiguration configre)
+
+        public PaymentService(IConfiguration configre)
         {
-          
+
             _configre = configre;
-            
+
         }
 
         public decimal CalculatePaymentAmount(CreateAppointmentDto model)
@@ -87,8 +79,8 @@ namespace Doczy.Business.Services.Implementations
             }
         }
 
-      
-        public async Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint,decimal amount,string description)
+
+        public async Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, decimal amount, string description)
         {
             using (var httpClient = new HttpClient())
             {
@@ -135,7 +127,7 @@ namespace Doczy.Business.Services.Implementations
             {
                 var responseContent = response.Content.ReadAsStringAsync().Result;
                 var responseObject = JsonConvert.DeserializeObject<PayriffResponseDto>(responseContent);
-                var url = responseObject.Payload.PaymentUrl; 
+                var url = responseObject.Payload.PaymentUrl;
                 return responseObject; // Assuming the payment URL is returned as "paymentUrl" in the response
             }
             else
@@ -148,7 +140,7 @@ namespace Doczy.Business.Services.Implementations
         public async Task RedirectUserToPayment(string paymentUrl)
         {
             // Assuming this method is called within a controller action where you have access to the HttpContext
-            
+
             // _contextAccessor.Response.Redirect(paymentUrl);
             Process.Start(new ProcessStartInfo
             {
