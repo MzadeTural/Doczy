@@ -80,7 +80,7 @@ namespace Doczy.Business.Services.Implementations
         }
 
 
-        public async Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, decimal amount, string description)
+        public async Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, decimal sumAmount, string descriptionPay)
         {
             using (var httpClient = new HttpClient())
             {
@@ -88,34 +88,35 @@ namespace Doczy.Business.Services.Implementations
                 {
                     body = new
                     {
-                        amount = amount,
-                        approveURL = _configre["Payriff:approveURL"].ToString(),
-                        cancelURL = _configre["Payriff:cancelURL"].ToString(),
-                        declineURL = _configre["Payriff:declineURL"].ToString(),
+                        amount = sumAmount,
+                        approveURL = _configre["Payriff:approveURL"],
+                        cancelURL = _configre["Payriff:cancelURL"],
+                        declineURL = _configre["Payriff:declineURL"],
                         cardUuid = "string",
                         currencyType = "AZN",
-                        description = description,
+                        description = descriptionPay,
                         directPay = true,
                         installmentPeriod = 0,
                         installmentProductType = "BIRKART",
                         language = "AZ",
                         senderCardUID = "string"
                     },
-                    merchant = _configre["Payriff:merchant"].ToString()
+                    merchant = _configre["Payriff:merchant"]
                 };
+
                 var requestUrl = $"https://api.payriff.com/api/v2/{endpoint}";
 
-                // Serialize request body to JSON
                 var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
 
-                // Create HTTP request message
-                var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUrl);
-                httpRequest.Content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json");
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUrl)
+                {
+                    Content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json")
+                };
 
-                httpClient.DefaultRequestHeaders.Add("Authorization", _configre["Payriff:secretKey"].ToString());
-                // Send HTTP request
+                // Add authorization header
+                httpRequest.Headers.Add("Authorization", _configre["Payriff:secretKey"]);
+
                 var response = await httpClient.SendAsync(httpRequest);
-
                 return response;
             }
         }
