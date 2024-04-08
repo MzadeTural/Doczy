@@ -1,12 +1,9 @@
 ﻿using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
-using Doczy.Business.DTOs.FavoriteDoctorDtos;
 using Doczy.Business.DTOs.Language;
 using Doczy.Business.DTOs.UserDtos;
-using Doczy.Business.Services.Implementations;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -53,9 +50,9 @@ namespace Doczy.API.Controllers.v1
         }
         [HttpGet("{pageSize}/{pageIndex}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllDoctorsPaginate([FromRoute]int pageSize,[FromRoute]int pageIndex)
+        public async Task<IActionResult> GetAllDoctorsPaginate([FromRoute] int pageSize, [FromRoute] int pageIndex)
         {
-            return Ok(await _doctorService.GetDoctorsPaginate(pageIndex,pageSize));
+            return Ok(await _doctorService.GetDoctorsPaginate(pageIndex, pageSize));
         }
         [HttpGet("by-categroryId/{categoryId}")]
         [AllowAnonymous]
@@ -71,14 +68,14 @@ namespace Doczy.API.Controllers.v1
         }
         [HttpGet("will-verified")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> GetWillVerifiedDoctors ()
+        public async Task<IActionResult> GetWillVerifiedDoctors()
         {
             return Ok(await _doctorService.GetWillVerifiedDoctors());
         }
 
         [HttpGet("favourite/{doctorId}")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<IActionResult> GetFavoriteDoctorAsync([FromRoute]Guid doctorId)
+        public async Task<IActionResult> GetFavoriteDoctorAsync([FromRoute] Guid doctorId)
         {
             return Ok(await _favoriteDoctorService.GetFavoriteDoctorAsync(doctorId));
         }
@@ -93,7 +90,7 @@ namespace Doczy.API.Controllers.v1
 
 
         [HttpPatch("update-phone")]
-        public async Task<IActionResult> UpdatePhoneNumber( UserPhoneUpdateDto model)
+        public async Task<IActionResult> UpdatePhoneNumber(UserPhoneUpdateDto model)
         {
             var response = await _doctorService.UpdatePhoneNumberAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
@@ -145,7 +142,7 @@ namespace Doczy.API.Controllers.v1
 
         [HttpPost("add-to-favourite/{doctorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
-        public async Task<IActionResult> AddFavouriteDoctor([FromRoute]Guid doctorId)
+        public async Task<IActionResult> AddFavouriteDoctor([FromRoute] Guid doctorId)
         {
             var response = await _favoriteDoctorService.CreateFavoriteDoctorAsync(doctorId);
 
@@ -154,7 +151,7 @@ namespace Doczy.API.Controllers.v1
 
         [HttpDelete("remove-from-favourite/{doctorId}")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Patient")]
-        public async Task<IActionResult> RemoveFavouriteDoctor([FromRoute]Guid doctorId)
+        public async Task<IActionResult> RemoveFavouriteDoctor([FromRoute] Guid doctorId)
         {
             var response = await _favoriteDoctorService.RemoveFavoriteDoctorAsync(doctorId);
 
