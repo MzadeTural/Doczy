@@ -93,7 +93,7 @@ namespace Doczy.Business.Services.Implementations
                    host: request.Host
                );
             }
-            string redirectUrl = "http://localhost:3000/Auth/VerifyEmailMessage?redirect=" + System.Web.HttpUtility.UrlEncode(url);
+            string redirectUrl = $"http://localhost:3000/Auth/VerifyEmailMessage?email={System.Web.HttpUtility.UrlEncode(user.Email)}&token={System.Web.HttpUtility.UrlEncode(token)}";
             return redirectUrl;
         }
 
