@@ -27,7 +27,11 @@ namespace Doczy.API.Controllers.v1
         public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailDto confirmEmailDto)
         {
             var response = await _authService.ConfirmEmailAsync(confirmEmailDto);
-            return StatusCode((int)response.StatusCode, response.Message);
+            if (response.StatusCode==HttpStatusCode.OK)
+                return Redirect("http://localhost:3000/Auth/VerifyEmailMessage");
+            else
+                return StatusCode((int)response.StatusCode, response.Message);
+            
         }
         [HttpGet("profile-info")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor")]
