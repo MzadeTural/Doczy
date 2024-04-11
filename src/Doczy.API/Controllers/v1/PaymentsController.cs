@@ -4,7 +4,10 @@ using Doczy.Business.Exceptions.PaymentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 
 namespace Doczy.API.Controllers.v1
@@ -38,11 +41,41 @@ namespace Doczy.API.Controllers.v1
             }
         }
 
+        //[HttpPost("callback")]
+        //public async Task<IActionResult> PaymentCallback([FromBody] CallbackData paymentCallback)
+        //{
+        //    var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
+        //    return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        //}
         [HttpPost("callback")]
-        public async Task<IActionResult> PaymentCallback(CallbackData paymentCallback)
+        public async Task<IActionResult> PaymentCallback(CallbackData payload)
         {
-            var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
-            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+            //var transactionDetails = payload["payload"];
+            //if (transactionDetails == null)
+            //{
+            //    return BadRequest("Transaction details are required.");
+            //}
+
+            //// Extract relevant information from the payload
+            //var orderId = (int)transactionDetails["orderID"];
+            //var purchaseAmount = (decimal)transactionDetails["purchaseAmount"];
+
+            return Ok(payload.Payload.Brand);
+        }
+        [HttpPost("test")]
+        public async Task<IActionResult> PaymentCallback( )
+        {
+            //var transactionDetails = payload["payload"];
+            //if (transactionDetails == null)
+            //{
+            //    return BadRequest("Transaction details are required.");
+            //}
+
+            //// Extract relevant information from the payload
+            //var orderId = (int)transactionDetails["orderID"];
+            //var purchaseAmount = (decimal)transactionDetails["purchaseAmount"];
+
+            return Ok();
         }
     }
 }
