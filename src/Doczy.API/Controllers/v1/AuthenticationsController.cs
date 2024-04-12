@@ -1,5 +1,6 @@
 ﻿using Doczy.Business.DTOs.AuthDtos;
 using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.UserDtos;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,12 @@ namespace Doczy.API.Controllers.v1
             await _authService.LogOutAsync();
             return Ok();
 
+        }
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+        {
+            var response = await _authService.ChangePassword(model);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword( ForgotPasswordRequestDto model)

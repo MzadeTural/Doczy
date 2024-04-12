@@ -251,11 +251,17 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> ChangePassword(ChangePasswordDto model)
         {
-            var userId = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
-           
+            var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+            if (user is null)
+                throw new UnauthorizedException();
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            return new ResponseDto
+          (
+              StatusCode: result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+              Message: result.Succeeded ? "Password change successful" : String.Join(',', result.Errors.Select(e => e.Description))
+          );
 
-
-            throw new NotImplementedException();
+            
         }
     }
 }
