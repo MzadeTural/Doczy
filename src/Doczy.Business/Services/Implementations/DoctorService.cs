@@ -327,9 +327,9 @@ namespace Doczy.Business.Services.Implementations
 
             var doctors = await doctorsQuery.ProjectTo<GetDashboardReports>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
 
-            doctors.Online = _appointmentRepository.FindAll(s=>s.Service.ServiceType.Name== ServiceTypes.Online.ToString() && s.DoctorId==doctorId,tracking:false).ToList().
+            doctors.Online = _appointmentRepository.FindAll(s=>s.Service.ServiceType.Name== ServiceTypes.Online.ToString() && s.DoctorId==doctorId,tracking:false).
                 Count();
-            doctors.InPerson = _appointmentRepository.FindAll(s => s.Service.ServiceType.Name == ServiceTypes.InPerson.ToString() && s.DoctorId == doctorId, tracking: false).ToList().
+            doctors.InPerson = _appointmentRepository.FindAll(s => s.Service.ServiceType.Name == ServiceTypes.InPerson.ToString() && s.DoctorId == doctorId, tracking: false).
                 Count();
             doctors.Patients = _appointmentRepository.FindAll(s =>s.DoctorId == doctorId, tracking: false).
                 GroupBy(a => a.PatientId).Count();

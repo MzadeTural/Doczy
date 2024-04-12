@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
+using System.Security.Claims;
+using Vonage.Users;
 
 namespace Doczy.Business.Services.Implementations
 {
@@ -245,6 +247,15 @@ namespace Doczy.Business.Services.Implementations
                 return new ResponseDto(StatusCode: HttpStatusCode.BadRequest, Message: "Invalid or expired OTP.");
 
             return new ResponseDto(StatusCode: HttpStatusCode.Accepted, Message: "OTP Verified.");
+        }
+
+        public async Task<ResponseDto> ChangePassword(ChangePasswordDto model)
+        {
+            var userId = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+           
+
+
+            throw new NotImplementedException();
         }
     }
 }
