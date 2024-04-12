@@ -33,19 +33,26 @@ namespace Doczy.API.Controllers.v1
 
         }
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordRequestDto model)
+        public async Task<IActionResult> ForgotPassword( ForgotPasswordRequestDto model)
         {
             var response= await _authService.ForgotPasswordAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordDto model)
+        public async Task<IActionResult> ResetPassword( ResetPasswordDto model)
         {
             var response = await _authService.ResetPasswordAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
 
         }
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOTP(VerifyOTPDto model)
+        {
+            var response = await _authService.VerifyOTPAsync(model);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+
+        }
+
         [HttpPatch("verify-doctor")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> VerifiedDoctor(Guid doctorId )

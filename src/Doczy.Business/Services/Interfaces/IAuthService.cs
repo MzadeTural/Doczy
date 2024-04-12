@@ -10,7 +10,8 @@ namespace Doczy.Business.Services.Interfaces
          Task<LoginResponseDto> LoginAsync(LoginDto model, int accessTokenLifeTime);
           Task LogOutAsync();
         Task<ResponseDto> VerifyOTPAsync(VerifyOTPDto model);
-         Task<TokenResponseDto> RefreshTokenLoginAsync(string refreshToken);
+        Task<ResponseDto> ChangePassword(ChangePasswordDto model);
+        Task<TokenResponseDto> RefreshTokenLoginAsync(string refreshToken);
          Task<ResponseDto> ConfirmEmailAsync(ConfirmEmailDto confirmEmailDto);
         Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordRequestDto model);
         Task<ResponseDto> ConfirmOTPAsync(ConfirmOTPDto model);
