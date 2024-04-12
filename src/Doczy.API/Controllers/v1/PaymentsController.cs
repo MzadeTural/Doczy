@@ -41,41 +41,12 @@ namespace Doczy.API.Controllers.v1
             }
         }
 
-        //[HttpPost("callback")]
-        //public async Task<IActionResult> PaymentCallback([FromBody] CallbackData paymentCallback)
-        //{
-        //    var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
-        //    return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
-        //}
         [HttpPost("callback")]
-        public async Task<IActionResult> PaymentCallback(CallbackData payload)
+        public async Task<IActionResult> PaymentCallback([FromBody] CallbackData paymentCallback)
         {
-            //var transactionDetails = payload["payload"];
-            //if (transactionDetails == null)
-            //{
-            //    return BadRequest("Transaction details are required.");
-            //}
-
-            //// Extract relevant information from the payload
-            //var orderId = (int)transactionDetails["orderID"];
-            //var purchaseAmount = (decimal)transactionDetails["purchaseAmount"];
-
-            return Ok(payload.Payload.Brand);
+            var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
-        [HttpPost("test")]
-        public async Task<IActionResult> PaymentCallback( )
-        {
-            //var transactionDetails = payload["payload"];
-            //if (transactionDetails == null)
-            //{
-            //    return BadRequest("Transaction details are required.");
-            //}
 
-            //// Extract relevant information from the payload
-            //var orderId = (int)transactionDetails["orderID"];
-            //var purchaseAmount = (decimal)transactionDetails["purchaseAmount"];
-
-            return Ok();
-        }
     }
 }
