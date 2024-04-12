@@ -3,12 +3,14 @@ using AutoMapper.QueryableExtensions;
 using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.DoctorDtos;
 using Doczy.Business.DTOs.Language;
+using Doczy.Business.Enums;
 using Doczy.Business.Exceptions.DoctorCategoryExceptions;
 using Doczy.Business.Exceptions.LanguageExceptions;
 using Doczy.Business.Exceptions.UserExceprions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +20,7 @@ using System.Net;
 namespace Doczy.Business.Services.Implementations
 {
     public class DoctorService : IDoctorService
+
     {
         private readonly UserManager<BaseAppUser> _userManager;
         private readonly IDoctorRatingRepository _doctorRatingRepository;
@@ -28,8 +31,8 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IDoctorCategoryRepository _categoryRepository;
         private readonly IFavoriteDoctorRepository _favoriteDoctorRepository;
-
-        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository, IDoctorRatingRepository doctorRatingRepository, IFavoriteDoctorRepository favoriteDoctorRepository)
+        private readonly IAppointmentRepository _appointmentRepository;
+        public DoctorService(UserManager<BaseAppUser> userManager, IDoctorRepository doctorRepository, ILanguageRepository languageRepository, IDoctorLanguageRepository doctorLanguageRepository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IDoctorCategoryRepository categoryRepository, IDoctorRatingRepository doctorRatingRepository, IFavoriteDoctorRepository favoriteDoctorRepository, IAppointmentRepository appointmentRepository)
         {
             _userManager = userManager;
             _doctorRepository = doctorRepository;
@@ -40,6 +43,7 @@ namespace Doczy.Business.Services.Implementations
             _categoryRepository = categoryRepository;
             _doctorRatingRepository = doctorRatingRepository;
             _favoriteDoctorRepository = favoriteDoctorRepository;
+            _appointmentRepository = appointmentRepository;
         }
 
         public async Task<ResponseDto> AddLanguageAsync(Guid languageId)
@@ -311,6 +315,26 @@ namespace Doczy.Business.Services.Implementations
                                                                "Gender");
             var doctorDetail = _mapper.Map<GetDoctorProfileDto>(doctors);
             return doctorDetail;
+        }
+
+        public async Task<GetDashboardReports> GetDashboardReportsAsync()
+        {
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var doctorsQuery = _doctorRepository.FindAll(d => d.IsVerified, tracking: false,
+                                                        d => d.FavoriteDoctors,
+                                                        d => d.Ratings,
+                                                        d => d.DoctorCategory);
+
+            var doctors = await doctorsQuery.ProjectTo<GetDashboardReports>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+
+            doctors.Online = _appointmentRepository.FindAll(s=>s.Service.ServiceType.Name== ServiceTypes.Online.ToString() && s.DoctorId==doctorId,tracking:false).ToList().
+                Count();
+            doctors.InPerson = _appointmentRepository.FindAll(s => s.Service.ServiceType.Name == ServiceTypes.InPerson.ToString() && s.DoctorId == doctorId, tracking: false).ToList().
+                Count();
+            doctors.Patients = _appointmentRepository.FindAll(s =>s.DoctorId == doctorId, tracking: false).
+                GroupBy(a => a.PatientId).Count();
+            return doctors;
+
         }
     }
 }
