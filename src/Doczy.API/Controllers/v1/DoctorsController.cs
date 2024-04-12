@@ -66,6 +66,12 @@ namespace Doczy.API.Controllers.v1
         {
             return Ok(await _doctorService.GetDoctorProfileAsync());
         }
+        [HttpGet("dashboard-reports")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor")]
+        public async Task<IActionResult> GetDoctorDashboardReports()
+        {
+            return Ok(await _doctorService.GetDashboardReportsAsync());
+        }
         [HttpGet("will-verified")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<IActionResult> GetWillVerifiedDoctors()

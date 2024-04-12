@@ -1,13 +1,13 @@
-﻿using Doczy.Business.DTOs.Common;
+using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.PaymentDtos;
 using Doczy.Business.Exceptions.PaymentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.MSIdentity.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 
 namespace Doczy.API.Controllers.v1
@@ -42,21 +42,11 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("callback")]
-        public async Task<IActionResult> PaymentCallback()
+        public async Task<IActionResult> PaymentCallback([FromBody] CallbackData paymentCallback)
         {
-            var formValues = await Request.ReadFormAsync();
-            return Ok(formValues);
-            //using (StreamReader reader = new StreamReader(Request.Body))
-            //{
-            //    string body = await reader.ReadToEndAsync();
-            //    //JObject jsonObject = JObject.Parse(body);
-            //    CallbackData response = JsonConvert.DeserializeObject<CallbackData>(body);
-
-            //    // JSON içeriğini konsola yazdırma
-            //    return Ok(data.ToString());
-            //}
-            //var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
-            //return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+            var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
+
     }
 }
