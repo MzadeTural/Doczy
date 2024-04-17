@@ -57,7 +57,7 @@ namespace Doczy.Business.Services.Implementations
             doct.CreatedAt = DateTime.Now;
             doct.DiplomaImageUrl = diplomaFile;
             doct.IdCardImageUrl = idCardFile;
-            doct.ProfileImageUrl = "profile-default.png";
+            doct.ProfileImageUrl = "default/profile-default.png";
             doct.IsVerified = false;
 
 
@@ -134,15 +134,25 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> ChangeProfilePhoto(UpdateProfilePhotoDto model)
         {
-            string profilePhoto = await _fileService.CreateFileAsync(model.fileUrl, _environment.WebRootPath + "/uploads/users/doctors/diploma/");
+            string profilePhoto = await _fileService.CreateFileAsync(model.fileUrl, _environment.WebRootPath + "/uploads/users/doctors/profilephotos/");
             var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
+                throw new UserNotFoundException("id",userId.ToString());
             user.ProfileImageUrl = profilePhoto;
             var result = await _userManager.UpdateAsync(user);
-            return new ResponseDto(
+            if (result.Succeeded)
+            { 
+                return new ResponseDto(
                     StatusCode: HttpStatusCode.NoContent,
                     Message: "Profile photo successfully updated"
                 );
+            }
+            return new ResponseDto(
+            StatusCode: HttpStatusCode.InternalServerError,
+            Message: $"Failed to update profile photo,\nErrors:{result.Errors}"
+            );
 
         }
 
@@ -155,6 +165,28 @@ namespace Doczy.Business.Services.Implementations
             var userInfo = _mapper.Map<GetUserDto>(user);
 
             return userInfo;
+        }
+
+        public async Task<ResponseDto> RemoveProfilePhotoAsync()
+        {
+            var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
+                throw new UserNotFoundException("id",userId.ToString());
+              _fileService.DeteleFile( _environment.WebRootPath + $"/uploads/users/doctors/profilephotos/{user.ProfileImageUrl}");
+            user.ProfileImageUrl ="default/profile-default.png";
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+            return new ResponseDto(
+                    StatusCode: HttpStatusCode.NoContent,
+                    Message: "Profile photo successfully removed"
+                );
+            }
+            return new ResponseDto(
+           StatusCode: HttpStatusCode.InternalServerError,
+           Message: $"Failed to remove profile photo,\nErrors:{result.Errors}"
+           );
         }
     }
 }
