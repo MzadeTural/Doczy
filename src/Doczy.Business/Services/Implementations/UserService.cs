@@ -139,7 +139,7 @@ namespace Doczy.Business.Services.Implementations
 
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user is null)
-                throw new UserNotFoundException("id",$"{userId}");
+                throw new UserNotFoundException("id",userId.ToString());
             user.ProfileImageUrl = profilePhoto;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
@@ -172,7 +172,7 @@ namespace Doczy.Business.Services.Implementations
             var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user is null)
-                throw new UserNotFoundException("id",$"{userId}");
+                throw new UserNotFoundException("id",userId.ToString());
               _fileService.DeteleFile( _environment.WebRootPath + $"/uploads/users/doctors/profilephotos/{user.ProfileImageUrl}");
             user.ProfileImageUrl ="default/profile-default.png";
             var result = await _userManager.UpdateAsync(user);
