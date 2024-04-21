@@ -48,5 +48,11 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
 
+        [HttpGet("callback")]
+        public async Task<IActionResult> PaymentCallback()
+        {
+            return StatusCode(200);
+        }
+
     }
 }
