@@ -2,6 +2,7 @@ using Doczy.Business.DTOs.Common;
 using Doczy.Business.DTOs.PaymentDtos;
 using Doczy.Business.Exceptions.PaymentExceptions;
 using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -26,11 +27,11 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreatePayment( decimal amount, string desc)
+        public async Task<IActionResult> CreatePayment(CreatePayment createPayment)
         {
             try
             {
-                var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", amount,  desc);
+                var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", createPayment);
                 var parsePaymentResponse = _paymentService.ParsePaymentDataFromResponse(paymentResponse);
                 var paymentUrl = parsePaymentResponse.Payload.PaymentUrl;
                 return Ok(new { PaymentUrl = paymentUrl });
@@ -42,10 +43,19 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("callback")]
-        public async Task<IActionResult> PaymentCallback([FromBody] CallbackData paymentCallback)
+        public async Task<IActionResult> PaymentCallback(CallbackData paymentCallback)
         {
+            //return Ok(paymentCallback);
             var response = await _appointmentService.UpdateAppointmentPaymentStatusAsync(paymentCallback);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
+
+        [HttpGet("callback")]
+        public IActionResult PaymentCallback()
+        {
+            //return Ok(paymentCallback);
+
+            return StatusCode(200);
         }
 
     }

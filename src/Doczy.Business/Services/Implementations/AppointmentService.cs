@@ -74,8 +74,13 @@ namespace Doczy.Business.Services.Implementations
                 senderCardUID = userId.ToString()
             };
 
+            CreatePayment createPayment = new CreatePayment()
+            {
+                Amount = amount,
+                Desc = "Appointment payment"
+            };
             // Make createOrder request to initiate payment
-            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", amount, "Appointment payment");
+            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder",createPayment);
 
             // Check if payment initiation was successful
             if (paymentResponse.IsSuccessStatusCode)
@@ -93,6 +98,7 @@ namespace Doczy.Business.Services.Implementations
                 newTempAppointment.PaymentAmount = amount;
                 newTempAppointment.SessionId = parsePaymentResponse.Payload.SessionId;
                 newTempAppointment.OrderId = parsePaymentResponse.Payload.OrderId;
+
                 var result = await _tempAppointmentRepository.CreateAsync(newTempAppointment);
                 await _tempAppointmentRepository.SaveAsync();
 
