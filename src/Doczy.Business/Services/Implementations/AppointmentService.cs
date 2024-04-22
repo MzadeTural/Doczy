@@ -74,8 +74,13 @@ namespace Doczy.Business.Services.Implementations
                 senderCardUID = userId.ToString()
             };
 
+            CreatePayment createPayment = new CreatePayment()
+            {
+                Amount = amount,
+                Desc = "Appointment payment"
+            };
             // Make createOrder request to initiate payment
-            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", amount, "Appointment payment");
+            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder",createPayment);
 
             // Check if payment initiation was successful
             if (paymentResponse.IsSuccessStatusCode)
