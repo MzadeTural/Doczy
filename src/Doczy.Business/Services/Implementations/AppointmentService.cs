@@ -93,6 +93,7 @@ namespace Doczy.Business.Services.Implementations
                 newTempAppointment.PaymentAmount = amount;
                 newTempAppointment.SessionId = parsePaymentResponse.Payload.SessionId;
                 newTempAppointment.OrderId = parsePaymentResponse.Payload.OrderId;
+
                 var result = await _tempAppointmentRepository.CreateAsync(newTempAppointment);
                 await _tempAppointmentRepository.SaveAsync();
 
