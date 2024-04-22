@@ -9,7 +9,7 @@ namespace Doczy.Business.Services.Interfaces
     {
 
        // Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, object requestBody);
-        Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint,decimal amount ,string description);
+        Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, CreatePayment payment);
         Task<string> InitiatePaymentAsync(double sumAmount, string desc);
         decimal CalculatePaymentAmount(CreateAppointmentDto model);
         PayriffResponseDto ParsePaymentDataFromResponse(HttpResponseMessage response);

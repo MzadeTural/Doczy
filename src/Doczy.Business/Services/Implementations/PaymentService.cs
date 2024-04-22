@@ -1,6 +1,7 @@
 ﻿using Doczy.Business.DTOs.AppointmentDto;
 using Doczy.Business.DTOs.PaymentDtos;
 using Doczy.Business.Services.Interfaces;
+using Doczy.Core.Entities;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -80,7 +81,7 @@ namespace Doczy.Business.Services.Implementations
         }
 
 
-        public async Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, decimal sumAmount, string descriptionPay)
+        public async Task<HttpResponseMessage> MakePaymentRequestAsync(string endpoint, CreatePayment createPayment)
         {
             using (var httpClient = new HttpClient())
             {
@@ -88,13 +89,13 @@ namespace Doczy.Business.Services.Implementations
                 {
                     body = new
                     {
-                        amount = sumAmount,
+                        amount = createPayment.Amount,
                         approveURL = _configre["Payriff:approveURL"],
                         cancelURL = _configre["Payriff:cancelURL"],
                         declineURL = _configre["Payriff:declineURL"],
                         cardUuid = "string",
                         currencyType = "AZN",
-                        description = descriptionPay,
+                        description = createPayment.Desc,
                         directPay = true,
                         installmentPeriod = 0,
                         installmentProductType = "BIRKART",
