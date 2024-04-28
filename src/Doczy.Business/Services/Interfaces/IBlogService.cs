@@ -9,7 +9,7 @@ namespace Doczy.Business.Services.Interfaces
         Task<ResponseDto> CreateBlogAsync(CreateBlogDto createBlog);
         Task<ResponseDto> UpdateBlog(Guid id, UpdateBlogDto updateBlog);
         Task<ResponseDto> DeleteBlog(Guid id);
-        Task<List<GetBlogDto>> GetAllFieldOfStudiesAsync();
+        Task<List<GetBlogDto>> GetAllBlogAsync();
         Task<GetBlogDto> GetBlogAsync(Guid id);
     }
 }

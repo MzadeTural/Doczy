@@ -20,7 +20,7 @@ namespace Doczy.Business.Services.Implementations
             _mapper = mapper;
             _blogRepository = blogRepository;
         }
-        public async Task<List<GetBlogDto>> GetAllFieldOfStudiesAsync()
+        public async Task<List<GetBlogDto>> GetAllBlogAsync()
         {
             var dbFields = await _blogRepository.FindAll(x => !x.IsDeleted).ToListAsync();
             return _mapper.Map<List<GetBlogDto>>(dbFields);
