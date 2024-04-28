@@ -37,9 +37,10 @@ namespace Doczy.Business.Services
             services.AddScoped<IGenderService,GenderService>();
             services.AddScoped<ICategorySliderService,CategorySliderService>();
             services.AddScoped<IVideoMeetingService,VideoMeetingService>();
+            services.AddScoped<IBlogService,BlogService>();
 
 
-        
+
 
             services.AddScoped<IPayriffService,PayriffService>();
             services.AddScoped<IAppointmentService,AppointmentService>();
