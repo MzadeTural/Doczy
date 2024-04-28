@@ -116,6 +116,7 @@ namespace Doczy.Business.Services.Implementations
 
                 // Add authorization header
                 httpRequest.Headers.Add("Authorization", _configre["Payriff:secretKey"]);
+                //httpRequest.Headers.
 
                 var response = await httpClient.SendAsync(httpRequest);
                 return response;
