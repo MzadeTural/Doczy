@@ -53,6 +53,7 @@ namespace Doczy.DataAccess.Repositories
             services.AddScoped<ITempAppointmentRepository, TempAppointmentRepository>();
             services.AddScoped<IGenderRepository, GenderRepository>();
             services.AddScoped<ICategorySliderRepository, CategorySliderRepository>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddScoped<AuditableEntitySaveChangesInterceptor>();
         }
