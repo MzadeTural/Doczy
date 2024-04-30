@@ -9,6 +9,7 @@ namespace Doczy.Business.Services.Interfaces
     {
         Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model);
         Task<List<GetDoctorAppointmentDto>> GetDoctorAppointmentAsync();
+        Task<GetAppoinmnetDetailDto> GetAppointmentDetailAsync(PaymentDetailDto detail);
         Task<List<GetPatientAppointmentDto>> GetPatientAppointmentAsync();
         Task<ResponseDto> UpdateAppointmentPaymentStatusAsync(CallbackData paymentCallback);
         Task CleanupTemporaryAppointmentData();

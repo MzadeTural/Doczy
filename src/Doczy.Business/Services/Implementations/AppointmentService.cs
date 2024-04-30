@@ -10,7 +10,6 @@ using Doczy.Business.Exceptions.TemporaryAppointmentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
-using Doczy.DataAccess.Migrations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +47,7 @@ namespace Doczy.Business.Services.Implementations
         public async Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto model)
         {
             var userId = (await _userManager.GetUserAsync(_contextAccessor?.HttpContext?.User)).Id;
-            var existService = await _serviceRepository.IsExistAsync(s => s.Id == model.ServiceId && s.DoctorId==model.DoctorId);
+            var existService = await _serviceRepository.IsExistAsync(s => s.Id == model.ServiceId && s.DoctorId == model.DoctorId);
             if (!existService)
                 throw new ServiceNotFoundException();
 
@@ -56,7 +55,7 @@ namespace Doczy.Business.Services.Implementations
             if (time is null)
                 throw new TimeNotFoundByIdException(model.ChosenHourId);
             var service = await _serviceRepository.GetByIdAsync(model.ServiceId);
-           
+
             var amount = service.Price;
             // Calculate payment amount based on service or any other relevant factors
             decimal paymentAmount = _paymentService.CalculatePaymentAmount(model);
@@ -80,7 +79,7 @@ namespace Doczy.Business.Services.Implementations
                 Desc = "Appointment payment"
             };
             // Make createOrder request to initiate payment
-            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder",createPayment);
+            var paymentResponse = await _paymentService.MakePaymentRequestAsync("createOrder", createPayment);
 
             // Check if payment initiation was successful
             if (paymentResponse.IsSuccessStatusCode)
@@ -100,7 +99,7 @@ namespace Doczy.Business.Services.Implementations
                 newTempAppointment.OrderId = parsePaymentResponse.Payload.OrderId;
 
                 var result = await _tempAppointmentRepository.CreateAsync(newTempAppointment);
-                await _tempAppointmentRepository.SaveAsync();
+               var a= await _tempAppointmentRepository.SaveAsync();
 
                 return new ResponseDto(
                     StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
@@ -143,7 +142,7 @@ namespace Doczy.Business.Services.Implementations
                                                                     a => a.Doctor)
                                                                     .ProjectTo<GetPatientAppointmentDto>(_mapper.ConfigurationProvider)
                                                                     .ToListAsync();
-    
+
             return appointment;
         }
 
@@ -202,6 +201,17 @@ namespace Doczy.Business.Services.Implementations
 
         }
 
+        public async Task<GetAppoinmnetDetailDto> GetAppointmentDetailAsync(PaymentDetailDto detail)
+        {
+            var patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            ArgumentNullException.ThrowIfNull(patientId);
+            var tempAppointment = await _tempAppointmentRepository.GetSingleAysnc(ta => ta.OrderId == detail.Payload.OrderId && ta.SessionId == detail.Payload.SessionId)
+                 
+                ;
+            var response = _mapper.Map<GetAppoinmnetDetailDto>(tempAppointment);
+          
 
+            return response;
+        }
     }
 }
