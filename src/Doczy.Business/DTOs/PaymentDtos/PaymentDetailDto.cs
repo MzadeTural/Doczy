@@ -8,5 +8,9 @@ namespace Doczy.Business.DTOs.PaymentDtos
 {
     public class PaymentDetailDto
     {
+        public Payload Payload { get; set; }
+        public string Code { get; set; }
+        public string Message { get; set; }
+        public string Route { get; set; }
     }
 }
