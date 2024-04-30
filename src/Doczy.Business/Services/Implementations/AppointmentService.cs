@@ -143,7 +143,7 @@ namespace Doczy.Business.Services.Implementations
                                                                     a => a.Doctor)
                                                                     .ProjectTo<GetPatientAppointmentDto>(_mapper.ConfigurationProvider)
                                                                     .ToListAsync();
-
+    
             return appointment;
         }
 
