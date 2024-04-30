@@ -3,12 +3,8 @@ using Doczy.Business.DTOs.PaymentDtos;
 using Doczy.Business.Exceptions.PaymentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 
 
 namespace Doczy.API.Controllers.v1
@@ -55,7 +51,7 @@ namespace Doczy.API.Controllers.v1
         {
             //return Ok(paymentCallback);
 
-            return StatusCode(200);
+            return Redirect("http://localhost:3000/Doctors/Confirm");
         }
 
     }
