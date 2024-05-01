@@ -33,6 +33,8 @@
     <None Remove="Exceptions\FieldOfStudyExceptions\" />
     <None Remove="DTOs\BlogDtos\" />
     <None Remove="Exceptions\BlogExceptions\" />
+    <None Remove="DTOs\UnivercityDegreeDtos\" />
+    <None Remove="Exceptions\UnivercityDegreeExceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTOs\UnivercityDtos\" />
@@ -44,5 +46,7 @@
     <Folder Include="Exceptions\FieldOfStudyExceptions\" />
     <Folder Include="DTOs\BlogDtos\" />
     <Folder Include="Exceptions\BlogExceptions\" />
+    <Folder Include="DTOs\UnivercityDegreeDtos\" />
+    <Folder Include="Exceptions\UnivercityDegreeExceptions\" />
   </ItemGroup>
 </Project>
