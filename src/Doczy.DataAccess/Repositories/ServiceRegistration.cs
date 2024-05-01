@@ -55,6 +55,7 @@ namespace Doczy.DataAccess.Repositories
             services.AddScoped<ICategorySliderRepository, CategorySliderRepository>();
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<IUnivercityDegreeRepository, UnivercityDegreeRepository>();
             services.AddScoped<AuditableEntitySaveChangesInterceptor>();
         }
 
