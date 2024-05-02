@@ -45,6 +45,27 @@ namespace Doczy.Business.Services.Implementations
             
         }
 
+        public async Task<string> CreateZoomAsync(string meetName, int duration, string date, string time)
+        {
+
+            using (HttpClient client = new HttpClient())
+            {
+                var url = "";
+                url = url + $"?name={meetName}&duration={duration}&date={date}&time={time}";
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    return responseBody;
+                }
+                else
+                {
+                    return response.StatusCode.ToString();
+                }
+
+            }
+        }
+
         public async Task<string> GetMeetingSpaceDataAsync()
         {
             string result="";
