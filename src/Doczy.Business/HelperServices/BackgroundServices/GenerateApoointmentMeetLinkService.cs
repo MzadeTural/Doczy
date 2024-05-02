@@ -1,15 +1,9 @@
 ﻿using Doczy.Business.Services.Interfaces;
 using Doczy.DataAccess.Abstractions.Common;
 using Doczy.DataAccess.Contexts;
-using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doczy.Business.HelperServices.BackgroundServices
 {
@@ -19,7 +13,7 @@ namespace Doczy.Business.HelperServices.BackgroundServices
         private Timer _timer;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IDateTime _dateTime;
-       
+
 
 
         public GenerateApoointmentMeetLinkService(IServiceScopeFactory serviceScopeFactory, IDateTime dateTime)
@@ -27,7 +21,7 @@ namespace Doczy.Business.HelperServices.BackgroundServices
             _serviceScopeFactory = serviceScopeFactory;
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
             _dateTime = dateTime;
-          
+
         }
 
 
@@ -46,12 +40,13 @@ namespace Doczy.Business.HelperServices.BackgroundServices
                 var expiredUsers = await dbContext.Appointments
                     .Include(u => u.Doctor)
                     .Include(u => u.Patient)
-                    .Include(u=>u.Service)
+                    .Include(u => u.Service)
                     .ToListAsync();
-                expiredUsers = expiredUsers.Where(u => (u.AppointmentDate.Date + u.AppointmentTime) <= currentTimeMinus15Minutes).ToList();
+                expiredUsers = expiredUsers.Where(u => (u.AppointmentDate.Date + u.AppointmentTime) <= currentTimeMinus15Minutes && u.MeetLink is null).ToList();
                 foreach (var user in expiredUsers)
                 {
                     user.MeetLink = await videoMeetingService.CreateZoomAsync(user.Patient.FirstName + user.Doctor.FirstName, user.Service.Duration, user.AppointmentDate.ToString(), user.AppointmentTime.ToString());
+                    await Console.Out.WriteLineAsync("asda");
                 }
                 await dbContext.SaveChangesAsync();
             }
