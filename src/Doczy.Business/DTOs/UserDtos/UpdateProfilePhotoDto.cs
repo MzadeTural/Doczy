@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace Doczy.Business.DTOs.UserDtos
 {
-    public record UpdateProfilePhotoDto
-    (
-         IFormFile fileUrl
-         );
+    public record UpdateProfilePhotoDto(IFormFile fileUrl);
+   
 }

@@ -134,7 +134,7 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> ChangeProfilePhoto(UpdateProfilePhotoDto model)
         {
-            string profilePhoto = await _fileService.CreateFileAsync(model.fileUrl, _environment.WebRootPath + "/uploads/users/doctors/profilephotos/");
+            string profilePhoto = await _fileService.CreateFileAsync(model.fileUrl, _environment.WebRootPath + "/uploads/users/profilephotos/");
             var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
 
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -173,7 +173,7 @@ namespace Doczy.Business.Services.Implementations
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user is null)
                 throw new UserNotFoundException("id",userId.ToString());
-              _fileService.DeteleFile( _environment.WebRootPath + $"/uploads/users/doctors/profilephotos/{user.ProfileImageUrl}");
+              _fileService.DeteleFile( _environment.WebRootPath + $"/uploads/users/profilephotos/{user.ProfileImageUrl}");
             user.ProfileImageUrl ="default/profile-default.png";
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)

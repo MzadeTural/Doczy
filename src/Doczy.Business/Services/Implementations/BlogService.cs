@@ -5,7 +5,10 @@ using Doczy.Business.DTOs.Common;
 using Doczy.Business.Exceptions.BlogExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
+using Doczy.Core.Entities.Identities;
 using Doczy.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Doczy.Business.Services.Implementations
@@ -14,11 +17,15 @@ namespace Doczy.Business.Services.Implementations
 	{
         private IMapper _mapper;
         private IBlogRepository _blogRepository;
+        private readonly UserManager<BaseAppUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BlogService(IMapper mapper, IBlogRepository blogRepository)
+        public BlogService(IMapper mapper, IBlogRepository blogRepository, UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _blogRepository = blogRepository;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<List<GetBlogDto>> GetAllBlogAsync()
         {
@@ -36,8 +43,10 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<ResponseDto> CreateBlogAsync(CreateBlogDto createBlog)
         {
-            var newField = _mapper.Map<Blog>(createBlog);
-            var result = await _blogRepository.CreateAsync(newField);
+            var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            var newBlod = _mapper.Map<Blog>(createBlog);
+            newBlod.DoctorId=userId;
+            var result = await _blogRepository.CreateAsync(newBlod);
             await _blogRepository.SaveAsync();
             return new ResponseDto(
                 StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
