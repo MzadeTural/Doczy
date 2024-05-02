@@ -14,9 +14,11 @@ namespace Doczy.API.Controllers.v1
         {
             _videoMeetingService = videoMeetingService;
         }
-        public IActionResult Index()
+        [HttpGet("")]
+        public  async Task<IActionResult> Index()
         {
-            Url= _videoMeetingService.CreateZoomAsync("c#",30,)
+            var url = await _videoMeetingService.CreateZoomAsync("c#", 50, "2024-05-02 00:00:00.0000000", "23:55:00");
+            return Ok(url);
         }
     }
 }

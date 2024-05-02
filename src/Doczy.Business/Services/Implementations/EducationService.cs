@@ -59,10 +59,6 @@ namespace Doczy.Business.Services.Implementations
             var dbEducation = await _educationRepository.GetSingleAysnc(x => x.Id == id && !x.IsDeleted);
             if (dbEducation is null) throw new EducationNotFoundException("Not Found Education");
             //dbEducation = _mapper.Map<Education>(model);
-            if(model.DoctorId != null)
-            {
-                dbEducation.DoctorId = model.DoctorId;
-            }
             if (model.UnivercityId != null)
             {
                 dbEducation.UnivercityId = model.UnivercityId;
