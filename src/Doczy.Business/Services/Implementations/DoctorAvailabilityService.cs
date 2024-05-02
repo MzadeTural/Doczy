@@ -33,57 +33,114 @@ namespace Doczy.Business.Services.Implementations
             _appointmentRepository = appointmentRepository;
         }
 
+        //public async Task<ResponseDto> CreateDoctorAvailabilityAsync(CreateDoctorAvailabilityDto model)
+        //{
+        //    bool result = true;
+        //    var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+        //    if (model.AvailableHours == null || model.AvailableHours.Count == 0)
+        //        throw new ArgumentException("At least one available hour must be specified.");
+        //    var existingAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == model.DayOfWeek);
+        //    if (existingAvailability is null)
+        //        throw new DoctorAvailabilityNotFoundException();
+        //    var existTime = await _availableHourRepository.FindAll(da => da.DoctorAvailabilityId == existingAvailability.Id).ToListAsync();
+        //    List<AvailableHour> AvailableHours = new List<AvailableHour>();
+
+        //    foreach (var availableHourDto in model.AvailableHours)
+        //    {
+        //        var time = new TimeSpan(availableHourDto.Hour, availableHourDto.Minute, 0);
+        //        bool exist = false;
+        //        foreach (var hour in existTime)
+        //        {
+        //            if (hour.Time == time)
+        //            {
+        //                exist = true;
+        //                break;
+        //            }
+        //        }
+        //        if (!exist)
+        //        {
+        //            AvailableHours.Add(new AvailableHour
+        //            {
+        //                Time = time
+        //            });
+        //        }
+
+
+        //    }
+        //    existTime.AddRange(AvailableHours);
+        //    if (existingAvailability != null) 
+        //    {
+        //        existingAvailability.AvailableHours = existTime;
+        //    }
+        //    else
+        //    {
+        //        var doctorAvailability = _mapper.Map<DoctorAvailability>(model);
+        //        doctorAvailability.AvailableHours = existTime;
+        //        doctorAvailability.DoctorId = doctorId;
+        //        result = await _doctorAvailabilityRepository.CreateAsync(doctorAvailability);
+
+        //    }
+
+        //    await _doctorAvailabilityRepository.SaveAsync();
+        //    return new ResponseDto(
+        //                StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+        //                Message: result ? "DoctorAvailability  successfully created" : "Something went wrong"
+        //                );
+        //}
+
         public async Task<ResponseDto> CreateDoctorAvailabilityAsync(CreateDoctorAvailabilityDto model)
         {
             bool result = true;
             var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+
             if (model.AvailableHours == null || model.AvailableHours.Count == 0)
                 throw new ArgumentException("At least one available hour must be specified.");
+
             var existingAvailability = await _doctorAvailabilityRepository.GetSingleAysnc(da => da.DoctorId == doctorId && da.DayOfWeek == model.DayOfWeek);
-            if (existingAvailability is null)
-                throw new DoctorAvailabilityNotFoundException();
-            var existTime = await _availableHourRepository.FindAll(da => da.DoctorAvailabilityId == existingAvailability.Id).ToListAsync();
-            List<AvailableHour> AvailableHours = new List<AvailableHour>();
+
+            if (existingAvailability == null)
+            {
+                existingAvailability = new DoctorAvailability(); // Create a new instance if not found
+                existingAvailability.DayOfWeek = model.DayOfWeek;
+            }
+
+            var existingAvailableHours = await _availableHourRepository.FindAll(da => da.DoctorAvailabilityId == existingAvailability.Id).ToListAsync();
+
+            var newAvailableHours = new List<AvailableHour>();
 
             foreach (var availableHourDto in model.AvailableHours)
             {
                 var time = new TimeSpan(availableHourDto.Hour, availableHourDto.Minute, 0);
-                bool exist = false;
-                foreach (var hour in existTime)
+                bool exists = existingAvailableHours.Any(hour => hour.Time == time);
+
+                if (!exists)
                 {
-                    if (hour.Time == time)
-                    {
-                        exist = true;
-                        break;
-                    }
-                }
-                if (!exist)
-                {
-                    AvailableHours.Add(new AvailableHour
+                    newAvailableHours.Add(new AvailableHour
                     {
                         Time = time
                     });
                 }
-
-
             }
-            existTime.AddRange(AvailableHours);
-            if (existingAvailability != null)
-                existingAvailability.AvailableHours = existTime;
+
+            existingAvailableHours.AddRange(newAvailableHours);
+            existingAvailability.AvailableHours = existingAvailableHours;
+
+            if (existingAvailability.Id == Guid.Empty)
+            {
+                existingAvailability.DoctorId = doctorId;
+                result = await _doctorAvailabilityRepository.CreateAsync(existingAvailability);
+            }
             else
             {
-                var doctorAvailability = _mapper.Map<DoctorAvailability>(model);
-                doctorAvailability.AvailableHours = existTime;
-                doctorAvailability.DoctorId = doctorId;
-                result = await _doctorAvailabilityRepository.CreateAsync(doctorAvailability);
-
+                _doctorAvailabilityRepository.Update(existingAvailability);
             }
 
             await _doctorAvailabilityRepository.SaveAsync();
+
             return new ResponseDto(
-                        StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
-                        Message: result ? "DoctorAvailability  successfully created" : "Something went wrong"
-                        );
+            StatusCode: result ? HttpStatusCode.Created : HttpStatusCode.BadRequest,
+            Message: result ? "DoctorAvailability  successfully created" : "Something went wrong"
+        );
         }
 
         public async Task<ResponseDto> DeleteDoctorAvailability(Guid id)
