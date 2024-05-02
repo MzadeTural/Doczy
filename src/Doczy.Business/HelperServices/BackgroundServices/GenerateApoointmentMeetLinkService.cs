@@ -46,13 +46,13 @@ namespace Doczy.Business.HelperServices.BackgroundServices
                 var expiredUsers = await dbContext.Appointments
                     .Include(u => u.Doctor)
                     .Include(u => u.Patient)
+                    .Include(u=>u.Service)
                     .ToListAsync();
                 expiredUsers = expiredUsers.Where(u => (u.AppointmentDate.Date + u.AppointmentTime) <= currentTimeMinus15Minutes).ToList();
                 foreach (var user in expiredUsers)
                 {
-                    user.MeetLink = await videoMeetingService.CreateAsync(user.Patient.FirstName,user.Doctor.FirstName);
+                    user.MeetLink = await videoMeetingService.CreateZoomAsync(user.Patient.FirstName + user.Doctor.FirstName, user.Service.Duration, user.AppointmentDate.ToString(), user.AppointmentTime.ToString());
                 }
-
                 await dbContext.SaveChangesAsync();
             }
         }

@@ -10,5 +10,6 @@
         public string LastName { get; set; }
         public string ServiceTypeName { get; set; }
         public string ServiceTypeIconUrl { get; set; }
+        public string? MeetLink { get; set; }
     }
 }
