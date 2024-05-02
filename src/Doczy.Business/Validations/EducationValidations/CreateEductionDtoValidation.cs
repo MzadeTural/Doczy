@@ -8,7 +8,6 @@ namespace Doczy.Business.Validations.EducationValidations
 	{
 		public UpdateEductionDtoValidation()
 		{
-			RuleFor(x => x.DoctorId).NotEmpty().NotNull();
 			RuleFor(x => x.UnivercityId).NotEmpty().NotNull();
 			RuleFor(x => x.UnivercityDegreeId).NotEmpty().NotNull();
 			RuleFor(x => x.FieldOfStudyId).NotEmpty().NotNull();
