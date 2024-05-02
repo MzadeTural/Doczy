@@ -11,5 +11,6 @@
         public string ServiceTypeName { get; set; }
         public string ServiceTypeIconUrl { get; set; }
         public byte Duration { get; set; }
+        public string? MeetLink { get; set; }
     }
 }
