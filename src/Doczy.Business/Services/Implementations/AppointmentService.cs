@@ -10,6 +10,7 @@ using Doczy.Business.Exceptions.TemporaryAppointmentExceptions;
 using Doczy.Business.Services.Interfaces;
 using Doczy.Core.Entities;
 using Doczy.Core.Entities.Identities;
+using Doczy.DataAccess.Repositories.Implementations;
 using Doczy.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +30,8 @@ namespace Doczy.Business.Services.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPaymentService _paymentService;
         private readonly ITempAppointmentRepository _tempAppointmentRepository;
-        public AppointmentService(IAppointmentRepository appointmentRepository, IMapper mapper, IHttpContextAccessor contextAccessor, UserManager<BaseAppUser> userManager, IServiceRepository serviceRepository, IAvailableHourRepository availableHourRepository, IHttpContextAccessor httpContextAccessor, IPaymentService paymantService, ITempAppointmentRepository tempAppointmentRepository)
+        private readonly IPayriffPaymentRepository _payriffPaymentRepository;
+        public AppointmentService(IPayriffPaymentRepository payriffPaymentRepository,IAppointmentRepository appointmentRepository, IMapper mapper, IHttpContextAccessor contextAccessor, UserManager<BaseAppUser> userManager, IServiceRepository serviceRepository, IAvailableHourRepository availableHourRepository, IHttpContextAccessor httpContextAccessor, IPaymentService paymantService, ITempAppointmentRepository tempAppointmentRepository)
         {
             _appointmentRepository = appointmentRepository;
             _mapper = mapper;
@@ -40,6 +42,7 @@ namespace Doczy.Business.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
             _paymentService = paymantService;
             _tempAppointmentRepository = tempAppointmentRepository;
+            _payriffPaymentRepository = payriffPaymentRepository;
 
         }
 
@@ -179,6 +182,11 @@ namespace Doczy.Business.Services.Implementations
 
                 await _appointmentRepository.CreateAsync(newAppointment);
                 await _appointmentRepository.SaveAsync();
+
+                var newPayment = _mapper.Map<PayriffPayments>(paymentCallback.Payload);
+                newPayment.AppointmentId = newAppointment.Id;
+                await _payriffPaymentRepository.CreateAsync(newPayment);
+                await _payriffPaymentRepository.SaveAsync();
             }
             else
             {
