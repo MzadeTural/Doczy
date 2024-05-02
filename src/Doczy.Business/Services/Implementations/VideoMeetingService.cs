@@ -1,6 +1,9 @@
-﻿using Doczy.Business.Services.Interfaces;
+﻿using Doczy.Business.DTOs.VideoDtos;
+using Doczy.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Text.Json;
 using Vonage;
 using Vonage.Meetings.CreateRoom;
 using Vonage.Request;
@@ -47,22 +50,26 @@ namespace Doczy.Business.Services.Implementations
 
         public async Task<string> CreateZoomAsync(string meetName, int duration, string date, string time)
         {
-
             using (HttpClient client = new HttpClient())
             {
-                var url = "";
-                url = url + $"?name={meetName}&duration={duration}&date={date}&time={time}";
+                // Base URL needs to be defined.
+                var baseUrl = "https://doczy.000webhostapp.com/";
+                var url = $"{baseUrl}?name={Uri.EscapeDataString(meetName)}&duration={duration}&date={Uri.EscapeDataString(date)}&time={Uri.EscapeDataString(time)}";
+
                 HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    return responseBody;
+                    // Deserialize the JSON response into a C# object
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    ZoomApiResponseDto apiResponse = JsonSerializer.Deserialize<ZoomApiResponseDto>(jsonResponse);
+
+                    // Access the join_url property
+                    return apiResponse.message.response.join_url;
                 }
                 else
                 {
-                    return response.StatusCode.ToString();
+                    return $"Error: {response.StatusCode}, {await response.Content.ReadAsStringAsync()}";
                 }
-
             }
         }
 
