@@ -18,6 +18,7 @@ namespace Doczy.API.Controllers.v1
         public  async Task<IActionResult> Index()
         {
             var url = await _videoMeetingService.CreateZoomAsync("c#", 50, "2024-05-03 00:00:00.0000000", "12:00:00");
+
             return Ok(url);
         }
     }
