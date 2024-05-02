@@ -38,6 +38,7 @@ namespace Doczy.Business.Services
             services.AddScoped<ICategorySliderService,CategorySliderService>();
             services.AddScoped<IVideoMeetingService,VideoMeetingService>();
             services.AddScoped<IBlogService,BlogService>();
+            services.AddScoped<IUnivercityDegreeService,UnivercityDegreeService>();
 
 
 
