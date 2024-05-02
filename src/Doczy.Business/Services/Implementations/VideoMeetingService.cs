@@ -57,6 +57,7 @@ namespace Doczy.Business.Services.Implementations
                 var url = $"{baseUrl}?name={Uri.EscapeDataString(meetName)}&duration={duration}&date={Uri.EscapeDataString(date)}&time={Uri.EscapeDataString(time)}";
 
                 HttpResponseMessage response = await client.GetAsync(url);
+
                 if (response.IsSuccessStatusCode)
                 {
                     // Deserialize the JSON response into a C# object
