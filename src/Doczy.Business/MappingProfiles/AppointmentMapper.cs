@@ -25,6 +25,7 @@ namespace Doczy.Business.MappingProfiles
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Doctor.LastName))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Doctor.FirstName))
             .ForMember(dest => dest.ServiceTypeName, opt => opt.MapFrom(src => src.Service.ServiceType.Name))
+            .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Service.Duration))
             .ForMember(dest => dest.ServiceTypeIconUrl, opt => opt.MapFrom(src => src.Service.ServiceType.IconUrl)).ReverseMap();
 
             CreateMap<Appointment, GetAppoinmnetDetailDto>()

@@ -7,8 +7,7 @@ namespace Doczy.Business.DTOs.BlogDtos
         string Title,
      string Subtitle,
      string Content,
-     string ImageUrl,
-     Guid DoctorId
+     string ImageUrl
 		);
 }
 

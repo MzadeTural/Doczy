@@ -50,8 +50,8 @@ namespace Doczy.API.Controllers.v1
         public IActionResult PaymentCallback()
         {
             //return Ok(paymentCallback);
-
-            return StatusCode(200);
+            return Redirect($"http://localhost:3000/Doctors/Confirm");
+            //return StatusCode(200);
         }
 
     }
