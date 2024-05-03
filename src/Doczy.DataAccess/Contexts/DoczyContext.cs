@@ -45,6 +45,7 @@ namespace Doczy.DataAccess.Contexts
         public DbSet<CategorySlider> CategorySliders { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<UserSocialMedia> UserSocialMedias { get; set; }
+        public DbSet<PayriffPayments> PayriffPayments { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
