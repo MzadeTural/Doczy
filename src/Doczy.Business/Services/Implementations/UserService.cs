@@ -57,7 +57,7 @@ namespace Doczy.Business.Services.Implementations
             doct.CreatedAt = DateTime.Now;
             doct.DiplomaImageUrl = diplomaFile;
             doct.IdCardImageUrl = idCardFile;
-            doct.ProfileImageUrl = "default/profile-default.png";
+            doct.ProfileImageUrl = "default/profile-circle.svg";
             doct.IsVerified = false;
 
 
@@ -116,7 +116,7 @@ namespace Doczy.Business.Services.Implementations
         {
             var user = _mapper.Map<PatientAppUser>(model);
             user.CreatedAt = DateTime.Now;
-            user.ProfileImageUrl = "profile-default.png";
+            user.ProfileImageUrl = "default/profile-circle.svg";
             user.IsVerified = true;
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -174,7 +174,7 @@ namespace Doczy.Business.Services.Implementations
             if (user is null)
                 throw new UserNotFoundException("id",userId.ToString());
               _fileService.DeteleFile( _environment.WebRootPath + $"/uploads/users/profilephotos/{user.ProfileImageUrl}");
-            user.ProfileImageUrl ="default/profile-default.png";
+            user.ProfileImageUrl = "default/profile-circle.svg";
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
