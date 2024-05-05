@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg">
+  <defs/>
+  <path d="M 1 16 L 16 16" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgb(9, 51, 51);"/>
+  <path d="M 12.209 1 L 4.709 1 C 2.459 1 1.709 2.343 1.709 4 L 1.709 16 L 15.209 16 L 15.209 4 C 15.209 2.343 14.459 1 12.209 1 Z" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgb(9, 51, 51); fill: rgb(255, 255, 255);"/>
+  <path d="M 10.045 10.75 L 6.947 10.75 C 6.565 10.75 6.242 11.065 6.242 11.455 L 6.242 16 L 10.742 16 L 10.742 11.455 C 10.75 11.065 10.435 10.75 10.045 10.75 Z" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgb(9, 51, 51); fill: rgb(255, 255, 255);"/>
+  <path d="M 8.5 4 L 8.5 7.75" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgb(3, 107, 92);"/>
+  <path d="M 6.625 5.875 L 10.375 5.875" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgb(3, 107, 92);"/>
+</svg>

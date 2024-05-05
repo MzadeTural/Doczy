@@ -5,7 +5,7 @@
        
         Guid? CategoryId,
         Guid? ServiceTypeId,
-        string FullName,
+        string? FullName,
         decimal? MinPrice,
         decimal? MaxPrice,
         Guid? HospitalId
