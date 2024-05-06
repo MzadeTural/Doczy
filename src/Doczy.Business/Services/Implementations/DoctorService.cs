@@ -336,5 +336,20 @@ namespace Doczy.Business.Services.Implementations
             return doctors;
 
         }
+
+        public async Task<ResponseDto> UpdateAboutDoctorAsync(UpdateAboutDoctorDto model)
+        {
+            var doctorId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
+            ArgumentNullException.ThrowIfNull(doctorId);
+            var doct = await _doctorRepository.GetByIdAsync(doctorId);
+            if (doct is null) throw new UserNotFoundException("Doctor Not Found");
+            doct.AboutDoctor = model.AboutDoctor;
+            await _doctorRepository.SaveAsync();
+            return new ResponseDto(
+                                    StatusCode: HttpStatusCode.OK,
+                                    Message: "About Doctor  successfully modified"
+                                    );
+           
+        }
     }
 }
