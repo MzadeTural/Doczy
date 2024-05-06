@@ -153,7 +153,7 @@ namespace Doczy.Business.Services.Implementations
             }
 
             var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
-
+            await SetIsFavouriteForDoctors(doctors);
             return doctors;
         }
 
