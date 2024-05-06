@@ -48,6 +48,12 @@ namespace Doczy.API.Controllers.v1
             var response = await _userService.ChangeProfilePhoto(model);
             return StatusCode((int) HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
+        [HttpPatch("remove-profile-photo")]
+        public async Task<IActionResult> RemoveProfilePhoto( )
+        {
+            var response = await _userService.RemoveProfilePhotoAsync();
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
 
         [HttpPost("createrole")]
 
