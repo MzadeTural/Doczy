@@ -101,6 +101,12 @@ namespace Doczy.API.Controllers.v1
             var response = await _doctorService.UpdatePhoneNumberAsync(model);
             return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
+        [HttpPatch("update-about")]
+        public async Task<IActionResult> UpdateAboutDoctor(UpdateAboutDoctorDto model)
+        {
+            var response = await _doctorService.UpdateAboutDoctorAsync(model);
+            return StatusCode((int)HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
+        }
         [HttpPost("add-language/{languageId}")]
         public async Task<IActionResult> AddLanguage([FromRoute] Guid languageId)
         {

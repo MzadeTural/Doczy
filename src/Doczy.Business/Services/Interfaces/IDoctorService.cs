@@ -19,6 +19,7 @@ namespace Doczy.Business.Services.Interfaces
         Task<List<GetWillVerifiedDoctorDto>> GetWillVerifiedDoctors();
         Task<GetDoctorResumeDto> GetDoctorResumeAsync(Guid doctorId);
         Task<ResponseDto> UpdatePhoneNumberAsync(UserPhoneUpdateDto model);
+        Task<ResponseDto> UpdateAboutDoctorAsync(UpdateAboutDoctorDto model);
 
         Task<ResponseDto> AddLanguageAsync(Guid languageId);
         Task<ResponseDto> UpdateCategoryAsync(Guid categoryId);
