@@ -9,7 +9,8 @@ namespace Doczy.DataAccess.Configurations
         public void Configure(EntityTypeBuilder<DoctorAppUser> builder)
         {
             builder.Property(x => x.FirstName).HasMaxLength(30).IsRequired(true); 
-            builder.Property(x => x.LastName).HasMaxLength(250).IsRequired(true); 
+            builder.Property(x => x.LastName).HasMaxLength(30).IsRequired(true); 
+            builder.Property(x => x.AboutDoctor).HasMaxLength(500); 
         }
     }
 }
