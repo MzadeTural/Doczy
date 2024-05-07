@@ -209,7 +209,6 @@ namespace Doczy.Business.Services.Implementations
         public async Task<GetDoctorDetailDto> GetDoctorDetailAsync(Guid doctorId)
         {
 
-            var patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
             var doctors = await _doctorRepository.GetSingleAysnc(d => d.Id == doctorId && d.IsVerified,
                                                                  "FavoriteDoctors",
                                                                  "Ratings",
@@ -222,9 +221,14 @@ namespace Doczy.Business.Services.Implementations
 
             var availabilities = doctors.Availabilities;
             var doctorDetail = _mapper.Map<GetDoctorDetailDto>(doctors);
+            var user = _httpContextAccessor?.HttpContext?.User.Identity;
+            if (user.IsAuthenticated)
+            {
+                var patientId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
 
-            doctorDetail.IsFavourite= await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
-            if (availabilities.Any())
+                doctorDetail.IsFavourite = await _favoriteDoctorRepository.IsExistAsync(fd => fd.DoctorId == doctorId && fd.PatientId == patientId);
+            }
+                if (availabilities.Any())
                 doctorDetail.EarliestAvailable = GetMostRecentDate(availabilities);
 
             return doctorDetail;
