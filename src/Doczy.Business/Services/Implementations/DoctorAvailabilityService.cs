@@ -110,6 +110,7 @@ namespace Doczy.Business.Services.Implementations
 
             foreach (var availableHourDto in model.AvailableHours)
             {
+
                 var time = new TimeSpan(availableHourDto.Hour, availableHourDto.Minute, 0);
                 bool exists = existingAvailableHours.Any(hour => hour.Time == time);
 

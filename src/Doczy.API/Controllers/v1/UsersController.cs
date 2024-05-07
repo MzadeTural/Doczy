@@ -43,12 +43,14 @@ namespace Doczy.API.Controllers.v1
             return Ok(response);
         }
         [HttpPatch("change-profile-photo")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor,Patient")]
         public async Task<IActionResult> CahangeProfilePhoto([FromForm]UpdateProfilePhotoDto model)
         {
             var response = await _userService.ChangeProfilePhoto(model);
             return StatusCode((int) HttpStatusCode.OK, new ResponseDto(response.StatusCode, response.Message));
         }
         [HttpPatch("remove-profile-photo")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor,Patient")]
         public async Task<IActionResult> RemoveProfilePhoto( )
         {
             var response = await _userService.RemoveProfilePhotoAsync();
