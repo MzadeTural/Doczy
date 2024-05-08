@@ -24,7 +24,7 @@ namespace Doczy.API.Controllers.v1
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] CreatePatientDto createPatientDto)
+        public async Task<IActionResult> Register(CreatePatientDto createPatientDto)
         {
             var response = await _userService.CreatePatientAsync(createPatientDto);
 
