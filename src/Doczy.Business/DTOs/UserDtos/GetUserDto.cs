@@ -2,12 +2,12 @@
 
 namespace Doczy.Business.DTOs.UserDtos
 {
-    public record GetUserDto
-    (
-        string FirstName  ,
-         string LastName ,
-         string UserName,
-         string ProfileImageUrl,
-         string? Gender
-        );
+    public class GetUserDto
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserName { get; set; }
+        public string ProfileImageUrl { get; set; }
+        public string Gender { get; set; }
+    }
 }

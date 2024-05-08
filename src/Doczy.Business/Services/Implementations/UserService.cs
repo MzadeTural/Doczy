@@ -28,9 +28,9 @@ namespace Doczy.Business.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IGenderRepository _genderRepository;
-        private readonly BaseAppUserRepository _baseAppUserRepository;
+        private readonly IBaseAppUserRepository _baseAppUserRepository;
 
-        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IGenderRepository genderRepository = null, BaseAppUserRepository baseAppUserRepository = null)
+        public UserService(UserManager<BaseAppUser> userManager, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IWebHostEnvironment environment, IMapper mapper, DoczyContext context, IFileService fileService = null, IMailService mailService = null, IGenderRepository genderRepository = null, IBaseAppUserRepository baseAppUserRepository = null)
         {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
@@ -159,7 +159,7 @@ namespace Doczy.Business.Services.Implementations
         public async Task<GetUserDto> GetAuthUserInfo()
         {
             var userId = (await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User)).Id;
-            var user =await _baseAppUserRepository.GetSingleAysnc(ba => ba.Id == userId && !ba.IsVerified, ba => ba.Gender);
+            var user =await _baseAppUserRepository.GetSingleAysnc(ba => ba.Id == userId && ba.IsVerified, ba => ba.Gender);
             if (user is null)
                 throw new UserNotFoundException("User Not Found");
             var userInfo = _mapper.Map<GetUserDto>(user);

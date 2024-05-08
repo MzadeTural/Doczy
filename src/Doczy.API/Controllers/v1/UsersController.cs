@@ -30,7 +30,7 @@ namespace Doczy.API.Controllers.v1
             return StatusCode((int)response.StatusCode, response.Message);
         }
         [HttpGet("profile-info")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor,Patient")]
         public async Task<IActionResult> GetAuthUserInfo()
         {
             var response = await _userService.GetAuthUserInfo();
