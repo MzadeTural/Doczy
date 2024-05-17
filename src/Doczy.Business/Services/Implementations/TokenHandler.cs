@@ -50,7 +50,7 @@ namespace Doczy.Business.Services.Implementations
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 expires: tokenResponseDto.Expiration,
-                notBefore: DateTime.UtcNow,
+                notBefore: DateTime.Now,
                 signingCredentials: signingCredentials,
                 claims: claims
                 );
