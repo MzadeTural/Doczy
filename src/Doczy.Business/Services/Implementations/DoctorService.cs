@@ -21,7 +21,6 @@ using System.Numerics;
 namespace Doczy.Business.Services.Implementations
 {
     public class DoctorService : IDoctorService
-
     {
         private readonly UserManager<BaseAppUser> _userManager;
         private readonly IDoctorRatingRepository _doctorRatingRepository;
@@ -355,6 +354,20 @@ namespace Doczy.Business.Services.Implementations
                                     Message: "About Doctor  successfully modified"
                                     );
            
+        }
+
+        public async Task<List<GetDoctorsDto>> GetDoctorsByCategoryNameAsync(string categoryName)
+        {
+            var doctorsQuery = _doctorRepository.FindAll(d => d.IsVerified && d.DoctorCategory.Name.Trim().ToUpper()==categoryName.Trim().ToUpper(), tracking: false,
+                                                 d => d.FavoriteDoctors,
+                                                 d => d.Ratings,
+                                                 d => d.DoctorCategory);
+
+            var doctors = await doctorsQuery.ProjectTo<GetDoctorsDto>(_mapper.ConfigurationProvider).ToListAsync();
+
+            await SetIsFavouriteForDoctors(doctors);
+
+            return doctors;
         }
     }
 }
