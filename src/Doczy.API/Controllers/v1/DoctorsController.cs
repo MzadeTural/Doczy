@@ -60,6 +60,12 @@ namespace Doczy.API.Controllers.v1
         {
             return Ok(await _doctorService.GetDoctorsByCategoryId(categoryId));
         }
+        [HttpGet("by-categroryName")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDoctorsByCategoryName(string categoryName)
+        {
+            return Ok(await _doctorService.GetDoctorsByCategoryNameAsync(categoryName));
+        }
         [HttpGet("profile")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin,Doctor")]
         public async Task<IActionResult> GetDoctorProfile()
