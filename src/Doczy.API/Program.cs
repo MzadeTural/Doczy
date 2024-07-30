@@ -21,7 +21,7 @@ builder.Services.AddHttpClient();
 //builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowOrigin",
+    options.AddPolicy("AllowAll",
         builder => builder.AllowAnyOrigin()
                           .AllowAnyMethod()
                           .AllowAnyHeader());
@@ -71,7 +71,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors();
+app.UseCors("AllowAll");
+//app.UseCors();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.AddExceptionHandler();
