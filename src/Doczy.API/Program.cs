@@ -18,7 +18,14 @@ builder.Services.AddBusinessServices();
 builder.Services.AddDataAccesServices();
 builder.Services.AddRouting();
 builder.Services.AddHttpClient();
-builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
+//builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);
 builder.Services.AddEndpointsApiExplorer();
