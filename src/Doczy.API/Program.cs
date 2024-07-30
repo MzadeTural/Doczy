@@ -18,7 +18,14 @@ builder.Services.AddBusinessServices();
 builder.Services.AddDataAccesServices();
 builder.Services.AddRouting();
 builder.Services.AddHttpClient();
-builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
+//builder.Services.AddCorsService(builder.Configuration.GetSection("Client:Urls").Get<string[]>());
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddJwtAuthenticationService(builder.Configuration["Jwt:Audience"], builder.Configuration["Jwt:Issuer"], builder.Configuration["Jwt:SigningKey"]);
 builder.Services.AddEndpointsApiExplorer();
@@ -64,7 +71,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors();
+app.UseCors("AllowAll");
+//app.UseCors();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.AddExceptionHandler();
