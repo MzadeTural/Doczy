@@ -144,9 +144,9 @@ namespace Doczy.Business.Services.Implementations
 
             AuthenticationProperties properties = new() { IsPersistent = model.RememberMe };
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe,false);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
 
-           
+
             if (result.Succeeded)
             {
                 var tokenResponse = await GenerateJwtTokenAsync(user, accessTokenLifeTime);
@@ -227,12 +227,15 @@ namespace Doczy.Business.Services.Implementations
         {
             var user = await _userManager.FindByIdAsync(doctorId.ToString());
             if (user is null)
-                throw new UserNotFoundException("ID:",doctorId.ToString());
-           var result=  user.IsVerified = true;
+                throw new UserNotFoundException("ID:", doctorId.ToString());
+            if (user.IsVerified)
+                throw new AlreadyVerifiedException("User already verified", HttpStatusCode.Conflict);
+            var result = user.IsVerified = true;
+            await _userManager.UpdateAsync(user);
             return new ResponseDto
        (
-           StatusCode:result? HttpStatusCode.OK:HttpStatusCode.BadRequest,
-           Message:  result?  "Doctor  successfully verfied": "Something went wrong"
+           StatusCode: result ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
+           Message: result ? "Doctor  successfully verfied" : "Something went wrong"
        );
 
         }
@@ -261,7 +264,7 @@ namespace Doczy.Business.Services.Implementations
               Message: result.Succeeded ? "Password change successful" : String.Join(',', result.Errors.Select(e => e.Description))
           );
 
-            
+
         }
     }
 }
